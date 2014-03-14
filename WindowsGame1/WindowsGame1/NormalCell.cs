@@ -10,12 +10,12 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
 
-namespace WindowsGame1
+namespace Virion
 {
     /// <summary>
     /// This is a game component that implements IUpdateable.
     /// </summary>
-    public class NormalCell : Microsoft.Xna.Framework.DrawableGameComponent
+    public class NormalCell : Unit
     {
         private Main game;
 
@@ -51,7 +51,7 @@ namespace WindowsGame1
 
 
         public NormalCell(Main game, Point cellPosition, int frameTime)
-            : base(game)
+
         {
             this.game = (Main)game;
             this.frameTime = frameTime;
@@ -123,12 +123,12 @@ namespace WindowsGame1
             texture = new Texture2D(GD, 1, 1, false, SurfaceFormat.Color);
             texture.SetData<Color>(new Color[] { Color.White });
 
-            base.LoadContent();
+            //base.LoadContent();
         }
 
-        public override void Initialize()
+        public void Initialize()
         {
-            base.Initialize();
+            //base.Initialize();
         }
 
         private void initDarkMatrix()
@@ -152,13 +152,13 @@ namespace WindowsGame1
 
         }
 
-        public override void Update(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
             elapsedTime += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (elapsedTime < frameTime)
             {
                 //If we are not supposed to calculate a new frame, just return
-                base.Update(gameTime);
+                //base.Update(gameTime);
                 return;
             }
 
@@ -170,7 +170,7 @@ namespace WindowsGame1
             fillColorMatrix();
             updateDarkMatrix();
 
-            base.Update(gameTime);
+            //base.Update(gameTime);
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -185,7 +185,7 @@ namespace WindowsGame1
                 }
             }
 
-            base.Draw(gameTime);
+            //base.Draw(gameTime);
         }
 
         private void drawPixel(int x, int y, int pixelCode, SpriteBatch spriteBatch)

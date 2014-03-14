@@ -9,7 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
-namespace WindowsGame1
+namespace Virion
 {
     /// <summary>
     /// This is the main type for your game
@@ -21,7 +21,7 @@ namespace WindowsGame1
         Texture2D texture;
         Random random;
 
-        List<DrawableGameComponent> cellList;
+        List<NormalCell> cellList;
 
         public Main()
         {
@@ -29,7 +29,7 @@ namespace WindowsGame1
             Content.RootDirectory = "Content";
             random = new Random();
 
-            cellList = new List<DrawableGameComponent>();
+            cellList = new List<NormalCell>();
 
 
             cellList.Add(new NormalCell(this, new Point(100, 200), 10));

@@ -1,6 +1,6 @@
 using System;
 
-namespace WindowsGame1
+namespace Virion
 {
 #if WINDOWS || XBOX
     static class Program
