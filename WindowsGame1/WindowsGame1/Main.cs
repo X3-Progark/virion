@@ -32,7 +32,7 @@ namespace WindowsGame1
             cellList = new List<DrawableGameComponent>();
 
 
-            cellList.Add(new NormalCell(this, new Point(100, 200), 100));
+            cellList.Add(new NormalCell(this, new Point(100, 200), 10));
             cellList.Add(new NormalCell(this, new Point(250, 200), 200));
             cellList.Add(new NormalCell(this, new Point(400, 200), 300));
             cellList.Add(new NormalCell(this, new Point(550, 200), 400));

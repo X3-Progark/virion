@@ -22,39 +22,30 @@ namespace WindowsGame1
         //Default texture
         private Texture2D texture;
 
-        //Time controlling variables
-        private int elapsedTime;
-        private int frameTime;
-
-        //Colors for the cell
         private int[,] colorMatrix;
         private bool[,] darkMatrix;
-        float percentageDarkSpots;
-        float darkSpotMotionFactor;
 
-        private Color c;
-        private Color wallColor;
-        private Color wallColorDark;
-        private Color fillColor;
-        private Color fillColorDark;
-        private Color centerColor;
-        private Color centerColorDark;
+        float percentageDarkSpots,
+            darkSpotMotionFactor;
+
+        private Color c,
+            wallColor, wallColorDark, 
+            fillColor, fillColorDark, 
+            centerColor, centerColorDark;
         
-        //Cell look
-        private int pixelSize;
-        private int cellRadius;
-        private double cellRadiusMinFactor;
-        private double cellAngleFactor;
-        private int cellPoints;
+        private int pixelSize, 
+            cellRadius,cellPoints,
+            elapsedTime, frameTime;
 
-        //Cell pulsation
-        private List<double> cellPointsAngle;
-        private List<double> cellPointsAngleSpeed;
-        private List<double> cellPointsLength;
-        private List<double> cellPointsLengthSpeed;
+        private double cellRadiusMinFactor, 
+            cellAngleFactor;
+        
+        private List<double> cellPointsAngle,
+            cellPointsAngleSpeed,cellPointsLength,
+            cellPointsLengthSpeed;
+
         private List<Vector2> cellVectors;
 
-        //Cell position and motion
         private Point cellPosition;
         private Vector2 cellMotion;
 
@@ -68,16 +59,32 @@ namespace WindowsGame1
             
             elapsedTime = 0;
             
-            pixelSize = 5; //SHOULD BE SOME KIND OF GLOBAL VARIABLE
-            cellRadius = 7; //How many pixels the MAXIMUM cell radius should be
-            cellRadiusMinFactor = 0.2d; //Percentage of the length of the radius can go inwards, larger makes bigger variation
-            cellAngleFactor = 0.6d; //How much the angles can vary. 1 is much, 0 is nothing. Makes shape more random!
-            cellPoints = 7; //Number of points that are used to define the edge
+            //SHOULD BE SOME KIND OF GLOBAL VARIABLE
+            pixelSize = 5;
 
-            colorMatrix = new int[cellRadius * 2, cellRadius * 2]; //A cellRadius*2 x cellRadius*2 2D int array
-            darkMatrix = new bool[cellRadius * 2, cellRadius * 2]; //A cellRadius*2 x cellRadius*2 2D bool array
-            percentageDarkSpots = 0.3f; //How much of the grid that should be dark
-            darkSpotMotionFactor = 0.3f; //Should the dark spots move often? higher values will move more. 
+            //How many pixels the MAXIMUM cell radius should be
+            cellRadius = 7;
+
+            //Percentage of the length of the radius can go inwards, larger makes bigger variation
+            cellRadiusMinFactor = 0.1d;
+
+            //How much the angles can vary. 1 is much, 0 is nothing. Makes shape more random!
+            cellAngleFactor = 0.8d;
+
+            //Number of points that are used to define the edge
+            cellPoints = 8;
+
+            //A cellRadius*2 x cellRadius*2 2D int array
+            colorMatrix = new int[cellRadius * 2, cellRadius * 2];
+
+            //A cellRadius*2 x cellRadius*2 2D bool array
+            darkMatrix = new bool[cellRadius * 2, cellRadius * 2];
+
+            //How much of the grid that should be dark
+            percentageDarkSpots = 0.3f;
+
+            //Should the dark spots move often? higher values will move more. 
+            darkSpotMotionFactor = 0.3f;
 
             wallColor = new Color(241, 181, 141);
             wallColorDark = new Color(236, 169, 119);
@@ -86,12 +93,23 @@ namespace WindowsGame1
             centerColor = new Color(254, 220, 220);
             centerColorDark = new Color(254, 215, 215);
 
-            cellPointsAngle = new List<double>(); //All the angles
-            cellPointsAngleSpeed = new List<double>(); //All the angle speeds
-            cellPointsLength = new List<double>(); //All the lengths
-            cellPointsLengthSpeed = new List<double>(); //All the length speeds
-            cellVectors = new List<Vector2>(); //Contains the vectors that define the bounds of the cell
-            cellMotion = new Vector2(); //Says how the cell is moving
+            //All the angles
+            cellPointsAngle = new List<double>();
+            
+            //All the angle speeds
+            cellPointsAngleSpeed = new List<double>();
+            
+            //All the lengths
+            cellPointsLength = new List<double>();
+            
+            //All the length speeds
+            cellPointsLengthSpeed = new List<double>();
+            
+            //Contains the vectors that define the bounds of the cell
+            cellVectors = new List<Vector2>();
+            
+            //Says how the cell is moving
+            cellMotion = new Vector2();
 
             initDarkMatrix();
 
