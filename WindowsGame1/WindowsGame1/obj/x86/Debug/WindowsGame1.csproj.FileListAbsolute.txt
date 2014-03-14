@@ -4,3 +4,9 @@ C:\Users\Tobias\Documents\NTNU\Software Architecture\WindowsGame1\WindowsGame1\b
 C:\Users\Tobias\Documents\NTNU\Software Architecture\WindowsGame1\WindowsGame1\bin\x86\Debug\WindowsGame1.pdb
 C:\Users\Tobias\Documents\NTNU\Software Architecture\WindowsGame1\WindowsGame1\obj\x86\Debug\WindowsGame1.exe
 C:\Users\Tobias\Documents\NTNU\Software Architecture\WindowsGame1\WindowsGame1\obj\x86\Debug\WindowsGame1.pdb
+C:\Users\dawn\Documents\GitHub\virion\WindowsGame1\WindowsGame1\bin\x86\Debug\WindowsGame1.exe
+C:\Users\dawn\Documents\GitHub\virion\WindowsGame1\WindowsGame1\bin\x86\Debug\WindowsGame1.pdb
+C:\Users\dawn\Documents\GitHub\virion\WindowsGame1\WindowsGame1\obj\x86\Debug\WindowsGame1.csprojResolveAssemblyReference.cache
+C:\Users\dawn\Documents\GitHub\virion\WindowsGame1\WindowsGame1\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Users\dawn\Documents\GitHub\virion\WindowsGame1\WindowsGame1\obj\x86\Debug\WindowsGame1.exe
+C:\Users\dawn\Documents\GitHub\virion\WindowsGame1\WindowsGame1\obj\x86\Debug\WindowsGame1.pdb
