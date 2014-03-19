@@ -19,23 +19,25 @@ namespace Virion
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Texture2D texture;
-        Random random;
+        
 
-        List<NormalCell> cellList;
+        ViewManager viewManager;
+
+        
 
         public Main()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            random = new Random();
+            
 
-            cellList = new List<NormalCell>();
+            viewManager = new ViewManager(this);
+            Components.Add(viewManager);
 
+            viewManager.AddView(new BackgroundView(), null);
+            viewManager.AddView(new MainMenuView(), null);
 
-            cellList.Add(new NormalCell(this, new Point(100, 200), 10));
-            cellList.Add(new NormalCell(this, new Point(250, 200), 200));
-            cellList.Add(new NormalCell(this, new Point(400, 200), 300));
-            cellList.Add(new NormalCell(this, new Point(550, 200), 400));
+            
         }
 
         /// <summary>
@@ -60,15 +62,13 @@ namespace Virion
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            foreach (NormalCell c in cellList)
-            {
-                c.LoadContent(graphics.GraphicsDevice);
-            }
 
             texture = new Texture2D(graphics.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             //Texture2D texture = new Texture2D(graphics, 1, 1, SurfaceFormat.Color);
             texture.SetData<Color>(new Color[] { Color.White });
             // TODO: use this.Content to load your game content here
+
+            base.LoadContent();
         }
 
         /// <summary>
@@ -91,10 +91,7 @@ namespace Virion
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
                 this.Exit();
 
-            foreach (NormalCell c in cellList)
-            {
-                c.Update(gameTime);
-            }
+            
 
             base.Update(gameTime);
         }
@@ -105,32 +102,12 @@ namespace Virion
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(new Color(255,153,153));
-
-
-            spriteBatch.Begin();
-
-            foreach (NormalCell c in cellList)
-            {
-                c.Draw(gameTime, spriteBatch);
-            }
-            spriteBatch.End();
-
+            graphics.GraphicsDevice.Clear(Color.Black);
 
             base.Draw(gameTime);
         }
 
 
-        //We want a random
-        public Random getRandom()
-        {
-            return random;
-        }
-
-        //We need this as a public method to get different seeds in order to get an actual random number
-        public double getRandomD()
-        {
-            return random.NextDouble();
-        }
+        
     }
 }

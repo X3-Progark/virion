@@ -17,7 +17,6 @@ namespace Virion
     /// </summary>
     public class NormalCell : Unit
     {
-        private Main game;
 
         //Default texture
         private Texture2D texture;
@@ -49,11 +48,15 @@ namespace Virion
         private Point cellPosition;
         private Vector2 cellMotion;
 
+        Random random;
 
-        public NormalCell(Main game, Point cellPosition, int frameTime)
+
+        public NormalCell(Point cellPosition, int frameTime)
 
         {
-            this.game = (Main)game;
+
+            random = new Random();
+
             this.frameTime = frameTime;
             this.cellPosition = cellPosition;
             
@@ -133,7 +136,7 @@ namespace Virion
 
         private void initDarkMatrix()
         {
-            Random r = game.getRandom();
+            Random r = getRandom();
             int amount = (int)(percentageDarkSpots*(cellRadius * cellRadius *4));
 
             for (int i = 0; i < amount; i++)
@@ -209,9 +212,9 @@ namespace Virion
             {
                 for (int y = 0; y < cellRadius * 2; y++)
                 {
-                    if (game.getRandomD() <= darkSpotMotionFactor && darkMatrix[x, y])
+                    if (getRandomD() <= darkSpotMotionFactor && darkMatrix[x, y])
                     {
-                        double r = game.getRandomD();
+                        double r = getRandomD();
                         int xM = x;
                         int yM = y;
 
@@ -233,14 +236,14 @@ namespace Virion
         //Calculates how the cell vectors look like
         private void calculateCellPulsation()
         {
-            double angleStart = game.getRandomD() * 360d; //Find a random startingpoint for our angle
+            double angleStart = getRandomD() * 360d; //Find a random startingpoint for our angle
             double angleStep = 360f / cellPoints;
             double angleVariation = angleStep * cellAngleFactor; //How much should the angle vary
 
             for (int i = 0; i < cellPoints; i++)
             {
-                double angle = angleStart + angleStep * i + angleVariation * game.getRandomD();
-                double length = cellRadius - cellRadiusMinFactor * cellRadius * game.getRandomD();
+                double angle = angleStart + angleStep * i + angleVariation * getRandomD();
+                double length = cellRadius - cellRadiusMinFactor * cellRadius * getRandomD();
 
                 cellPointsAngle.Add(angle);
                 cellPointsLength.Add(length);
@@ -411,6 +414,18 @@ namespace Virion
 
             }
 
+        }
+
+        //We want a random
+        public Random getRandom()
+        {
+            return random;
+        }
+
+        //We need this as a public method to get different seeds in order to get an actual random number
+        public double getRandomD()
+        {
+            return random.NextDouble();
         }
     }
 }
