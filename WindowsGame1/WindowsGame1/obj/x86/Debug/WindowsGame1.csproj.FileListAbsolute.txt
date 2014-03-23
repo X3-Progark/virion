@@ -4,9 +4,18 @@ C:\Users\Tobias\Documents\NTNU\Software Architecture\WindowsGame1\WindowsGame1\b
 C:\Users\Tobias\Documents\NTNU\Software Architecture\WindowsGame1\WindowsGame1\bin\x86\Debug\WindowsGame1.pdb
 C:\Users\Tobias\Documents\NTNU\Software Architecture\WindowsGame1\WindowsGame1\obj\x86\Debug\WindowsGame1.exe
 C:\Users\Tobias\Documents\NTNU\Software Architecture\WindowsGame1\WindowsGame1\obj\x86\Debug\WindowsGame1.pdb
+<<<<<<< HEAD
 C:\Users\Tobias\Documents\GitHub\virion\WindowsGame1\WindowsGame1\bin\x86\Debug\WindowsGame1.exe
 C:\Users\Tobias\Documents\GitHub\virion\WindowsGame1\WindowsGame1\bin\x86\Debug\WindowsGame1.pdb
 C:\Users\Tobias\Documents\GitHub\virion\WindowsGame1\WindowsGame1\obj\x86\Debug\WindowsGame1.csprojResolveAssemblyReference.cache
 C:\Users\Tobias\Documents\GitHub\virion\WindowsGame1\WindowsGame1\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
 C:\Users\Tobias\Documents\GitHub\virion\WindowsGame1\WindowsGame1\obj\x86\Debug\WindowsGame1.exe
 C:\Users\Tobias\Documents\GitHub\virion\WindowsGame1\WindowsGame1\obj\x86\Debug\WindowsGame1.pdb
+=======
+F:\Git projects\virion\WindowsGame1\WindowsGame1\bin\x86\Debug\WindowsGame1.exe
+F:\Git projects\virion\WindowsGame1\WindowsGame1\bin\x86\Debug\WindowsGame1.pdb
+F:\Git projects\virion\WindowsGame1\WindowsGame1\obj\x86\Debug\WindowsGame1.csprojResolveAssemblyReference.cache
+F:\Git projects\virion\WindowsGame1\WindowsGame1\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+F:\Git projects\virion\WindowsGame1\WindowsGame1\obj\x86\Debug\WindowsGame1.exe
+F:\Git projects\virion\WindowsGame1\WindowsGame1\obj\x86\Debug\WindowsGame1.pdb
+>>>>>>> origin/jorgen
