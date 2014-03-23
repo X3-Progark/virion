@@ -54,13 +54,15 @@ namespace Virion
         public NormalCell(Point cellPosition, int frameTime)
 
         {
-
+            //TODO: Må, MÅ, hentes fra en høyere klasse slik at de får forskjellige variabler! 
+            //Når de blir initialisert samtidig får de akkurat samme variabler > cellene blir identiske
             random = new Random();
 
             this.frameTime = frameTime;
-            this.cellPosition = cellPosition;
-            
             elapsedTime = 0;
+
+            //Sets where the cell is
+            this.cellPosition = cellPosition;
             
             //SHOULD BE SOME KIND OF GLOBAL VARIABLE
             pixelSize = 5;
@@ -149,10 +151,9 @@ namespace Virion
                     i -= 1;
                     continue;
                 }
-                
+
                 darkMatrix[x, y] = true;
             }
-
         }
 
         public void Update(GameTime gameTime)
@@ -198,14 +199,14 @@ namespace Virion
             else if (pixelCode == 2) c = (darkMatrix[x, y] ? fillColorDark : fillColor);
             else if (pixelCode == 3) c = (darkMatrix[x, y] ? centerColorDark : centerColor);
 
-            int xPos = (x - cellRadius) * pixelSize + cellPosition.X;
-            int yPos = (y - cellRadius) * pixelSize + cellPosition.Y;
+            int xPos = (x - cellRadius) * pixelSize + cellPosition.X - cellPosition.X % pixelSize;
+            int yPos = (y - cellRadius) * pixelSize + cellPosition.Y - cellPosition.Y % pixelSize;
 
             spriteBatch.Draw(texture, new Rectangle(xPos, yPos, pixelSize, pixelSize), c);
 
         }
 
-        //
+        //Editing the darker pixels
         private void updateDarkMatrix()
         {
             for (int x = 0; x < cellRadius * 2; x++)
