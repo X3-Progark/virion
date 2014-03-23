@@ -1,1 +1,2 @@
 C:\Users\Tobias\Documents\NTNU\Software Architecture\WindowsGame1\WindowsGame1Content\obj\x86\Debug\WindowsGame1Content.contentprojResolveAssemblyReference.cache
+C:\Users\Tobias\Documents\GitHub\virion\WindowsGame1\WindowsGame1Content\obj\x86\Debug\WindowsGame1Content.contentprojResolveAssemblyReference.cache

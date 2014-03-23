@@ -62,17 +62,22 @@ namespace WindowsGame1
         public NormalCell(Main game, Point cellPosition, int frameTime)
             : base(game)
         {
+
+            pixelSize = 5; //SHOULD BE SOME KIND OF GLOBAL VARIABLE
+            cellRadius = 10; //How many pixels the MAXIMUM cell radius should be
+            cellRadiusMinFactor = 0.8d; //Percentage of the length of the radius can go inwards, larger makes bigger variation
+            cellAngleFactor = 0.6d; //How much the angles can vary. 1 is much, 0 is nothing. Makes shape more random!
+            cellPoints = 10; //Number of points that are used to define the edge
+
+
             this.game = (Main)game;
             this.frameTime = frameTime;
-            this.cellPosition = cellPosition;
+            this.cellPosition.X = cellPosition.X - cellPosition.X % pixelSize;
+            this.cellPosition.Y = cellPosition.Y - cellPosition.Y % pixelSize;
             
             elapsedTime = 0;
             
-            pixelSize = 5; //SHOULD BE SOME KIND OF GLOBAL VARIABLE
-            cellRadius = 7; //How many pixels the MAXIMUM cell radius should be
-            cellRadiusMinFactor = 0.2d; //Percentage of the length of the radius can go inwards, larger makes bigger variation
-            cellAngleFactor = 0.6d; //How much the angles can vary. 1 is much, 0 is nothing. Makes shape more random!
-            cellPoints = 7; //Number of points that are used to define the edge
+            
 
             colorMatrix = new int[cellRadius * 2, cellRadius * 2]; //A cellRadius*2 x cellRadius*2 2D int array
             darkMatrix = new bool[cellRadius * 2, cellRadius * 2]; //A cellRadius*2 x cellRadius*2 2D bool array
