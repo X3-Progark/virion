@@ -52,12 +52,12 @@ namespace Virion
             this.cellDirection = new Vector2(1, 0);
             this.cellDirection.Normalize();
 
-            pixelSize = 10;
+            pixelSize = 5;
 
-            cellLength = 15;
+            cellLength = 12;
 
             //How many pixles the largest part should be
-            cellRadius = 4;
+            cellRadius = 3;
 
             //A cellRadius*2 x cellRadius*2 2D int array
             colorMatrix = new int[cellLength * 2, cellLength * 2];
@@ -71,12 +71,12 @@ namespace Virion
             //Should the dark spots move often? higher values will move more. 
             darkSpotMotionFactor = 0.3f;
 
-            wallColor = new Color(255, 215, 225);
-            wallColorDark = new Color(255, 210, 220);
-            fillColor = new Color(255, 232, 238);
-            fillColorDark = new Color(255, 225, 233);
-            centerColor = new Color(255, 255, 255);
-            centerColorDark = new Color(255, 245, 245);
+            wallColor = new Color(240, 215, 225);
+            wallColorDark = new Color(240, 210, 220);
+            fillColor = new Color(240, 232, 238);
+            fillColorDark = new Color(240, 225, 233);
+            centerColor = new Color(240, 255, 255);
+            centerColorDark = new Color(240, 245, 245);
 
             initDarkMatrix();
             

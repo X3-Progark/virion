@@ -35,7 +35,7 @@ namespace Virion
         InputAction pauseAction;
 
 
-        List<NormalCell> cellList;
+        List<Unit> cellList;
 
         WhiteCell wc;
 
@@ -52,13 +52,16 @@ namespace Virion
                 new Keys[] { Keys.Escape },
                 true);
 
-            cellList = new List<NormalCell>();
+            cellList = new List<Unit>();
 
 
             cellList.Add(new NormalCell(new Point(100, 200), 100));
             cellList.Add(new NormalCell(new Point(250, 200), 200));
             cellList.Add(new NormalCell(new Point(400, 200), 200));
             cellList.Add(new NormalCell(new Point(550, 200), 200));
+            cellList.Add(new WhiteCell(new Point(300, 300), 200));
+
+            cellList.Add(new Virus(new Point(300, 400), 200));
 
             wc = new WhiteCell(new Point(100, 100), 200);
         }
@@ -76,7 +79,7 @@ namespace Virion
 
                 gameFont = content.Load<SpriteFont>("gamefont");
 
-                foreach (NormalCell c in cellList)
+                foreach (Unit c in cellList)
                 {
                     c.LoadContent(ViewManager.GraphicsDevice);
                 }
@@ -141,7 +144,7 @@ namespace Virion
                 // TODO: this game isn't very fun! You could probably improve
                 // it by inserting something more interesting in this space :-)
 
-                foreach (NormalCell c in cellList)
+                foreach (Unit c in cellList)
                 {
                     c.Update(gameTime);
                 }
@@ -230,13 +233,14 @@ namespace Virion
 
             //spriteBatch.DrawString(gameFont, "Insert Gameplay Here",
             //                       enemyPosition, Color.DarkRed);
-            
-            foreach (NormalCell c in cellList)
+
+            foreach (Unit c in cellList)
             {
                 c.Draw(gameTime, spriteBatch);
             }
 
             wc.Draw(gameTime, spriteBatch, playerPosition);
+            //wc.Draw(gameTime, spriteBatch);
 
             spriteBatch.End();
 
