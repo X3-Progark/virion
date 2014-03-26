@@ -35,7 +35,9 @@ namespace Virion
         InputAction pauseAction;
 
 
-        List<NormalCell> cellList;
+        List<Unit> cellList;
+
+        WhiteCell wc;
 
         /// <summary>
         /// Constructor.
@@ -50,13 +52,18 @@ namespace Virion
                 new Keys[] { Keys.Escape },
                 true);
 
-            cellList = new List<NormalCell>();
+            cellList = new List<Unit>();
 
 
-            cellList.Add(new NormalCell(new Point(100, 200), 10));
+            cellList.Add(new NormalCell(new Point(100, 200), 100));
             cellList.Add(new NormalCell(new Point(250, 200), 200));
-            cellList.Add(new NormalCell(new Point(400, 200), 300));
-            cellList.Add(new NormalCell(new Point(550, 200), 400));
+            cellList.Add(new NormalCell(new Point(400, 200), 200));
+            cellList.Add(new NormalCell(new Point(550, 200), 200));
+            cellList.Add(new WhiteCell(new Point(300, 300), 200));
+
+            cellList.Add(new Virus(new Point(300, 400), 200));
+
+            wc = new WhiteCell(new Point(100, 100), 200);
         }
 
 
@@ -72,11 +79,12 @@ namespace Virion
 
                 gameFont = content.Load<SpriteFont>("gamefont");
 
-                foreach (NormalCell c in cellList)
+                foreach (Unit c in cellList)
                 {
                     c.LoadContent(ViewManager.GraphicsDevice);
                 }
 
+                wc.LoadContent(ViewManager.GraphicsDevice);
                 // once the load has finished, we use ResetElapsedTime to tell the game's
                 // timing mechanism that we have just finished a very long frame, and that
                 // it should not try to catch up.
@@ -136,10 +144,12 @@ namespace Virion
                 // TODO: this game isn't very fun! You could probably improve
                 // it by inserting something more interesting in this space :-)
 
-                foreach (NormalCell c in cellList)
+                foreach (Unit c in cellList)
                 {
                     c.Update(gameTime);
                 }
+
+                wc.Update(gameTime);
             }
         }
 
@@ -200,7 +210,7 @@ namespace Virion
                 if (movement.Length() > 1)
                     movement.Normalize();
 
-                playerPosition += movement * 8f;
+                playerPosition += movement * 1f;
             }
         }
 
@@ -212,22 +222,26 @@ namespace Virion
         {
             // This game has a blue background. Why? Because!
             ViewManager.GraphicsDevice.Clear(ClearOptions.Target,
-                                               Color.CornflowerBlue, 0, 0);
+                                               Color.Pink, 0, 0);
 
             // Our player and enemy are both actually just text strings.
             SpriteBatch spriteBatch = ViewManager.SpriteBatch;
 
             spriteBatch.Begin();
 
-            spriteBatch.DrawString(gameFont, "// TODO", playerPosition, Color.Green);
+            //spriteBatch.DrawString(gameFont, "// TODO", playerPosition, Color.Green);
 
-            spriteBatch.DrawString(gameFont, "Insert Gameplay Here",
-                                   enemyPosition, Color.DarkRed);
-            
-            foreach (NormalCell c in cellList)
+            //spriteBatch.DrawString(gameFont, "Insert Gameplay Here",
+            //                       enemyPosition, Color.DarkRed);
+
+            foreach (Unit c in cellList)
             {
                 c.Draw(gameTime, spriteBatch);
             }
+
+            wc.Draw(gameTime, spriteBatch, playerPosition);
+            //wc.Draw(gameTime, spriteBatch);
+
             spriteBatch.End();
 
             // If the game is transitioning on or off, fade it out to black.

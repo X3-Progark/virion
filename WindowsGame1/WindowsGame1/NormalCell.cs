@@ -54,28 +54,30 @@ namespace Virion
         public NormalCell(Point cellPosition, int frameTime)
 
         {
-
+            //TODO: Må, MÅ, hentes fra en høyere klasse slik at de får forskjellige variabler! 
+            //Når de blir initialisert samtidig får de akkurat samme variabler > cellene blir identiske
             random = new Random();
 
             this.frameTime = frameTime;
-            this.cellPosition = cellPosition;
-            
             elapsedTime = 0;
+
+            //Sets where the cell is
+            this.cellPosition = cellPosition;
             
             //SHOULD BE SOME KIND OF GLOBAL VARIABLE
             pixelSize = 5;
 
             //How many pixels the MAXIMUM cell radius should be
-            cellRadius = 7;
+            cellRadius = 5;
+
+            //Number of points that are used to define the edge
+            cellPoints = 10;
 
             //Percentage of the length of the radius can go inwards, larger makes bigger variation
             cellRadiusMinFactor = 0.1d;
 
             //How much the angles can vary. 1 is much, 0 is nothing. Makes shape more random!
-            cellAngleFactor = 0.8d;
-
-            //Number of points that are used to define the edge
-            cellPoints = 8;
+            cellAngleFactor = 0.5d;
 
             //A cellRadius*2 x cellRadius*2 2D int array
             colorMatrix = new int[cellRadius * 2, cellRadius * 2];
@@ -149,10 +151,9 @@ namespace Virion
                     i -= 1;
                     continue;
                 }
-                
+
                 darkMatrix[x, y] = true;
             }
-
         }
 
         public void Update(GameTime gameTime)
@@ -198,14 +199,14 @@ namespace Virion
             else if (pixelCode == 2) c = (darkMatrix[x, y] ? fillColorDark : fillColor);
             else if (pixelCode == 3) c = (darkMatrix[x, y] ? centerColorDark : centerColor);
 
-            int xPos = (x - cellRadius) * pixelSize + cellPosition.X;
-            int yPos = (y - cellRadius) * pixelSize + cellPosition.Y;
+            int xPos = (x - cellRadius) * pixelSize + cellPosition.X - cellPosition.X % pixelSize;
+            int yPos = (y - cellRadius) * pixelSize + cellPosition.Y - cellPosition.Y % pixelSize;
 
             spriteBatch.Draw(texture, new Rectangle(xPos, yPos, pixelSize, pixelSize), c);
 
         }
 
-        //
+        //Editing the darker pixels
         private void updateDarkMatrix()
         {
             for (int x = 0; x < cellRadius * 2; x++)
@@ -315,6 +316,7 @@ namespace Virion
             fillEdge();
             fillInside(cellRadius, cellRadius);
             fillCenter();
+            removeOutsiders();
         }
 
         private void fillEdge()
@@ -396,6 +398,30 @@ namespace Virion
             colorMatrix[cellRadius + 1, cellRadius] = 3;
             colorMatrix[cellRadius, cellRadius + 1] = 3;
             colorMatrix[cellRadius + 1, cellRadius + 1] = 3;
+        }
+
+        //FRemoves ugly outsiders
+        private void removeOutsiders()
+        {
+            for (int x = 1; x < cellRadius * 2 - 1; x++)
+            {
+                for (int y = 1; y < cellRadius * 2 - 1; y++)
+                {
+                    if (colorMatrix[x, y] == 1)
+                    {
+                        int i = 0;
+                        if (colorMatrix[x + 1, y] == 0) i++;
+                        if (colorMatrix[x + 1, y + 1] == 0) i++;
+                        if (colorMatrix[x + 1, y - 1] == 0) i++;
+                        if (colorMatrix[x - 1, y] == 0) i++;
+                        if (colorMatrix[x - 1, y + 1] == 0) i++;
+                        if (colorMatrix[x - 1, y - 1] == 0) i++;
+                        if (colorMatrix[x, y + 1] == 0) i++;
+                        if (colorMatrix[x, y - 1] == 0) i++;
+                        if (i > 5) colorMatrix[x, y] = 0;
+                    }
+                }
+            }
         }
 
         private void fillFloaters()
