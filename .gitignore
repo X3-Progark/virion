@@ -35,15 +35,6 @@ local.properties
 #################
 
 
-<<<<<<< HEAD
-
-bin\
-obj\
-
-
-
-=======
->>>>>>> giignore merge
 bin\
 obj\
 
@@ -61,14 +52,9 @@ obj\
 [Dd]ebug/
 [Rr]elease/
 
-<<<<<<< HEAD
-
-=======
->>>>>>> giignore merge
 
 [Dd]ebug/
 [Rr]elease/
-ore
 x64/
 build/
 [Bb]in/
@@ -78,10 +64,7 @@ build/
 [Tt]est[Rr]esult*/
 [Bb]uild[Ll]og.*
 
-<<<<<<< HEAD
-=======
 
->>>>>>> giignore merge
 *_i.c
 *_p.c
 *.ilk
@@ -98,10 +81,6 @@ build/
 *.tlh
 *.tmp
 
-<<<<<<< HEAD
-
-=======
->>>>>>> giignore merge
 *.vspscc
 .builds
 *.dotCover
@@ -109,11 +88,6 @@ build/
 ## TODO: If you have NuGet Package Restore enabled, uncomment this
 #packages/
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> giignore merge
 *.tmp_proj
 *.log
 *.vspscc
@@ -122,10 +96,7 @@ build/
 *.pidb
 *.log
 *.scc
-<<<<<<< HEAD
-=======
 
->>>>>>> giignore merge
 
 # Visual C++ cache files
 ipch/
@@ -134,10 +105,6 @@ ipch/
 *.opensdf
 *.sdf
 
-<<<<<<< HEAD
-
-=======
->>>>>>> giignore merge
 *.cachefile
 
 
@@ -152,16 +119,6 @@ _ReSharper*
 # Installshield output folder
 [Ee]xpress
 
-<<<<<<< HEAD
-
-*.cachefile
-
-# Visual Studio profiler
-*.psess
-*.vsp
-
-=======
->>>>>>> giignore merge
 *.vspx
 
 # Guidance Automation Toolkit
@@ -183,10 +140,7 @@ _TeamCity*
 
 # Installshield output folder
 [Ee]xpress/
-<<<<<<< HEAD
-=======
 
->>>>>>> giignore merge
 
 # DocProject is a documentation generator add-in
 DocProject/buildhelp/
@@ -200,10 +154,6 @@ DocProject/Help/html
 
 # Click-Once directory
 
-<<<<<<< HEAD
-
-=======
->>>>>>> giignore merge
 publish
 
 # Others
@@ -218,10 +168,6 @@ stylecop.*
 *.dbmdl
 Generated_Code #added for RIA/Silverlight projects
 
-<<<<<<< HEAD
-
-=======
->>>>>>> giignore merge
 publish/
 
 # Publish Web Output
@@ -253,10 +199,7 @@ ClientBin/
 
 # RIA/Silverlight projects
 Generated_Code/
-<<<<<<< HEAD
-=======
 
->>>>>>> giignore merge
 
 # Backup & report files from converting an old project file to a newer
 # Visual Studio version. Backup files are not needed, because we have git ;-)
@@ -264,10 +207,6 @@ _UpgradeReport_Files/
 Backup*/
 UpgradeLog*.XML
 
-<<<<<<< HEAD
-
-=======
->>>>>>> giignore merge
 
 
 
@@ -278,10 +217,6 @@ UpgradeLog*.XML
 # Windows image file caches
 Thumbs.db
 
-<<<<<<< HEAD
-
-=======
->>>>>>> giignore merge
 UpgradeLog*.htm
 
 # SQL Server files
@@ -296,23 +231,11 @@ App_Data/*.ldf
 Thumbs.db
 ehthumbs.db
 
-<<<<<<< HEAD
-
-=======
->>>>>>> giignore merge
 
 # Folder config file
 Desktop.ini
 
 
-<<<<<<< HEAD
-
-# Folder config file
-Desktop.ini
-
-
-=======
->>>>>>> giignore merge
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
 
@@ -331,10 +254,6 @@ $RECYCLE.BIN/
 *.egg
 *.egg-info
 
-<<<<<<< HEAD
-
-=======
->>>>>>> giignore merge
 dist
 build
 eggs
@@ -344,10 +263,6 @@ var
 sdist
 develop-eggs
 
-<<<<<<< HEAD
-
-=======
->>>>>>> giignore merge
 dist/
 build/
 eggs/
@@ -371,17 +286,11 @@ pip-log.txt
 #Mr Developer
 .mr.developer.cfg
 
-<<<<<<< HEAD
-
-=======
->>>>>>> giignore merge
 
 # Mac crap
 .DS_Store
 
 WindowsGame1/WindowsGame1/Virion.suo
-
-<<<<<<< HEAD
 WindowsGame1/WindowsGame1/obj/
 WindowsGame1/WindowsGame1/bin/
 WindowsGame1/WindowsGame1/bin/x86/Debug/Content/gamefont.xnb
@@ -394,11 +303,3 @@ WindowsGame1/WindowsGame1/obj/x86/Debug/DesignTimeResolveAssemblyReferencesInput
 WindowsGame1/WindowsGame1/obj/x86/Debug/Virion.exe
 WindowsGame1/WindowsGame1/obj/x86/Debug/Virion.pdb
 WindowsGame1/WindowsGame1Content/obj/x86/Debug/ContentPipeline.xml
-
-WindowsGame1/WindowsGame1/bin/x86/Debug/Content/gamefont.xnb
-
-=======
-
-WindowsGame1/WindowsGame1/bin/x86/Debug/Content/gamefont.xnb
->>>>>>> giignore merge
-
