@@ -291,8 +291,8 @@ pip-log.txt
 .DS_Store
 
 WindowsGame1/WindowsGame1/Virion.suo
-
-
+WindowsGame1/WindowsGame1/obj/
+WindowsGame1/WindowsGame1/bin/
 WindowsGame1/WindowsGame1/bin/x86/Debug/Content/gamefont.xnb
 
 WindowsGame1/WindowsGame1/bin/x86/Debug/Content/gamefont.xnb
