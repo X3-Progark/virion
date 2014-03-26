@@ -57,7 +57,7 @@ obj\
 
 [Dd]ebug/
 [Rr]elease/
-<<<<<<< HEAD
+
 
 
 [Dd]ebug/
@@ -319,6 +319,7 @@ pip-log.txt
 .DS_Store
 
 WindowsGame1/WindowsGame1/Virion.suo
+
 WindowsGame1/WindowsGame1/obj/
 WindowsGame1/WindowsGame1/bin/
 WindowsGame1/WindowsGame1/bin/x86/Debug/Content/gamefont.xnb
@@ -333,4 +334,5 @@ WindowsGame1/WindowsGame1/obj/x86/Debug/Virion.pdb
 WindowsGame1/WindowsGame1Content/obj/x86/Debug/ContentPipeline.xml
 
 WindowsGame1/WindowsGame1/bin/x86/Debug/Content/gamefont.xnb
+
 
