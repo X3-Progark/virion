@@ -6,12 +6,12 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Virion
 {
-    /// <summary>
+    
     /// Helper for reading input from keyboard, gamepad, and touch input. This class 
     /// tracks both the current and previous state of the input devices, and implements 
     /// query methods for high level input actions such as "move up through the menu"
     /// or "pause the game".
-    /// </summary>
+    
     public class InputState
     {
         public const int MaxInputs = 4;
@@ -25,9 +25,9 @@ namespace Virion
         public readonly bool[] GamePadWasConnected;
 
 
-        /// <summary>
+        
         /// Constructs a new input state.
-        /// </summary>
+        
         public InputState()
         {
             CurrentKeyboardStates = new KeyboardState[MaxInputs];
@@ -39,9 +39,9 @@ namespace Virion
             GamePadWasConnected = new bool[MaxInputs];
         }
 
-        /// <summary>
+        
         /// Reads the latest state user input.
-        /// </summary>
+        
         public void Update()
         {
             for (int i = 0; i < MaxInputs; i++)
@@ -62,12 +62,11 @@ namespace Virion
         }
 
 
-        /// <summary>
+        
         /// Helper for checking if a key was pressed during this update. The
         /// controllingPlayer parameter specifies which player to read input for.
         /// If this is null, it will accept input from any player. When a keypress
         /// is detected, the output playerIndex reports which player pressed it.
-        /// </summary>
         public bool IsKeyPressed(Keys key, PlayerIndex? controllingPlayer, out PlayerIndex playerIndex)
         {
             if (controllingPlayer.HasValue)
@@ -90,12 +89,11 @@ namespace Virion
         }
 
 
-        /// <summary>
         /// Helper for checking if a button was pressed during this update.
         /// The controllingPlayer parameter specifies which player to read input for.
         /// If this is null, it will accept input from any player. When a button press
         /// is detected, the output playerIndex reports which player pressed it.
-        /// </summary>
+        
         public bool IsButtonPressed(Buttons button, PlayerIndex? controllingPlayer, out PlayerIndex playerIndex)
         {
             if (controllingPlayer.HasValue)
@@ -118,12 +116,12 @@ namespace Virion
         }
 
 
-        /// <summary>
+        
         /// Helper for checking if a key was newly pressed during this update. The
         /// controllingPlayer parameter specifies which player to read input for.
         /// If this is null, it will accept input from any player. When a keypress
         /// is detected, the output playerIndex reports which player pressed it.
-        /// </summary>
+        
         public bool IsNewKeyPress(Keys key, PlayerIndex? controllingPlayer, out PlayerIndex playerIndex)
         {
             if (controllingPlayer.HasValue)
@@ -147,12 +145,12 @@ namespace Virion
         }
 
 
-        /// <summary>
+        
         /// Helper for checking if a button was newly pressed during this update.
         /// The controllingPlayer parameter specifies which player to read input for.
         /// If this is null, it will accept input from any player. When a button press
         /// is detected, the output playerIndex reports which player pressed it.
-        /// </summary>
+        
         public bool IsNewButtonPress(Buttons button, PlayerIndex? controllingPlayer, out PlayerIndex playerIndex)
         {
             if (controllingPlayer.HasValue)

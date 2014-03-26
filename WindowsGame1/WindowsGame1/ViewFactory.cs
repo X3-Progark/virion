@@ -4,10 +4,10 @@ using System;
 
 namespace Virion
 {
-    /// <summary>
+    
     /// Our game's implementation of IViewFactory which can handle creating the views
     /// when resuming from being tombstoned.
-    /// </summary>
+    
     public class ViewFactory
     {
         public GameView CreateView(Type viewType)

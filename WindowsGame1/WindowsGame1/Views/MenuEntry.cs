@@ -6,93 +6,46 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Virion
 {
-    /// <summary>
+    
     /// Helper class represents a single entry in a MenuView. By default this
     /// just draws the entry text string, but it can be customized to display menu
     /// entries in different ways. This also provides an event that will be raised
     /// when the menu entry is selected.
-    /// </summary>
+    
     class MenuEntry
     {
-
-        /// <summary>
-        /// The text rendered for this entry.
-        /// </summary>
         string text;
-
-        /// <summary>
-        /// Tracks a fading selection effect on the entry.
-        /// </summary>
-        /// <remarks>
-        /// The entries transition out of the selection effect when they are deselected.
-        /// </remarks>
         float selectionFade;
-
-        /// <summary>
-        /// The position at which the entry is drawn. This is set by the MenuView
-        /// each frame in Update.
-        /// </summary>
         Vector2 position;
-
-
-
-        /// <summary>
-        /// Gets or sets the text of this menu entry.
-        /// </summary>
+        
         public string Text
         {
             get { return text; }
             set { text = value; }
         }
 
-
-        /// <summary>
-        /// Gets or sets the position at which to draw this menu entry.
-        /// </summary>
         public Vector2 Position
         {
             get { return position; }
             set { position = value; }
         }
 
-
-
-        /// <summary>
-        /// Event raised when the menu entry is selected.
-        /// </summary>
         public event EventHandler<PlayerIndexEventArgs> Selected;
 
-
-        /// <summary>
-        /// Method for raising the Selected event.
-        /// </summary>
         protected internal virtual void OnSelectEntry(PlayerIndex playerIndex)
         {
             if (Selected != null)
                 Selected(this, new PlayerIndexEventArgs(playerIndex));
         }
 
-
-
-        /// <summary>
-        /// Constructs a new menu entry with the specified text.
-        /// </summary>
         public MenuEntry(string text)
         {
             this.text = text;
         }
 
-
-
-        /// <summary>
-        /// Updates the menu entry.
-        /// </summary>
         public virtual void Update(MenuView view, bool isSelected, GameTime gameTime)
         {
 
-            // When the menu selection changes, entries gradually fade between
-            // their selected and deselected appearance, rather than instantly
-            // popping to the new state.
             float fadeSpeed = (float)gameTime.ElapsedGameTime.TotalSeconds * 4;
 
             if (isSelected)
@@ -102,9 +55,6 @@ namespace Virion
         }
 
 
-        /// <summary>
-        /// Draws the menu entry. This can be overridden to customize the appearance.
-        /// </summary>
         public virtual void Draw(MenuView view, bool isSelected, GameTime gameTime)
         {
 
@@ -134,23 +84,17 @@ namespace Virion
         }
 
 
-        /// <summary>
-        /// Queries how much space this menu entry requires.
-        /// </summary>
+        
         public virtual int GetHeight(MenuView view)
         {
             return view.ViewManager.Font.LineSpacing;
         }
 
 
-        /// <summary>
-        /// Queries how wide the entry is, used for centering on the view.
-        /// </summary>
+        
         public virtual int GetWidth(MenuView view)
         {
             return (int)view.ViewManager.Font.MeasureString(Text).X;
         }
-
-
     }
 }

@@ -12,12 +12,6 @@ using System.Xml.Linq;
 
 namespace Virion
 {
-    /// <summary>
-    /// The view manager is a component which manages one or more GameView
-    /// instances. It maintains a stack of views, calls their Update and Draw
-    /// methods at the appropriate times, and automatically routes input to the
-    /// topmost active view.
-    /// </summary>
     public class ViewManager : DrawableGameComponent
     {
 
@@ -35,50 +29,31 @@ namespace Virion
         bool traceEnabled;
 
 
-        /// <summary>
-        /// A default SpriteBatch shared by all the views. This saves
-        /// each view having to bother creating their own local instance.
-        /// </summary>
         public SpriteBatch SpriteBatch
         {
             get { return spriteBatch; }
         }
 
 
-        /// <summary>
-        /// A default font shared by all the views. This saves
-        /// each view having to bother loading their own local copy.
-        /// </summary>
         public SpriteFont Font
         {
             get { return font; }
         }
 
 
-        /// <summary>
-        /// If true, the manager prints out a list of all the views
-        /// each time it is updated. This can be useful for making sure
-        /// everything is being added and removed at the right times.
-        /// </summary>
         public bool TraceEnabled
         {
             get { return traceEnabled; }
             set { traceEnabled = value; }
         }
 
-
-        /// <summary>
-        /// Gets a blank texture that can be used by the views.
-        /// </summary>
+        
         public Texture2D BlankTexture
         {
             get { return blankTexture; }
         }
 
 
-        /// <summary>
-        /// Constructs a new view manager component.
-        /// </summary>
         public ViewManager(Game game)
             : base(game)
         {
@@ -86,9 +61,6 @@ namespace Virion
         }
 
 
-        /// <summary>
-        /// Initializes the view manager component.
-        /// </summary>
         public override void Initialize()
         {
             base.Initialize();
@@ -97,12 +69,8 @@ namespace Virion
         }
 
 
-        /// <summary>
-        /// Load your graphics content.
-        /// </summary>
         protected override void LoadContent()
         {
-            // Load content belonging to the view manager.
             ContentManager content = Game.Content;
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -117,12 +85,8 @@ namespace Virion
         }
 
 
-        /// <summary>
-        /// Unload your graphics content.
-        /// </summary>
         protected override void UnloadContent()
         {
-            // Tell each of the views to unload their content.
             foreach (GameView view in views)
             {
                 view.Unload();
@@ -130,13 +94,8 @@ namespace Virion
         }
 
 
-
-        /// <summary>
-        /// Allows each view to run logic.
-        /// </summary>
         public override void Update(GameTime gameTime)
         {
-            // Read the keyboard and gamepad.
             input.Update();
 
             // Make a copy of the master view list, to avoid confusion if
@@ -184,10 +143,7 @@ namespace Virion
                 TraceViews();
         }
 
-
-        /// <summary>
-        /// Prints a list of all the views, for debugging.
-        /// </summary>
+        
         void TraceViews()
         {
             List<string> viewNames = new List<string>();
@@ -199,9 +155,6 @@ namespace Virion
         }
 
 
-        /// <summary>
-        /// Tells each view to draw itself.
-        /// </summary>
         public override void Draw(GameTime gameTime)
         {
             foreach (GameView view in views)
@@ -213,12 +166,7 @@ namespace Virion
             }
         }
 
-
-
-
-        /// <summary>
-        /// Adds a new view to the view manager.
-        /// </summary>
+        
         public void AddView(GameView view, PlayerIndex? controllingPlayer)
         {
             view.ControllingPlayer = controllingPlayer;
@@ -233,12 +181,6 @@ namespace Virion
         }
 
 
-        /// <summary>
-        /// Removes a view from the view manager. You should normally
-        /// use GameView.ExitView instead of calling this directly, so
-        /// the view can gradually transition off rather than just being
-        /// instantly removed.
-        /// </summary>
         public void RemoveView(GameView view)
         {
             // If we have a graphics device, tell the view to unload content.
@@ -253,27 +195,18 @@ namespace Virion
         }
 
 
-        /// <summary>
-        /// Expose an array holding all the views. We return a copy rather
-        /// than the real master list, because views should only ever be added
-        /// or removed using the AddView and RemoveView methods.
-        /// </summary>
         public GameView[] GetViews()
         {
             return views.ToArray();
         }
 
 
-        /// <summary>
-        /// Helper draws a translucent black fullview sprite, used for fading
-        /// views in and out, and for darkening the background behind popups.
-        /// </summary>
+        
         public void FadeBackBufferToBlack(float alpha)
         {
             spriteBatch.Begin();
             spriteBatch.Draw(blankTexture, GraphicsDevice.Viewport.Bounds, Color.Black * alpha);
             spriteBatch.End();
         }
-
     }
 }

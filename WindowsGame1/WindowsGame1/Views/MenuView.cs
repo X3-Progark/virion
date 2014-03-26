@@ -1,5 +1,4 @@
 
-#region Using Statements
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
@@ -9,13 +8,12 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Virion
 {
-    /// <summary>
+    
     /// Base class for views that contain a menu of options. The user can
     /// move up and down to select an entry, or cancel to back out of the view.
-    /// </summary>
+    
     abstract class MenuView : GameView
     {
-
 
         List<MenuEntry> menuEntries = new List<MenuEntry>();
         int selectedEntry = 0;
@@ -28,19 +26,17 @@ namespace Virion
 
 
 
-        /// <summary>
-        /// Gets the list of menu entries, so derived classes can add
-        /// or change the menu contents.
-        /// </summary>
+
+        
         protected IList<MenuEntry> MenuEntries
         {
             get { return menuEntries; }
         }
+        
 
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
+
+
         public MenuView(string menuTitle)
         {
             this.menuTitle = menuTitle;
@@ -67,11 +63,7 @@ namespace Virion
         }
 
 
-
-        /// <summary>
-        /// Responds to user input, changing the selected entry and accepting
-        /// or cancelling the menu.
-        /// </summary>
+        
         public override void HandleInput(GameTime gameTime, InputState input)
         {
             // For input tests we pass in our ControllingPlayer, which may
@@ -110,37 +102,36 @@ namespace Virion
         }
 
 
-        /// <summary>
+        
         /// Handler for when the user has chosen a menu entry.
-        /// </summary>
+        
         protected virtual void OnSelectEntry(int entryIndex, PlayerIndex playerIndex)
         {
             menuEntries[entryIndex].OnSelectEntry(playerIndex);
         }
 
 
-        /// <summary>
+        
         /// Handler for when the user has cancelled the menu.
-        /// </summary>
+        
         protected virtual void OnCancel(PlayerIndex playerIndex)
         {
             ExitView();
         }
 
 
-        /// <summary>
+        
         /// Helper overload makes it easy to use OnCancel as a MenuEntry event handler.
-        /// </summary>
+        
         protected void OnCancel(object sender, PlayerIndexEventArgs e)
         {
             OnCancel(e.PlayerIndex);
         }
 
 
-        /// <summary>
+        
         /// Allows the view the chance to position the menu entries. By default
         /// all menu entries are lined up in a vertical list, centered on the view.
-        /// </summary>
         protected virtual void UpdateMenuEntryLocations()
         {
             // Make the menu slide into place during transitions, using a
@@ -172,10 +163,8 @@ namespace Virion
             }
         }
 
-
-        /// <summary>
         /// Updates the menu.
-        /// </summary>
+        
         public override void Update(GameTime gameTime, bool otherViewHasFocus,
                                                        bool coveredByOtherView)
         {
@@ -190,10 +179,8 @@ namespace Virion
             }
         }
 
-
-        /// <summary>
         /// Draws the menu.
-        /// </summary>
+        
         public override void Draw(GameTime gameTime)
         {
             // make sure our entries are in the right place before we draw them
@@ -233,8 +220,5 @@ namespace Virion
 
             spriteBatch.End();
         }
-
-
-        #endregion
     }
 }

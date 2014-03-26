@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Virion
 {
-    /// <summary>
+    
     /// Defines an action that is designated by some set of buttons and/or keys.
     /// 
     /// The way actions work is that you define a set of buttons and keys that trigger the action. You can
@@ -16,7 +16,7 @@ namespace Virion
     /// Using this InputAction class means that you can configure new actions based on keys and buttons
     /// without having to directly modify the InputState type. This means more customization by your games
     /// without having to change the core classes of Game State Management.
-    /// </summary>
+    
     public class InputAction
     {
         private readonly Buttons[] buttons;
@@ -28,9 +28,9 @@ namespace Virion
         private delegate bool ButtonPress(Buttons button, PlayerIndex? controllingPlayer, out PlayerIndex player);
         private delegate bool KeyPress(Keys key, PlayerIndex? controllingPlayer, out PlayerIndex player);
 
-        /// <summary>
+        
         /// Initializes a new InputAction.
-        /// </summary>
+        
         /// <param name="buttons">An array of buttons that can trigger the action.</param>
         /// <param name="keys">An array of keys that can trigger the action.</param>
         /// <param name="newPressOnly">Whether the action only occurs on the first press of one of the buttons/keys, 
@@ -45,9 +45,9 @@ namespace Virion
             this.newPressOnly = newPressOnly;
         }
 
-        /// <summary>
+        
         /// Evaluates the action against a given InputState.
-        /// </summary>
+        
         /// <param name="state">The InputState to test for the action.</param>
         /// <param name="controllingPlayer">The player to test, or null to allow any player.</param>
         /// <param name="player">If controllingPlayer is null, this is the player that performed the action.</param>

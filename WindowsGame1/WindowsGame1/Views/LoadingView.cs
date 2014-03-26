@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Virion
 {
-    /// <summary>
+    
     /// The loading View coordinates transitions between the menu system and the
     /// game itself. Normally one View will transition off at the same time as
     /// the next view is transitioning on, but for larger transitions that can
@@ -19,7 +19,7 @@ namespace Virion
     /// - When it sees they have finished transitioning off, it activates the real
     ///   next view, which may take a long time to load its data. The loading
     ///   view will be the only thing displayed while this load is taking place.
-    /// </summary>
+    
     class LoadingView : GameView
     {
 
@@ -29,12 +29,10 @@ namespace Virion
 
         GameView[] viewsToLoad;
 
-
-
-        /// <summary>
+        
         /// The constructor is private: loading views should
         /// be activated via the static Load method instead.
-        /// </summary>
+        
         private LoadingView(ViewManager viewManager, bool loadingIsSlow,
                               GameView[] viewsToLoad)
         {
@@ -45,9 +43,8 @@ namespace Virion
         }
 
 
-        /// <summary>
+        
         /// Activates the loading view.
-        /// </summary>
         public static void Load(ViewManager viewManager, bool loadingIsSlow,
                                 PlayerIndex? controllingPlayer,
                                 params GameView[] viewsToLoad)
@@ -65,9 +62,8 @@ namespace Virion
         }
 
 
-        /// <summary>
+        
         /// Updates the loading view.
-        /// </summary>
         public override void Update(GameTime gameTime, bool otherViewHasFocus,
                                                        bool coveredByOtherView)
         {
@@ -94,10 +90,8 @@ namespace Virion
             }
         }
 
-
-        /// <summary>
+        
         /// Draws the loading view.
-        /// </summary>
         public override void Draw(GameTime gameTime)
         {
             // If we are the only active view, that means all the previous views
@@ -138,7 +132,5 @@ namespace Virion
                 spriteBatch.End();
             }
         }
-
-
     }
 }

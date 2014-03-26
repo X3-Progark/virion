@@ -13,14 +13,8 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Virion
 {
-    /// <summary>
-    /// This view implements the actual game logic. It is just a
-    /// placeholder to get the idea across: you'll probably want to
-    /// put some more interesting gameplay in here!
-    /// </summary>
     class GameplayView : GameView
     {
-
 
         ContentManager content;
         SpriteFont gameFont;
@@ -39,9 +33,7 @@ namespace Virion
 
         WhiteCell wc;
 
-        /// <summary>
-        /// Constructor.
-        /// </summary>
+        
         public GameplayView()
         {
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
@@ -66,10 +58,8 @@ namespace Virion
             wc = new WhiteCell(new Point(100, 100), 200);
         }
 
-
-        /// <summary>
-        /// Load graphics content for the game.
-        /// </summary>
+        
+        
         public override void Activate(bool instancePreserved)
         {
             if (!instancePreserved)
@@ -85,40 +75,24 @@ namespace Virion
                 }
 
                 wc.LoadContent(ViewManager.GraphicsDevice);
-                // once the load has finished, we use ResetElapsedTime to tell the game's
-                // timing mechanism that we have just finished a very long frame, and that
-                // it should not try to catch up.
                 ViewManager.Game.ResetElapsedTime();
             }
-
-
         }
 
 
 
-
-
-        /// <summary>
-        /// Unload graphics content used by the game.
-        /// </summary>
         public override void Unload()
         {
             content.Unload();
-
-
         }
 
 
-
-        /// <summary>
-        /// Updates the state of the game. This method checks the GameView.IsActive
-        /// property, so the game will stop updating when the pause menu is active,
-        /// or if you tab away to a different application.
-        /// </summary>
         public override void Update(GameTime gameTime, bool otherViewHasFocus,
                                                        bool coveredByOtherView)
         {
             base.Update(gameTime, otherViewHasFocus, false);
+
+
 
             // Gradually fade in or out depending on whether we are covered by the pause view.
             if (coveredByOtherView)
@@ -126,24 +100,10 @@ namespace Virion
             else
                 pauseAlpha = Math.Max(pauseAlpha - 1f / 32, 0);
 
+
+
             if (IsActive)
             {
-                // Apply some random jitter to make the enemy move around.
-                const float randomization = 10;
-
-                enemyPosition.X += (float)(random.NextDouble() - 0.5) * randomization;
-                enemyPosition.Y += (float)(random.NextDouble() - 0.5) * randomization;
-
-                // Apply a stabilizing force to stop the enemy moving off the view.
-                Vector2 targetPosition = new Vector2(
-                    ViewManager.GraphicsDevice.Viewport.Width / 2 - gameFont.MeasureString("Insert Gameplay Here").X / 2, 
-                    200);
-
-                enemyPosition = Vector2.Lerp(enemyPosition, targetPosition, 0.05f);
-
-                // TODO: this game isn't very fun! You could probably improve
-                // it by inserting something more interesting in this space :-)
-
                 foreach (Unit c in cellList)
                 {
                     c.Update(gameTime);
@@ -154,10 +114,7 @@ namespace Virion
         }
 
 
-        /// <summary>
-        /// Lets the game respond to player input. Unlike the Update method,
-        /// this will only be called when the gameplay view is active.
-        /// </summary>
+        
         public override void HandleInput(GameTime gameTime, InputState input)
         {
             if (input == null)
@@ -215,9 +172,7 @@ namespace Virion
         }
 
 
-        /// <summary>
-        /// Draws the gameplay view.
-        /// </summary>
+        
         public override void Draw(GameTime gameTime)
         {
             // This game has a blue background. Why? Because!
@@ -252,8 +207,5 @@ namespace Virion
                 ViewManager.FadeBackBufferToBlack(alpha);
             }
         }
-
-
-
     }
 }

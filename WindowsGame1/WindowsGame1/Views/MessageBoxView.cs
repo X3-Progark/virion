@@ -8,10 +8,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Virion
 {
-    /// <summary>
-    /// A popup message box view, used to display "are you sure?"
-    /// confirmation messages.
-    /// </summary>
+    // A popup box
     class MessageBoxView : GameView
     {
 
@@ -21,28 +18,17 @@ namespace Virion
         InputAction menuSelect;
         InputAction menuCancel;
 
-
         public event EventHandler<PlayerIndexEventArgs> Accepted;
         public event EventHandler<PlayerIndexEventArgs> Cancelled;
 
-
-        /// <summary>
-        /// Constructor automatically includes the standard "A=ok, B=cancel"
-        /// usage text prompt.
-        /// </summary>
         public MessageBoxView(string message)
             : this(message, true)
         { }
 
-
-        /// <summary>
-        /// Constructor lets the caller specify whether to include the standard
-        /// "A=ok, B=cancel" usage text prompt.
-        /// </summary>
         public MessageBoxView(string message, bool includeUsageText)
         {
-            const string usageText = "\nA button, Space, Enter = ok" +
-                                     "\nB button, Esc = cancel"; 
+            const string usageText = "\nSpace and Enter = ok" +
+                                     "\nEsc = cancel"; 
             
             if (includeUsageText)
                 this.message = message + usageText;
@@ -64,13 +50,6 @@ namespace Virion
                 true);
         }
 
-
-        /// <summary>
-        /// Loads graphics content for this view. This uses the shared ContentManager
-        /// provided by the Game class, so the content will remain loaded forever.
-        /// Whenever a subsequent MessageBoxView tries to load this same content,
-        /// it will just get back another reference to the already loaded data.
-        /// </summary>
         public override void Activate(bool instancePreserved)
         {
             if (!instancePreserved)
@@ -80,24 +59,12 @@ namespace Virion
             }
         }
 
-
-
-
-        /// <summary>
-        /// Responds to user input, accepting or cancelling the message box.
-        /// </summary>
         public override void HandleInput(GameTime gameTime, InputState input)
         {
             PlayerIndex playerIndex;
 
-            // We pass in our ControllingPlayer, which may either be null (to
-            // accept input from any player) or a specific index. If we pass a null
-            // controlling player, the InputState helper returns to us which player
-            // actually provided the input. We pass that through to our Accepted and
-            // Cancelled events, so they can tell which player triggered them.
             if (menuSelect.Evaluate(input, ControllingPlayer, out playerIndex))
             {
-                // Raise the accepted event, then exit the message box.
                 if (Accepted != null)
                     Accepted(this, new PlayerIndexEventArgs(playerIndex));
 
@@ -105,7 +72,6 @@ namespace Virion
             }
             else if (menuCancel.Evaluate(input, ControllingPlayer, out playerIndex))
             {
-                // Raise the cancelled event, then exit the message box.
                 if (Cancelled != null)
                     Cancelled(this, new PlayerIndexEventArgs(playerIndex));
 
@@ -113,14 +79,6 @@ namespace Virion
             }
         }
 
-
-
-
-
-
-        /// <summary>
-        /// Draws the message box.
-        /// </summary>
         public override void Draw(GameTime gameTime)
         {
             SpriteBatch spriteBatch = ViewManager.SpriteBatch;
@@ -157,7 +115,5 @@ namespace Virion
 
             spriteBatch.End();
         }
-
-
     }
 }
