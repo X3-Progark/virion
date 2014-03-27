@@ -110,6 +110,7 @@
     <Compile Include="GameView.cs" />
     <Compile Include="InputAction.cs" />
     <Compile Include="InputState.cs" />
+    <Compile Include="SoundManager.cs" />
     <Compile Include="Views\BackgroundView.cs" />
     <Compile Include="Views\Button.cs" />
     <Compile Include="Views\GameplayView.cs" />

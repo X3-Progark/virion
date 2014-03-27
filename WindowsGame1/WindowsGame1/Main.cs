@@ -19,6 +19,7 @@ namespace Virion
         Texture2D texture;
         
         ViewManager viewManager;
+        SoundManager soundManager = new SoundManager();
 
         public Main()
         {
@@ -45,6 +46,8 @@ namespace Virion
             texture = new Texture2D(graphics.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             //Texture2D texture = new Texture2D(graphics, 1, 1, SurfaceFormat.Color);
             texture.SetData<Color>(new Color[] { Color.White });
+            soundManager.loadContent(Content);
+            MediaPlayer.Play(soundManager.bgmusic);
             
             base.LoadContent();
         }
