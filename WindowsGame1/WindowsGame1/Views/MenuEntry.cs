@@ -6,12 +6,6 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Virion
 {
-    
-    /// Helper class represents a single entry in a MenuView. By default this
-    /// just draws the entry text string, but it can be customized to display menu
-    /// entries in different ways. This also provides an event that will be raised
-    /// when the menu entry is selected.
-    
     class MenuEntry
     {
         string text;
@@ -57,8 +51,6 @@ namespace Virion
 
         public virtual void Draw(MenuView view, bool isSelected, GameTime gameTime)
         {
-
-
             // Draw the selected entry in yellow, otherwise white.
             Color color = isSelected ? Color.Yellow : Color.White;
 
@@ -83,7 +75,6 @@ namespace Virion
                                    origin, scale, SpriteEffects.None, 0);
         }
 
-
         
         public virtual int GetHeight(MenuView view)
         {
@@ -91,7 +82,6 @@ namespace Virion
         }
 
 
-        
         public virtual int GetWidth(MenuView view)
         {
             return (int)view.ViewManager.Font.MeasureString(Text).X;
