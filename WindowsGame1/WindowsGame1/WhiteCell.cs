@@ -52,7 +52,7 @@ namespace Virion
             this.cellDirection = new Vector2(1, 0);
             this.cellDirection.Normalize();
 
-            pixelSize = 5;
+            pixelSize = 4;
 
             cellLength = 12;
 
@@ -208,7 +208,7 @@ namespace Virion
         private double getCellThickness(double xi)
         {
             double x = 4.0d * xi / (double)cellLength;
-            return -0.04 * x * x * x * x + 0.42 * x * x * x - 1.6 * x * x + 2.2 * x;
+            return -0.04 * x * x * x * x + 0.42 * x * x * x - 1.6 * x * x + 2.2 * x - 0.1;
         }
 
         private void fillInside(int x, int y)

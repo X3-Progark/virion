@@ -22,7 +22,7 @@ namespace Virion
         private Color c,
             wasteColor, wallColorDark, 
             fillColor, fillColorDark, 
-            centerColor, centerColorDark;
+            centerColor, centerColorLight;
         
         private int pixelSize, 
             elapsedTime, frameTime;
@@ -46,7 +46,7 @@ namespace Virion
             this.cellPosition = cellPosition;
             
             //SHOULD BE SOME KIND OF GLOBAL VARIABLE
-            pixelSize = 5;
+            pixelSize = 4;
 
             //A 5x5 2D int array
             colorMatrix = new int[5, 5];
@@ -54,7 +54,7 @@ namespace Virion
             fillColor = new Color(100, 191, 0);
             fillColorDark = new Color(94, 179, 0);
             centerColor = new Color(206, 255, 4);
-            centerColorDark = new Color(222, 255, 91);
+            centerColorLight = new Color(222, 255, 91);
             wasteColor = new Color(138, 216, 3);
             wallColorDark = new Color(236, 169, 119);
             
@@ -69,7 +69,7 @@ namespace Virion
             colorMatrix[2, 2] = 3;
 
             colorMatrix[3, 3] = 1;
-            colorMatrix[1, 1] = 1;
+            colorMatrix[1, 1] = 2;
             colorMatrix[3, 1] = 1;
             colorMatrix[1, 3] = 1;
         }
@@ -98,6 +98,8 @@ namespace Virion
 
             elapsedTime = 0; //We have reached the elapsed time and have to reset it
 
+            double d = getRandomD();
+            colorMatrix[2, 2] = (d > 0.7d ? 4 : 3);
             //TODO
         }
 
@@ -119,12 +121,25 @@ namespace Virion
             else if (pixelCode == 1) c = fillColor;
             else if (pixelCode == 2) c = fillColorDark;
             else if (pixelCode == 3) c = centerColor;
+            else if (pixelCode == 4) c = centerColorLight;
 
             int xPos = (x - 2) * pixelSize + cellPosition.X - cellPosition.X % pixelSize;
             int yPos = (y - 2) * pixelSize + cellPosition.Y - cellPosition.Y % pixelSize;
 
             spriteBatch.Draw(texture, new Rectangle(xPos, yPos, pixelSize, pixelSize), c);
 
+        }
+
+        //We want a random
+        public Random getRandom()
+        {
+            return random;
+        }
+
+        //We need this as a public method to get different seeds in order to get an actual random number
+        public double getRandomD()
+        {
+            return random.NextDouble();
         }
     }
 }

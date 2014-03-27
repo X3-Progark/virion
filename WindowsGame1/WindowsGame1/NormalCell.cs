@@ -65,16 +65,16 @@ namespace Virion
             this.cellPosition = cellPosition;
             
             //SHOULD BE SOME KIND OF GLOBAL VARIABLE
-            pixelSize = 5;
+            pixelSize = 4;
 
             //How many pixels the MAXIMUM cell radius should be
-            cellRadius = 5;
+            cellRadius = 7;
 
             //Number of points that are used to define the edge
-            cellPoints = 10;
+            cellPoints = 7;
 
             //Percentage of the length of the radius can go inwards, larger makes bigger variation
-            cellRadiusMinFactor = 0.1d;
+            cellRadiusMinFactor = 0.2d;
 
             //How much the angles can vary. 1 is much, 0 is nothing. Makes shape more random!
             cellAngleFactor = 0.5d;
@@ -166,20 +166,18 @@ namespace Virion
                 return;
             }
 
-            elapsedTime = 0; //We have reached the elapsed time and have to reset it
+            //We have reached the elapsed time and have to reset it
+            elapsedTime = 0; 
 
             colorMatrix = new int[cellRadius * 2, cellRadius * 2];
 
             calculateNewCellVectors();
             fillColorMatrix();
             updateDarkMatrix();
-
-            //base.Update(gameTime);
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-           
             for (int x = 0; x < cellRadius * 2; x++)
             {
                 for (int y = 0; y < cellRadius * 2; y++)
@@ -188,8 +186,6 @@ namespace Virion
                     drawPixel(x, y, p, spriteBatch);
                 }
             }
-
-            //base.Draw(gameTime);
         }
 
         private void drawPixel(int x, int y, int pixelCode, SpriteBatch spriteBatch)
@@ -356,7 +352,7 @@ namespace Virion
             //Make a vector that says how long vE should be when ending
             Vector2 vO = Vector2.Subtract(v2, v1);
 
-            points.Add(new Point(xS + cellRadius, yS + cellRadius)); //just in case
+            points.Add(new Point(xS + cellRadius, yS + cellRadius));
 
             while (vE.Length() <= vO.Length())
             {
@@ -437,9 +433,7 @@ namespace Virion
                 int y = (int)(v1.Y * 0.5f) + cellRadius;
 
                 colorMatrix[x, y] = 4;
-
             }
-
         }
 
         //We want a random
