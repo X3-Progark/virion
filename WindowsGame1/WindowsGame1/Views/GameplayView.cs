@@ -40,7 +40,6 @@ namespace Virion
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
 
             pauseAction = new InputAction(
-                new Buttons[] { Buttons.Start, Buttons.Back },
                 new Keys[] { Keys.Escape },
                 true);
 
@@ -124,17 +123,9 @@ namespace Virion
             int playerIndex = (int)ControllingPlayer.Value;
 
             KeyboardState keyboardState = input.CurrentKeyboardStates[playerIndex];
-            GamePadState gamePadState = input.CurrentGamePadStates[playerIndex];
-
-            // The game pauses either if the user presses the pause button, or if
-            // they unplug the active gamepad. This requires us to keep track of
-            // whether a gamepad was ever plugged in, because we don't want to pause
-            // on PC if they are playing with a keyboard and have no gamepad at all!
-            bool gamePadDisconnected = !gamePadState.IsConnected &&
-                                       input.GamePadWasConnected[playerIndex];
 
             PlayerIndex player;
-            if (pauseAction.Evaluate(input, ControllingPlayer, out player) || gamePadDisconnected)
+            if (pauseAction.Evaluate(input, ControllingPlayer, out player))
             {
                 ViewManager.AddView(new PauseMenuView(), ControllingPlayer);
             }
@@ -154,11 +145,6 @@ namespace Virion
 
                 if (keyboardState.IsKeyDown(Keys.Down))
                     movement.Y++;
-
-                Vector2 thumbstick = gamePadState.ThumbSticks.Left;
-
-                movement.X += thumbstick.X;
-                movement.Y -= thumbstick.Y;
 
                 
 

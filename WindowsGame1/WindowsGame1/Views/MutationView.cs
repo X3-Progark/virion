@@ -19,12 +19,10 @@ namespace Virion
         public MutationView()
         {
             backAction = new InputAction(
-                new Buttons[] { Buttons.Back },
                 new Keys[] { Keys.Escape },
                 true);
 
             backAction = new InputAction(
-                new Buttons[] { Buttons.Back },
                 new Keys[] { Keys.Escape },
                 true);
         }
