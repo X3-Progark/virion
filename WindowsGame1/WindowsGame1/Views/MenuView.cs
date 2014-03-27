@@ -21,10 +21,10 @@ namespace Virion
 
         InputAction menuUp;
         InputAction menuDown;
+        InputAction menuRight;
+        InputAction menuLeft;
         InputAction menuSelect;
         InputAction menuCancel;
-
-
 
 
         
@@ -34,9 +34,6 @@ namespace Virion
         }
         
 
-
-
-
         public MenuView(string menuTitle)
         {
             this.menuTitle = menuTitle;
@@ -45,10 +42,16 @@ namespace Virion
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
 
             menuUp = new InputAction(
-                new Keys[] { Keys.Up },
+                new Keys[] { Keys.Up, Keys.W },
                 true);
             menuDown = new InputAction(
-                new Keys[] { Keys.Down },
+                new Keys[] { Keys.Down, Keys.S },
+                true);
+            menuRight = new InputAction(
+                new Keys[] { Keys.Right, Keys.D },
+                true);
+            menuLeft = new InputAction(
+                new Keys[] { Keys.Left, Keys.A },
                 true);
             menuSelect = new InputAction(
                 new Keys[] { Keys.Enter, Keys.Space },
@@ -62,14 +65,8 @@ namespace Virion
         
         public override void HandleInput(GameTime gameTime, InputState input)
         {
-            // For input tests we pass in our ControllingPlayer, which may
-            // either be null (to accept input from any player) or a specific index.
-            // If we pass a null controlling player, the InputState helper returns to
-            // us which player actually provided the input. We pass that through to
-            // OnSelectEntry and OnCancel, so they can tell which player triggered them.
             PlayerIndex playerIndex;
 
-            // Move to the previous menu entry?
             if (menuUp.Evaluate(input, ControllingPlayer, out playerIndex))
             {
                 selectedEntry--;
@@ -78,7 +75,6 @@ namespace Virion
                     selectedEntry = menuEntries.Count - 1;
             }
 
-            // Move to the next menu entry?
             if (menuDown.Evaluate(input, ControllingPlayer, out playerIndex))
             {
                 selectedEntry++;
@@ -100,50 +96,36 @@ namespace Virion
 
         
         /// Handler for when the user has chosen a menu entry.
-        
         protected virtual void OnSelectEntry(int entryIndex, PlayerIndex playerIndex)
         {
             menuEntries[entryIndex].OnSelectEntry(playerIndex);
         }
 
 
-        
         /// Handler for when the user has cancelled the menu.
-        
         protected virtual void OnCancel(PlayerIndex playerIndex)
         {
             ExitView();
         }
 
-
         
         /// Helper overload makes it easy to use OnCancel as a MenuEntry event handler.
-        
         protected void OnCancel(object sender, PlayerIndexEventArgs e)
         {
             OnCancel(e.PlayerIndex);
         }
 
-
         
-        /// Allows the view the chance to position the menu entries. By default
-        /// all menu entries are lined up in a vertical list, centered on the view.
         protected virtual void UpdateMenuEntryLocations()
         {
-            // Make the menu slide into place during transitions, using a
-            // power curve to make things look more interesting (this makes
-            // the movement slow down as it nears the end).
             float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
 
-            // start at Y = 175; each X value is generated per entry
             Vector2 position = new Vector2(0f, 175f);
 
-            // update each menu entry's location in turn
             for (int i = 0; i < menuEntries.Count; i++)
             {
                 MenuEntry menuEntry = menuEntries[i];
                 
-                // each entry is to be centered horizontally
                 position.X = ViewManager.GraphicsDevice.Viewport.Width / 2 - menuEntry.GetWidth(this) / 2;
 
                 if (ViewState == ViewState.TransitionOn)
@@ -151,35 +133,26 @@ namespace Virion
                 else
                     position.X += transitionOffset * 512;
 
-                // set the entry's position
                 menuEntry.Position = position;
 
-                // move down for the next entry the size of this entry
                 position.Y += menuEntry.GetHeight(this);
             }
         }
 
-        /// Updates the menu.
-        
         public override void Update(GameTime gameTime, bool otherViewHasFocus,
                                                        bool coveredByOtherView)
         {
             base.Update(gameTime, otherViewHasFocus, coveredByOtherView);
 
-            // Update each nested MenuEntry object.
             for (int i = 0; i < menuEntries.Count; i++)
             {
                 bool isSelected = IsActive && (i == selectedEntry);
-
                 menuEntries[i].Update(this, isSelected, gameTime);
             }
         }
 
-        /// Draws the menu.
-        
         public override void Draw(GameTime gameTime)
         {
-            // make sure our entries are in the right place before we draw them
             UpdateMenuEntryLocations();
 
             GraphicsDevice graphics = ViewManager.GraphicsDevice;
@@ -188,7 +161,6 @@ namespace Virion
 
             spriteBatch.Begin();
 
-            // Draw each menu entry in turn.
             for (int i = 0; i < menuEntries.Count; i++)
             {
                 MenuEntry menuEntry = menuEntries[i];
@@ -198,12 +170,8 @@ namespace Virion
                 menuEntry.Draw(this, isSelected, gameTime);
             }
 
-            // Make the menu slide into place during transitions, using a
-            // power curve to make things look more interesting (this makes
-            // the movement slow down as it nears the end).
             float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
 
-            // Draw the menu title centered on the view
             Vector2 titlePosition = new Vector2(graphics.Viewport.Width / 2, 80);
             Vector2 titleOrigin = font.MeasureString(menuTitle) / 2;
             Color titleColor = new Color(192, 192, 192) * TransitionAlpha;

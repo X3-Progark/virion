@@ -8,89 +8,78 @@ using Microsoft.Xna.Framework.Input;
 
 namespace Virion
 {
-    class MutationView : GameView
+    class MutationView : MenuView
     {
-        ContentManager content;
-        SpriteFont gameFont;
+        int currentPlayer;
 
-        InputAction backAction;
-        InputAction buyAction;
+        static int[] strengthLevel;
+        static int[] healthLevel;
+        static int[] speedLevel;
+
+        MenuEntry speedMutation;
+        MenuEntry strengthMutation;
+        MenuEntry healthMutation;
+        MenuEntry backMenuEntry;
+
 
         public MutationView()
+            : base("Mutation Menu")
         {
-            backAction = new InputAction(
-                new Keys[] { Keys.Escape },
-                true);
+            strengthLevel = new int[4] { 0, 0, 0, 0 };
+            healthLevel = new int[4] { 0, 0, 0, 0 };
+            speedLevel = new int[4] { 0, 0, 0, 0 };
 
-            backAction = new InputAction(
-                new Keys[] { Keys.Escape },
-                true);
-        }
-        
-        
-        public override void Activate(bool instancePreserved)
-        {
-            if (!instancePreserved)
-            {
-                if (content == null)
-                    content = new ContentManager(ViewManager.Game.Services, "Content");
+            currentPlayer = 1;
 
-                gameFont = content.Load<SpriteFont>("gamefont");
-                ViewManager.Game.ResetElapsedTime();
-            }
-        }
+            speedMutation = new MenuEntry("Speed");
+            strengthMutation = new MenuEntry("Strength");
+            healthMutation = new MenuEntry("Health");
+            backMenuEntry = new MenuEntry("Back");
 
+            SetMenuEntryText();
 
-        public override void Unload()
-        {
-            content.Unload();
-        }
+            // Hook up menu event handlers.
+            speedMutation.Selected += BuySpeed;
+            strengthMutation.Selected += BuyStrength;
+            healthMutation.Selected += BuyHealth;
+            backMenuEntry.Selected += BackToMain;
 
-
-        public override void Update(GameTime gameTime, bool otherViewHasFocus,
-                                                       bool coveredByOtherView)
-        {
-            base.Update(gameTime, otherViewHasFocus, false);
-
-
-            if (IsActive)
-            {
-            }
+            // Add entries to the menu.
+            MenuEntries.Add(speedMutation);
+            MenuEntries.Add(strengthMutation);
+            MenuEntries.Add(healthMutation);
+            MenuEntries.Add(backMenuEntry);
         }
 
-
-        
-        public override void HandleInput(GameTime gameTime, InputState input)
+        void SetMenuEntryText()
         {
-            if (input == null)
-                throw new ArgumentNullException("input");
-
-            PlayerIndex player;
-            if (backAction.Evaluate(input, ControllingPlayer, out player))
-            {
-                LoadingView.Load(ViewManager, false, null, new BackgroundView(), new MainMenuView());
-            }
+            speedMutation.Text = "Speed: " + string.Join("  ", speedLevel);
+            healthMutation.Text = "Health: " + healthLevel;
+            strengthMutation.Text = "Strength: " + strengthLevel;
         }
 
-
-        
-        public override void Draw(GameTime gameTime)
+        // Upgrades virus speed
+        void BuySpeed(object sender, PlayerIndexEventArgs e)
         {
-            ViewManager.GraphicsDevice.Clear(ClearOptions.Target,
-                                               Color.Blue, 0, 0);
+            speedLevel[currentPlayer] += 1;
+        }
 
-            SpriteBatch spriteBatch = ViewManager.SpriteBatch;
+        // Upgrades virus infection strength
+        void BuyStrength(object sender, PlayerIndexEventArgs e)
+        {
+            strengthLevel[currentPlayer]++;
+        }
 
-            spriteBatch.Begin();
+        // Upgrades virus health
+        void BuyHealth(object sender, PlayerIndexEventArgs e)
+        {
+            healthLevel[currentPlayer]++;
+        }
 
-            spriteBatch.DrawString(gameFont, "Mutations", new Vector2(100, 100), Color.Green);
-
-            spriteBatch.DrawString(gameFont, "Buy things",
-                                   new Vector2(300, 300), Color.DarkRed);
-
-
-            spriteBatch.End();
-
+        // Returns to the main menu
+        void BackToMain(object sender, PlayerIndexEventArgs e)
+        {
+            LoadingView.Load(ViewManager, false, null, new BackgroundView(), new MainMenuView());
         }
     }
 }

@@ -17,6 +17,13 @@ namespace Virion
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Texture2D texture;
+        GraphicsDevice device;
+
+        const bool resultionIndependent = true;
+        Vector2 baseScreenSize;
+        int screenWidth, screenHeight;
+        Matrix globalTransformation;
+
         
         ViewManager viewManager;
 
@@ -36,11 +43,31 @@ namespace Virion
         protected override void Initialize()
         {
             base.Initialize();
+
+            baseScreenSize = new Vector2(1920, 1080);
+
+            if (resultionIndependent)
+            {
+                screenWidth = (int)baseScreenSize.X;
+                screenHeight = (int)baseScreenSize.Y;
+            }
+            else
+            {
+                screenWidth = device.PresentationParameters.BackBufferWidth;
+                screenHeight = device.PresentationParameters.BackBufferHeight;
+            }
+            graphics.IsFullScreen = false;
+            graphics.PreferredBackBufferHeight = screenHeight;
+            graphics.PreferredBackBufferWidth = screenWidth;
+            graphics.ApplyChanges();
+
         }
         
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            device = graphics.GraphicsDevice;
+            
 
             texture = new Texture2D(graphics.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             //Texture2D texture = new Texture2D(graphics, 1, 1, SurfaceFormat.Color);
@@ -61,9 +88,25 @@ namespace Virion
         
         protected override void Draw(GameTime gameTime)
         {
+            Vector3 screenScalingFactor;
+            if (resultionIndependent)
+            {
+                float horScaling = (float)device.PresentationParameters.BackBufferWidth / baseScreenSize.X;
+                float verScaling = (float)device.PresentationParameters.BackBufferHeight / baseScreenSize.Y;
+                screenScalingFactor = new Vector3(horScaling, verScaling, 1);
+            }
+            else
+            {
+                screenScalingFactor = new Vector3(1, 1, 1);
+            }
+            globalTransformation = Matrix.CreateScale(screenScalingFactor);
+
+
             graphics.GraphicsDevice.Clear(Color.Black);
 
+            //spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, globalTransformation);
             base.Draw(gameTime);
+            //spriteBatch.End();
         }
     }
 }
