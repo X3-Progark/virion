@@ -136,9 +136,7 @@ namespace Virion
             PlayerIndex player;
             if (pauseAction.Evaluate(input, ControllingPlayer, out player) || gamePadDisconnected)
             {
-
                 ViewManager.AddView(new PauseMenuView(), ControllingPlayer);
-
             }
             else
             {

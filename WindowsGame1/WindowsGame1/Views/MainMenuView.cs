@@ -12,16 +12,19 @@ namespace Virion
         {
             // Create our menu entries.
             MenuEntry playGameMenuEntry = new MenuEntry("Play Game");
+            MenuEntry mutationsMenuEntry = new MenuEntry("Mutations");
             MenuEntry optionsMenuEntry = new MenuEntry("Options");
             MenuEntry exitMenuEntry = new MenuEntry("Exit");
 
             // Hook up menu event handlers.
             playGameMenuEntry.Selected += PlayGameMenuEntrySelected;
             optionsMenuEntry.Selected += OptionsMenuEntrySelected;
+            mutationsMenuEntry.Selected += MutationsMenuEntrySelected;
             exitMenuEntry.Selected += OnCancel;
 
             // Add entries to the menu.
             MenuEntries.Add(playGameMenuEntry);
+            MenuEntries.Add(mutationsMenuEntry);
             MenuEntries.Add(optionsMenuEntry);
             MenuEntries.Add(exitMenuEntry);
         }
@@ -34,6 +37,12 @@ namespace Virion
                                new GameplayView());
         }
 
+        /// Event handler for when the Mutations menu entry is selected.
+        void MutationsMenuEntrySelected(object sender, PlayerIndexEventArgs e)
+        {
+            LoadingView.Load(ViewManager, true, e.PlayerIndex,
+                               new MutationView());
+        }
         
         /// Event handler for when the Options menu entry is selected.
         void OptionsMenuEntrySelected(object sender, PlayerIndexEventArgs e)
