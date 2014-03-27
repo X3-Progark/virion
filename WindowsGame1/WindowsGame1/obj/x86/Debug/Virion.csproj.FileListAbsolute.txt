@@ -3,3 +3,9 @@ F:\Git projects\virion\WindowsGame1\WindowsGame1\bin\x86\Debug\WindowsGame1.pdb
 F:\Git projects\virion\WindowsGame1\WindowsGame1\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
 F:\Git projects\virion\WindowsGame1\WindowsGame1\obj\x86\Debug\WindowsGame1.exe
 F:\Git projects\virion\WindowsGame1\WindowsGame1\obj\x86\Debug\WindowsGame1.pdb
+C:\Users\dawn\Documents\GitHub\virion\WindowsGame1\WindowsGame1\bin\x86\Debug\WindowsGame1.exe
+C:\Users\dawn\Documents\GitHub\virion\WindowsGame1\WindowsGame1\bin\x86\Debug\WindowsGame1.pdb
+C:\Users\dawn\Documents\GitHub\virion\WindowsGame1\WindowsGame1\obj\x86\Debug\Virion.csprojResolveAssemblyReference.cache
+C:\Users\dawn\Documents\GitHub\virion\WindowsGame1\WindowsGame1\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Users\dawn\Documents\GitHub\virion\WindowsGame1\WindowsGame1\obj\x86\Debug\WindowsGame1.exe
+C:\Users\dawn\Documents\GitHub\virion\WindowsGame1\WindowsGame1\obj\x86\Debug\WindowsGame1.pdb
