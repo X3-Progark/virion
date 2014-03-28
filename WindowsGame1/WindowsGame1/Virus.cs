@@ -29,14 +29,15 @@ namespace Virion
 
         private Point cellPosition;
         private Vector2 cellMotion;
+        private float breakFactor, motionAdd, maxSpeed;
 
         Random random;
 
-        public Virus(Point cellPosition, int frameTime)
+        public Virus(string look, Point cellPosition, int frameTime)
 
         {
             //TODO: Må, MÅ, hentes fra en høyere klasse slik at de får forskjellige variabler! 
-            //Når de blir initialisert samtidig får de akkurat samme variabler > cellene blir identiske
+            //Når de blir initialisert samtidig får de akkurat samme variabler => cellene blir identiske
             random = new Random();
 
             this.frameTime = frameTime;
@@ -61,17 +62,34 @@ namespace Virion
             //Says how the cell is moving
             cellMotion = new Vector2();
 
-            setColorMatrix();
+            //How quick the speed should slow down
+            breakFactor = 0.98f;
+
+            //How much it should move
+            motionAdd = pixelSize * 0.05f;
+
+            maxSpeed = pixelSize * 0.5f;
+
+            setColorMatrix(look);
         }
 
-        private void setColorMatrix()
+        private void setColorMatrix(string look)
         {
-            colorMatrix[2, 2] = 3;
+            for (int i = 0; i < 9; i++)
+            {
+                int x = (int)Math.Ceiling((i + 1)/3.0);
+                int y = (i + 1) + (1 - x) * 3;
+                if (look[i].Equals('X'))
+                    colorMatrix[y, x] = 1;
+                else if (look[i].Equals('M'))
+                    colorMatrix[y, x] = 3;
+            }
+            /*    colorMatrix[2, 2] = 3;
 
             colorMatrix[3, 3] = 1;
             colorMatrix[1, 1] = 1;
             colorMatrix[3, 1] = 1;
-            colorMatrix[1, 3] = 1;
+            colorMatrix[1, 3] = 1;*/
         }
 
         public void LoadContent(GraphicsDevice GD)
@@ -91,14 +109,48 @@ namespace Virion
             elapsedTime += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (elapsedTime < frameTime)
             {
-                //If we are not supposed to calculate a new frame, just return
-                //base.Update(gameTime);
+                //We are not supposed to calculate a new frame, just return
                 return;
             }
+            //We have reached the elapsed time and have to reset it
+            elapsedTime = 0;
 
-            elapsedTime = 0; //We have reached the elapsed time and have to reset it
+            //Slowing down the virus
+            cellMotion.X *= breakFactor;
+            cellMotion.Y *= breakFactor;
+
+            if (cellMotion.X > maxSpeed) cellMotion.X = maxSpeed;
+            else if (cellMotion.X < -maxSpeed) cellMotion.X = -maxSpeed;
+            
+            if (cellMotion.Y > maxSpeed) cellMotion.Y = maxSpeed;
+            else if (cellMotion.Y < -maxSpeed) cellMotion.Y = -maxSpeed;
+
+            cellPosition.X += (int)cellMotion.X;
+            cellPosition.Y += (int)cellMotion.Y;
+
+
 
             //TODO
+        }
+
+        public void up()
+        {
+            cellMotion.Y -= motionAdd;
+        }
+
+        public void down()
+        {
+            cellMotion.Y += motionAdd;
+        }
+
+        public void left()
+        {
+            cellMotion.X -= motionAdd;
+        }
+
+        public void right()
+        {
+            cellMotion.X += motionAdd;
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)

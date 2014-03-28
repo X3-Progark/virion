@@ -17,6 +17,7 @@ namespace Virion
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Texture2D texture;
+        public static Random random = new Random();
         
         ViewManager viewManager;
 
@@ -64,6 +65,16 @@ namespace Virion
             graphics.GraphicsDevice.Clear(Color.Black);
 
             base.Draw(gameTime);
+        }
+
+        public static Random getRandom()
+        {
+            return random;
+        }
+
+        public static double getRandomD()
+        {
+            return random.NextDouble();
         }
     }
 }

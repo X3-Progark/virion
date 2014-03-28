@@ -19,6 +19,10 @@ namespace Virion
         ContentManager content;
         SpriteFont gameFont;
 
+        List<Keys> playerInputs;
+        List<Virus> playerObjects;
+
+
         Vector2 playerPosition = new Vector2(100, 100);
         Vector2 enemyPosition = new Vector2(100, 100);
 
@@ -29,7 +33,7 @@ namespace Virion
         InputAction pauseAction;
 
 
-        List<Unit> cellList;
+        List<NormalCell> cellList;
 
         WhiteCell wc;
 
@@ -44,20 +48,49 @@ namespace Virion
                 new Keys[] { Keys.Escape },
                 true);
 
-            cellList = new List<Unit>();
+            //Contains the players as well as the number
+            playerObjects = new List<Virus>();
 
+            //Add in WASD order! 
+            playerInputs = new List<Keys>();
 
-            cellList.Add(new NormalCell(new Point(100, 200), 100));
-            cellList.Add(new NormalCell(new Point(250, 200), 200));
-            cellList.Add(new NormalCell(new Point(400, 200), 200));
-            cellList.Add(new NormalCell(new Point(550, 200), 200));
-            cellList.Add(new WhiteCell(new Point(300, 300), 200));
+            cellList = new List<NormalCell>();
 
-            cellList.Add(new Virus(new Point(300, 400), 200));
+            //The look of the different players
+            string p1 = "OXOXMXOXO";
+            string p2 = "OXOOMXXXX";
+            string p3 = "XMXOMOXMX";
+            string p4 = "OXOOMOXOX";
+
+            //Creates players
+            Virus player1 = new Virus(p1, new Point(100, 400), 5);
+            Virus player2 = new Virus(p2, new Point(200, 400), 5);
+            Virus player3 = new Virus(p3, new Point(300, 400), 5);
+            Virus player4 = new Virus(p4, new Point(400, 400), 5);
+
+            //Adds players to the list and gives the correct controls
+            addNewPlayer(player1, Keys.Up, Keys.Left, Keys.Down, Keys.Right);
+            addNewPlayer(player2, Keys.W, Keys.A, Keys.S, Keys.D);
+            addNewPlayer(player3, Keys.T, Keys.F, Keys.G, Keys.H);
+            //addNewPlayer(player4, Keys.I, Keys.J, Keys.K, Keys.L);
+
+            for (int i = 0; i < 20; i++)
+                cellList.Add(new NormalCell(new Point((int)(800 * Main.getRandomD()), (int)(500 * Main.getRandomD())), 100));
+
+            //cellList.Add(new WhiteCell(new Point(300, 300), 200));
 
             wc = new WhiteCell(new Point(100, 100), 200);
         }
 
+        public void addNewPlayer(Virus v, Keys up, Keys left, Keys down, Keys right)
+        {
+            playerObjects.Add(v);
+
+            playerInputs.Add(up);
+            playerInputs.Add(left);
+            playerInputs.Add(down);
+            playerInputs.Add(right);
+        }
         
         
         public override void Activate(bool instancePreserved)
@@ -73,6 +106,9 @@ namespace Virion
                 {
                     c.LoadContent(ViewManager.GraphicsDevice);
                 }
+
+                foreach (Virus v in playerObjects) v.LoadContent(ViewManager.GraphicsDevice);
+
 
                 wc.LoadContent(ViewManager.GraphicsDevice);
                 ViewManager.Game.ResetElapsedTime();
@@ -100,14 +136,17 @@ namespace Virion
             else
                 pauseAlpha = Math.Max(pauseAlpha - 1f / 32, 0);
 
-
+            
 
             if (IsActive)
             {
-                foreach (Unit c in cellList)
+                foreach (NormalCell c in cellList)
                 {
+                    c.collisionHandeling(cellList);
                     c.Update(gameTime);
                 }
+
+                foreach (Virus v in playerObjects) v.Update(gameTime);
 
                 wc.Update(gameTime);
             }
@@ -142,20 +181,41 @@ namespace Virion
             }
             else
             {
+
+                for (int i = 0; i < playerObjects.Count; i++)
+                {
+                    if (keyboardState.IsKeyDown(playerInputs[4 * i])) 
+                        playerObjects[i].up();
+
+                    if (keyboardState.IsKeyDown(playerInputs[4 * i + 1]))
+                        playerObjects[i].left();
+
+                    if (keyboardState.IsKeyDown(playerInputs[4 * i + 2]))
+                        playerObjects[i].down();
+
+                    if (keyboardState.IsKeyDown(playerInputs[4 * i + 3]))
+                        playerObjects[i].right();
+
+                }
+
                 // Otherwise move the player position.
                 Vector2 movement = Vector2.Zero;
 
-                if (keyboardState.IsKeyDown(Keys.Left))
-                    movement.X--;
 
-                if (keyboardState.IsKeyDown(Keys.Right))
-                    movement.X++;
-
-                if (keyboardState.IsKeyDown(Keys.Up))
+                if (keyboardState.IsKeyDown(playerInputs[0]))
                     movement.Y--;
 
-                if (keyboardState.IsKeyDown(Keys.Down))
+                if (keyboardState.IsKeyDown(playerInputs[1]))
+                    movement.X--;
+
+                if (keyboardState.IsKeyDown(playerInputs[2]))
                     movement.Y++;
+
+                if (keyboardState.IsKeyDown(playerInputs[3]))
+                    movement.X++;
+                
+
+                
 
                 Vector2 thumbstick = gamePadState.ThumbSticks.Left;
 
@@ -194,6 +254,8 @@ namespace Virion
                 c.Draw(gameTime, spriteBatch);
             }
 
+            foreach (Virus v in playerObjects) v.Draw(gameTime, spriteBatch);
+
             wc.Draw(gameTime, spriteBatch, playerPosition);
             //wc.Draw(gameTime, spriteBatch);
 
@@ -207,5 +269,6 @@ namespace Virion
                 ViewManager.FadeBackBufferToBlack(alpha);
             }
         }
+
     }
 }

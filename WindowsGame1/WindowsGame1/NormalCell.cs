@@ -46,15 +46,11 @@ namespace Virion
         private Point cellPosition;
         private Vector2 cellMotion;
 
-        Random random;
-
-
         public NormalCell(Point cellPosition, int frameTime)
 
         {
             //TODO: Må, MÅ, hentes fra en høyere klasse slik at de får forskjellige variabler! 
             //Når de blir initialisert samtidig får de akkurat samme variabler > cellene blir identiske
-            random = new Random();
 
             this.frameTime = frameTime;
             elapsedTime = 0;
@@ -112,7 +108,7 @@ namespace Virion
             cellVectors = new List<Vector2>();
             
             //Says how the cell is moving
-            cellMotion = new Vector2();
+            cellMotion = getVectorFromAngleAndLength((float)360 * getRandomD(), (float)pixelSize/2);
 
             initDarkMatrix();
 
@@ -167,6 +163,8 @@ namespace Virion
             elapsedTime = 0; //We have reached the elapsed time and have to reset it
 
             colorMatrix = new int[cellRadius * 2, cellRadius * 2];
+            cellPosition.X += (int)cellMotion.X;
+            cellPosition.Y += (int)cellMotion.Y;
 
             calculateNewCellVectors();
             fillColorMatrix();
@@ -186,7 +184,6 @@ namespace Virion
                     drawPixel(x, y, p, spriteBatch);
                 }
             }
-
             //base.Draw(gameTime);
         }
 
@@ -440,16 +437,58 @@ namespace Virion
 
         }
 
-        //We want a random
-        public Random getRandom()
+        public void collisionHandeling(List<NormalCell> cellList)
         {
-            return random;
+            foreach(NormalCell c in cellList)
+            {
+                if (isClose(c) && isColliding(c))
+                {
+                    cellMotion.X = -cellMotion.X;
+                    cellMotion.Y = -cellMotion.Y;
+                }
+                    
+            }
+        }
+
+        private bool isClose(NormalCell c)
+        {
+            Point otherCellPosition = c.getPosition();
+
+            int xV = cellPosition.X - otherCellPosition.X;
+            int yV = cellPosition.Y - otherCellPosition.Y;
+            Vector2 distance = new Vector2(xV, yV);
+            if (distance.Length() == 0) return false;
+            return distance.Length() < cellRadius;
+        }
+
+        private bool isColliding(NormalCell c)
+        {
+            Vector2 otherCellMotion = c.getMotion();
+            
+
+            return true;
+        }
+
+        public Point getPosition()
+        {
+            return cellPosition;
+        }
+
+        public Vector2 getMotion()
+        {
+            return cellMotion;
+        }
+
+        //We want a random
+        private Random getRandom()
+        {
+            return Main.getRandom();
         }
 
         //We need this as a public method to get different seeds in order to get an actual random number
-        public double getRandomD()
+        private double getRandomD()
         {
-            return random.NextDouble();
+            return Main.getRandomD();
         }
     }
 }
