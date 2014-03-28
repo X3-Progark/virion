@@ -443,11 +443,18 @@ namespace Virion
             {
                 if (isClose(c) && isColliding(c))
                 {
-                    cellMotion.X = -cellMotion.X;
-                    cellMotion.Y = -cellMotion.Y;
+                    coll();
+                    c.coll();
                 }
-                    
             }
+            if (cellPosition.X > 800 || cellPosition.X < 0) cellMotion.X *= -1;
+            if (cellPosition.Y > 500 || cellPosition.Y < 0) cellMotion.Y *= -1;
+        }
+
+        public void coll()
+        {
+            cellMotion.X *= -1;
+            cellMotion.Y *= -1;
         }
 
         private bool isClose(NormalCell c)
@@ -458,14 +465,27 @@ namespace Virion
             int yV = cellPosition.Y - otherCellPosition.Y;
             Vector2 distance = new Vector2(xV, yV);
             if (distance.Length() == 0) return false;
-            return distance.Length() < cellRadius;
+            return distance.Length() < (2*cellRadius * (pixelSize - 1));
         }
 
         private bool isColliding(NormalCell c)
         {
             Vector2 otherCellMotion = c.getMotion();
-            
+            Vector2 thisCellMotion = getMotion();
+            /*
+            otherCellMotion.Normalize();
+            thisCellMotion.Normalize();
 
+            float xDir = thisCellMotion.X - otherCellMotion.X;
+            float yDir = thisCellMotion.Y - otherCellMotion.Y;
+
+            if (xDir == 0 || yDir == 0) return false;
+            else if (thisCellMotion.X / thisCellMotion.X != xDir / xDir || thisCellMotion.Y / thisCellMotion.Y != yDir / yDir) return true;
+            */
+            Vector2 combinedMotion = new Vector2(cellMotion.X + otherCellMotion.X, cellMotion.Y + otherCellMotion.Y);
+            if (combinedMotion.Length() < otherCellMotion.Length() || combinedMotion.Length() < cellMotion.Length()) return true;
+
+            //Should not be true.. Just the code above that is not working!
             return true;
         }
 

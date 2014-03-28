@@ -74,7 +74,7 @@ namespace Virion
             addNewPlayer(player3, Keys.T, Keys.F, Keys.G, Keys.H);
             //addNewPlayer(player4, Keys.I, Keys.J, Keys.K, Keys.L);
 
-            for (int i = 0; i < 20; i++)
+            for (int i = 0; i < 40; i++)
                 cellList.Add(new NormalCell(new Point((int)(800 * Main.getRandomD()), (int)(500 * Main.getRandomD())), 100));
 
             //cellList.Add(new WhiteCell(new Point(300, 300), 200));
@@ -142,8 +142,9 @@ namespace Virion
             {
                 foreach (NormalCell c in cellList)
                 {
-                    c.collisionHandeling(cellList);
                     c.Update(gameTime);
+                    c.collisionHandeling(cellList);
+                    
                 }
 
                 foreach (Virus v in playerObjects) v.Update(gameTime);
