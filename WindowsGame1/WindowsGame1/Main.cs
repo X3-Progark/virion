@@ -24,6 +24,7 @@ namespace Virion
         int screenWidth, screenHeight;
         Matrix globalTransformation;
 
+        public static Random random = new Random();
         
         ViewManager viewManager;
 
@@ -107,6 +108,16 @@ namespace Virion
             //spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, globalTransformation);
             base.Draw(gameTime);
             //spriteBatch.End();
+        }
+
+        public static Random getRandom()
+        {
+            return random;
+        }
+
+        public static double getRandomD()
+        {
+            return random.NextDouble();
         }
     }
 }
