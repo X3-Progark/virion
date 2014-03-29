@@ -48,7 +48,7 @@ namespace Virion
         {
             base.Initialize();
 
-            baseScreenSize = new Vector2(1200, 800);
+            baseScreenSize = new Vector2(1337, 768);
 
             if (resultionIndependent)
             {

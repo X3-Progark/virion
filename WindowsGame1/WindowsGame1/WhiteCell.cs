@@ -31,7 +31,8 @@ namespace Virion
 
         private int pixelSize,
             cellLength, cellRadius,
-            elapsedTime, frameTime;
+            elapsedTime, frameTime,
+            functionX;
 
         private Vector2 cellPosition;
         private Vector2 cellDirection, cellMotion;
@@ -44,7 +45,10 @@ namespace Virion
         {
             //TODO: Må, MÅ, hentes fra en høyere klasse slik at de får forskjellige variabler! 
             //Når de blir initialisert samtidig får de akkurat samme variabler > cellene blir identiske
-            random = new Random();
+            random = getRandom();
+
+
+            functionX = random.Next(0,100);
 
             elapsedTime = 0;
             this.frameTime = frameTime;
@@ -130,6 +134,10 @@ namespace Virion
 
             //We have reached the elapsed time and have to reset it
             elapsedTime = 0;
+
+            //For the recalculation of the cell-walls
+            functionX++;
+
             Virus closestEnemy = findClosestVirus();
             cellDirection = cellPosition-closestEnemy.getPosition();
             cellDirection.Normalize();
@@ -214,7 +222,13 @@ namespace Virion
         private double getCellThickness(double xi)
         {
             double x = 4.0d * xi / (double)cellLength;
-            return -0.04 * x * x * x * x + 0.42 * x * x * x - 1.6 * x * x + 2.2 * x;
+            double sinPart =  Math.Sin(functionX / 5);
+            double x4 = 0.04;
+            double x3 = 0.40 + 0.02 * sinPart;
+            double x2 = 1.46 + 0.14 * sinPart;
+            double x1 = 1.98 + 0.26 * sinPart;
+
+            return -x4 * x * x * x * x + x3 * x * x * x - x2 * x * x + x1 * x;
         }
 
         private void fillInside(int x, int y)
@@ -303,8 +317,8 @@ namespace Virion
             else if (pixelCode == 2) c = (darkMatrix[x, y] ? fillColorDark : fillColor);
             else if (pixelCode == 3) c = (darkMatrix[x, y] ? centerColorDark : centerColor);
 
-            int xPos = (x - cellLength) * pixelSize + (int)cellPosition.X - (int)cellPosition.X % pixelSize;
-            int yPos = (y - cellLength) * pixelSize + (int)cellPosition.Y - (int)cellPosition.Y % pixelSize;
+            int xPos = (x - cellLength) * pixelSize + (int)cellPosition.X;// -(int)cellPosition.X % pixelSize;
+            int yPos = (y - cellLength) * pixelSize + (int)cellPosition.Y;// -(int)cellPosition.Y % pixelSize;
 
             spriteBatch.Draw(texture, new Rectangle(xPos, yPos, pixelSize, pixelSize), c);
 
@@ -313,14 +327,15 @@ namespace Virion
         //We want a random
         public Random getRandom()
         {
-            return random;
+            return Main.getRandom();
         }
 
         //We need this as a public method to get different seeds in order to get an actual random number
         public double getRandomD()
         {
-            return random.NextDouble();
+            return Main.getRandomD();
         }
+
         private Virus findClosestVirus()
         {
             Virus virus = null;
