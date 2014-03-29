@@ -12,66 +12,26 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Virion
 {
-    public class WhiteCell : Unit
+    public class WhiteCell : Cell
     {
-
-        //Default texture
-        private Texture2D texture;
-
-        private int[,] colorMatrix;
-        private bool[,] darkMatrix;
-
-        float percentageDarkSpots,
-            darkSpotMotionFactor;
-
-        private Color c,
-            wallColor, wallColorDark,
-            fillColor, fillColorDark,
-            centerColor, centerColorDark;
-
-        private int pixelSize,
-            cellLength, cellRadius,
-            elapsedTime, frameTime;
-
-        private Vector2 cellPosition;
-        private Vector2 cellDirection, cellMotion;
-
-        Random random;
 
         List<Virus> playerObjects;
 
-        public WhiteCell(Vector2 cellPosition, int frameTime)
+        public WhiteCell(Vector2 cellPosition, int frameTime) : base(cellPosition, frameTime, 3)
         {
             //TODO: Må, MÅ, hentes fra en høyere klasse slik at de får forskjellige variabler! 
             //Når de blir initialisert samtidig får de akkurat samme variabler > cellene blir identiske
-            random = new Random();
-
-            elapsedTime = 0;
-            this.frameTime = frameTime;
-
-            this.cellPosition = cellPosition;
 
             this.cellDirection = new Vector2(1, 0);
             this.cellDirection.Normalize();
 
-            pixelSize = 5;
-
             cellLength = 12;
-
-            //How many pixles the largest part should be
-            cellRadius = 3;
 
             //A cellRadius*2 x cellRadius*2 2D int array
             colorMatrix = new int[cellLength * 2, cellLength * 2];
 
             //A cellRadius*2 x cellRadius*2 2D bool array
             darkMatrix = new bool[cellLength * 2, cellLength * 2];
-
-            //How much of the grid that should be dark
-            percentageDarkSpots = 0.3f;
-
-            //Should the dark spots move often? higher values will move more. 
-            darkSpotMotionFactor = 0.3f;
 
             wallColor = new Color(240, 215, 225);
             wallColorDark = new Color(240, 210, 220);
@@ -84,41 +44,7 @@ namespace Virion
             
         }
 
-        public void LoadContent(GraphicsDevice GD)
-        {
-            //Make the pixel texture that can obtain any color
-            texture = new Texture2D(GD, 1, 1, false, SurfaceFormat.Color);
-            texture.SetData<Color>(new Color[] { Color.White });
-
-            //base.LoadContent();
-        }
-
-        public void Initialize()
-        {
-            //base.Initialize();
-        }
-
-        private void initDarkMatrix()
-        {
-            int amount = (int)(percentageDarkSpots * (cellLength * cellLength * 4));
-
-            for (int i = 0; i < amount; i++)
-            {
-                int x = random.Next(0, cellLength * 2);
-                int y = random.Next(0, cellLength * 2);
-
-                if (darkMatrix[x, y])
-                {
-                    i -= 1;
-                    continue;
-                }
-
-                darkMatrix[x, y] = true;
-            }
-        }
-
-
-        public void Update(GameTime gameTime)
+        new public void Update(GameTime gameTime)
         {
             elapsedTime += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (elapsedTime < frameTime)
@@ -264,63 +190,6 @@ namespace Virion
             colorMatrix[cellLength - 1, cellLength - 1] = 3;
         }
 
-        //DELETE THIS, KEEP THE ONE UNDER!
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Vector2 pp)
-        {
-            cellPosition.X = (int)(pp.X);
-            cellPosition.Y = (int)(pp.Y);
-            cellDirection = new Vector2(cellPosition.X - 250, cellPosition.Y - 250);
-            cellDirection.Normalize(); 
-            for (int x = 0; x < cellLength * 2; x++)
-            {
-                for (int y = 0; y < cellLength * 2; y++)
-                {
-                    int p = colorMatrix[x, y];
-                    drawPixel(x, y, p, spriteBatch);
-                }
-            }
-        }
-
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-
-            for (int x = 0; x < cellLength * 2; x++)
-            {
-                for (int y = 0; y < cellLength * 2; y++)
-                {
-                    int p = colorMatrix[x, y];
-                    drawPixel(x, y, p, spriteBatch);
-                }
-            }
-            //base.Draw(gameTime);
-        }
-
-        
-        private void drawPixel(int x, int y, int pixelCode, SpriteBatch spriteBatch)
-        {
-            if (pixelCode == 0) return;
-            else if (pixelCode == 1) c = (darkMatrix[x, y] ? wallColorDark : wallColor);
-            else if (pixelCode == 2) c = (darkMatrix[x, y] ? fillColorDark : fillColor);
-            else if (pixelCode == 3) c = (darkMatrix[x, y] ? centerColorDark : centerColor);
-
-            int xPos = (x - cellLength) * pixelSize + (int)cellPosition.X - (int)cellPosition.X % pixelSize;
-            int yPos = (y - cellLength) * pixelSize + (int)cellPosition.Y - (int)cellPosition.Y % pixelSize;
-
-            spriteBatch.Draw(texture, new Rectangle(xPos, yPos, pixelSize, pixelSize), c);
-
-        }
-
-        //We want a random
-        public Random getRandom()
-        {
-            return random;
-        }
-
-        //We need this as a public method to get different seeds in order to get an actual random number
-        public double getRandomD()
-        {
-            return random.NextDouble();
-        }
         private Virus findClosestVirus()
         {
             Virus virus = null;
