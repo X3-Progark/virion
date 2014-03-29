@@ -27,13 +27,13 @@ namespace Virion
         private int pixelSize, 
             elapsedTime, frameTime;
 
-        private Point cellPosition;
+        private Vector2 cellPosition;
         private Vector2 cellMotion;
         private float breakFactor, motionAdd, maxSpeed;
 
         Random random;
 
-        public Virus(string look, Point cellPosition, int frameTime)
+        public Virus(string look, Vector2 cellPosition, int frameTime)
 
         {
             //TODO: Må, MÅ, hentes fra en høyere klasse slik at de får forskjellige variabler! 
@@ -172,11 +172,15 @@ namespace Virion
             else if (pixelCode == 2) c = fillColorDark;
             else if (pixelCode == 3) c = centerColor;
 
-            int xPos = (x - 2) * pixelSize + cellPosition.X - cellPosition.X % pixelSize;
-            int yPos = (y - 2) * pixelSize + cellPosition.Y - cellPosition.Y % pixelSize;
+            int xPos = (x - 2) * pixelSize + (int)cellPosition.X - (int)cellPosition.X % pixelSize;
+            int yPos = (y - 2) * pixelSize + (int)cellPosition.Y - (int)cellPosition.Y % pixelSize;
 
             spriteBatch.Draw(texture, new Rectangle(xPos, yPos, pixelSize, pixelSize), c);
 
+        }
+        public Vector2 getPosition()
+        {
+            return this.cellPosition;
         }
     }
 }
