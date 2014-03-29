@@ -194,8 +194,8 @@ namespace Virion
             else if (pixelCode == 2) c = (darkMatrix[x, y] ? fillColorDark : fillColor);
             else if (pixelCode == 3) c = (darkMatrix[x, y] ? centerColorDark : centerColor);
 
-            int xPos = (x - cellRadius) * pixelSize + cellPosition.X - cellPosition.X % pixelSize;
-            int yPos = (y - cellRadius) * pixelSize + cellPosition.Y - cellPosition.Y % pixelSize;
+            int xPos = (x - cellRadius) * pixelSize + cellPosition.X;// -cellPosition.X % pixelSize;
+            int yPos = (y - cellRadius) * pixelSize + cellPosition.Y;// -cellPosition.Y % pixelSize;
 
             spriteBatch.Draw(texture, new Rectangle(xPos, yPos, pixelSize, pixelSize), c);
 
@@ -444,11 +444,11 @@ namespace Virion
                 if (isClose(c) && isColliding(c))
                 {
                     coll();
-                    c.coll();
+                    //c.coll();
                 }
             }
-            if (cellPosition.X > 800 || cellPosition.X < 0) cellMotion.X *= -1;
-            if (cellPosition.Y > 500 || cellPosition.Y < 0) cellMotion.Y *= -1;
+            if (cellPosition.X > 750 || cellPosition.X < 0) cellMotion.X *= -1;
+            if (cellPosition.Y > 450 || cellPosition.Y < 0) cellMotion.Y *= -1;
         }
 
         public void coll()
