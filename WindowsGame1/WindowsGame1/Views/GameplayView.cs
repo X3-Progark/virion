@@ -56,16 +56,16 @@ namespace Virion
             whiteCellList = new List<WhiteCell>();
 
             //The look of the different players
-            string p1 = "XOXXOXXOX";
-            string p2 = "OXOOMXXXX";
-            string p3 = "XMXOMOXMX";
-            string p4 = "OXOOMOXOX";
+            Main.Instance.players[0].Model = "XOXXOXXOX";
+            Main.Instance.players[1].Model = "OXOOMXXXX";
+            Main.Instance.players[2].Model = "XMXOMOXMX";
+            Main.Instance.players[3].Model = "OXOOMOXOX";
 
             //Creates players
-            Virus player1 = new Virus(p1, new Vector2(100, 400), 5);
-            Virus player2 = new Virus(p2, new Vector2(200, 400), 5);
-            Virus player3 = new Virus(p3, new Vector2(300, 400), 5);
-            Virus player4 = new Virus(p4, new Vector2(400, 400), 5);
+            Virus player1 = new Virus(Main.Instance.players[0], new Vector2(100, 400), 5);
+            Virus player2 = new Virus(Main.Instance.players[1], new Vector2(200, 400), 5);
+            Virus player3 = new Virus(Main.Instance.players[2], new Vector2(300, 400), 5);
+            Virus player4 = new Virus(Main.Instance.players[3], new Vector2(400, 400), 5);
 
             //Adds players to the list and gives the correct controls
             addNewPlayer(player1, Keys.Up, Keys.Left, Keys.Down, Keys.Right);

@@ -31,15 +31,34 @@ namespace Virion
         private Vector2 cellMotion;
         private float breakFactor, motionAdd, maxSpeed;
 
+        private Player player;
+
         Random random;
 
-        public Virus(string look, Vector2 cellPosition, int frameTime)
+        private int health;
+        public int Health
+        {
+            get { return this.health; }
+            set { this.health = value; }
+        }
+
+        private int strength;
+        public int Strength
+        {
+            get { return this.strength; }
+            set { this.strength = value; }
+        }
+
+        public Virus(Player player, Vector2 cellPosition, int frameTime)
 
         {
             //TODO: Må, MÅ, hentes fra en høyere klasse slik at de får forskjellige variabler! 
             //Når de blir initialisert samtidig får de akkurat samme variabler => cellene blir identiske
             random = new Random();
 
+            this.strength = 1 * player.Strength;
+            this.health = 100 * player.Health;
+            this.player = player;
             this.frameTime = frameTime;
             elapsedTime = 0;
 
@@ -68,9 +87,9 @@ namespace Virion
             //How much it should move
             motionAdd = pixelSize * 0.05f;
 
-            maxSpeed = pixelSize * 0.5f;
+            maxSpeed = pixelSize * 0.5f * player.Speed;
 
-            setColorMatrix(look);
+            setColorMatrix(player.Model);
         }
 
         private void setColorMatrix(string look)

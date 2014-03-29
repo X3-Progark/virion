@@ -12,11 +12,6 @@ namespace Virion
     {
         int currentPlayer;
 
-        static int[] proteins;
-        static int[] strengthLevel;
-        static int[] healthLevel;
-        static int[] speedLevel;
-
         MenuEntry speedMutation;
         MenuEntry strengthMutation;
         MenuEntry healthMutation;
@@ -28,12 +23,6 @@ namespace Virion
         public MutationView()
             : base("Mutation Menu")
         {
-
-            proteins = new int[4] { 3, 3, 3, 3 };
-
-            strengthLevel = new int[4] { 0, 0, 0, 0 };
-            healthLevel = new int[4] { 0, 0, 0, 0 };
-            speedLevel = new int[4] { 0, 0, 0, 0 };
 
             currentPlayer = 0;
 
@@ -65,19 +54,19 @@ namespace Virion
         void SetMenuEntryText()
         {
             playerIndexEntry.Text = "Current player: " + (currentPlayer+1);
-            proteinCountEntry.Text = "Available proteins: " + proteins[currentPlayer];
-            speedMutation.Text = "Speed: " + speedLevel[currentPlayer];
-            healthMutation.Text = "Health: " + healthLevel[currentPlayer];
-            strengthMutation.Text = "Strength: " + strengthLevel[currentPlayer];
+            proteinCountEntry.Text = "Available proteins: " + Main.Instance.players[currentPlayer].Proteins;
+            speedMutation.Text = "Speed: " + Main.Instance.players[currentPlayer].Speed;
+            healthMutation.Text = "Health: " + Main.Instance.players[currentPlayer].Health;
+            strengthMutation.Text = "Strength: " + Main.Instance.players[currentPlayer].Strength;
         }
 
         // Upgrades virus speed
         void BuySpeed(object sender, PlayerIndexEventArgs e)
         {
-            if (proteins[currentPlayer] > 0)
+            if (Main.Instance.players[currentPlayer].Proteins > 0)
             {
-                proteins[currentPlayer]--;
-                speedLevel[currentPlayer]++;
+                Main.Instance.players[currentPlayer].Proteins--;
+                Main.Instance.players[currentPlayer].Speed++;
                 SetMenuEntryText();
             }
         }
@@ -85,10 +74,10 @@ namespace Virion
         // Upgrades virus infection strength
         void BuyStrength(object sender, PlayerIndexEventArgs e)
         {
-            if (proteins[currentPlayer] > 0)
+            if (Main.Instance.players[currentPlayer].Proteins > 0)
             {
-                proteins[currentPlayer]--;
-                strengthLevel[currentPlayer]++;
+                Main.Instance.players[currentPlayer].Proteins--;
+                Main.Instance.players[currentPlayer].Strength++;
                 SetMenuEntryText();
             }
         }
@@ -96,10 +85,10 @@ namespace Virion
         // Upgrades virus health
         void BuyHealth(object sender, PlayerIndexEventArgs e)
         {
-            if (proteins[currentPlayer] > 0)
+            if (Main.Instance.players[currentPlayer].Proteins > 0)
             {
-                proteins[currentPlayer]--;
-                healthLevel[currentPlayer]++;
+                Main.Instance.players[currentPlayer].Proteins--;
+                Main.Instance.players[currentPlayer].Health++;
                 SetMenuEntryText();
             }
         }

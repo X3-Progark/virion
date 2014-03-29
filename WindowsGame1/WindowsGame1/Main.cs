@@ -30,6 +30,8 @@ namespace Virion
         
         ViewManager viewManager;
 
+        public Player[] players;
+
         public Main()
         {
             Instance = this;
@@ -47,6 +49,12 @@ namespace Virion
         protected override void Initialize()
         {
             base.Initialize();
+
+            players = new Player[4];
+            players[0] = (new Player("Player 1"));
+            players[1] = (new Player("Player 2"));
+            players[2] = (new Player("Player 3"));
+            players[3] = (new Player("Player 4"));
 
             baseScreenSize = new Vector2(1200, 800);
 
