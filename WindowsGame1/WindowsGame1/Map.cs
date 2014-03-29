@@ -26,7 +26,7 @@ namespace Virion
         public void generate()
         {
             normalCells = level * 10;
-            whiteCells = level *2;
+            whiteCells = level *1;
         }
 
         public int Level { get; set; }
