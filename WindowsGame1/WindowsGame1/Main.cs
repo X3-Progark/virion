@@ -22,9 +22,10 @@ namespace Virion
         GraphicsDevice device;
 
         const bool resultionIndependent = true;
-        Vector2 baseScreenSize;
-        int screenWidth, screenHeight;
         Matrix globalTransformation;
+        int resolutionIndex;
+
+        Vector2[] resolutions;
 
         public static Random random = new Random();
         
@@ -32,6 +33,42 @@ namespace Virion
 
         public Player[] players;
         public int playerCount;
+
+        public bool FullScreen
+        {
+            get { return graphics.IsFullScreen; }
+            set
+            { 
+                graphics.IsFullScreen = value;
+                graphics.ApplyChanges();
+            }
+        }
+
+        public Vector2 Resolution
+        {
+            get { return new Vector2(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height); }
+            set
+            {
+                graphics.PreferredBackBufferHeight = (int)value.Y;
+                graphics.PreferredBackBufferWidth = (int)value.X;
+                graphics.ApplyChanges();
+            }
+        }
+
+        public int ResolutionIndex
+        {
+            get { return resolutionIndex; }
+            set
+            {
+                if (value > resolutions.Length -1)
+                    this.resolutionIndex = 0;
+                else
+                    this.resolutionIndex = value;
+
+                this.Resolution = resolutions[this.resolutionIndex];
+            }
+        }
+
 
         public Main()
         {
@@ -57,22 +94,11 @@ namespace Virion
             for (int i=0; i < playerCount; i++)
                 players[i] = (new Player("Player "+(i+1), i));
 
-            baseScreenSize = new Vector2(1200, 800);
+            resolutions = new Vector2[3] { new Vector2(1200, 800), new Vector2(1366, 768), new Vector2(1920, 1080) };
 
-            if (resultionIndependent)
-            {
-                screenWidth = (int)baseScreenSize.X;
-                screenHeight = (int)baseScreenSize.Y;
-            }
-            else
-            {
-                screenWidth = device.PresentationParameters.BackBufferWidth;
-                screenHeight = device.PresentationParameters.BackBufferHeight;
-            }
             graphics.IsFullScreen = false;
-            graphics.PreferredBackBufferHeight = screenHeight;
-            graphics.PreferredBackBufferWidth = screenWidth;
-            graphics.ApplyChanges();
+
+            this.ResolutionIndex = 0;
 
         }
         
@@ -104,8 +130,8 @@ namespace Virion
             Vector3 screenScalingFactor;
             if (resultionIndependent)
             {
-                float horScaling = (float)device.PresentationParameters.BackBufferWidth / baseScreenSize.X;
-                float verScaling = (float)device.PresentationParameters.BackBufferHeight / baseScreenSize.Y;
+                float horScaling = (float)device.PresentationParameters.BackBufferWidth / Resolution.X;
+                float verScaling = (float)device.PresentationParameters.BackBufferHeight / Resolution.Y;
                 screenScalingFactor = new Vector3(horScaling, verScaling, 1);
             }
             else
