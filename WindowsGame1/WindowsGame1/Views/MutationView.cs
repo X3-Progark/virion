@@ -95,7 +95,7 @@ namespace Virion
 
         void SwitchPlayer(object sender, PlayerIndexEventArgs e)
         {
-            if (currentPlayer < Main.Instance.playerCount - 1)
+            if (currentPlayer < Main.Instance.Conf.playerCount - 1)
             {
                 currentPlayer++;
             }

@@ -16,59 +16,23 @@ namespace Virion
     {
         public static Main Instance;
 
-        GraphicsDeviceManager graphics;
+        public GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Texture2D texture;
         GraphicsDevice device;
 
         const bool resultionIndependent = true;
         Matrix globalTransformation;
-        int resolutionIndex;
-
-        Vector2[] resolutions;
+        
 
         public static Random random = new Random();
         
         ViewManager viewManager;
 
+        public Config Conf;
+
         public Player[] players;
-        public int playerCount;
-
-        public bool FullScreen
-        {
-            get { return graphics.IsFullScreen; }
-            set
-            { 
-                graphics.IsFullScreen = value;
-                graphics.ApplyChanges();
-            }
-        }
-
-        public Vector2 Resolution
-        {
-            get { return new Vector2(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height); }
-            set
-            {
-                graphics.PreferredBackBufferHeight = (int)value.Y;
-                graphics.PreferredBackBufferWidth = (int)value.X;
-                graphics.ApplyChanges();
-            }
-        }
-
-        public int ResolutionIndex
-        {
-            get { return resolutionIndex; }
-            set
-            {
-                if (value > resolutions.Length -1)
-                    this.resolutionIndex = 0;
-                else
-                    this.resolutionIndex = value;
-
-                this.Resolution = resolutions[this.resolutionIndex];
-            }
-        }
-
+        
 
         public Main()
         {
@@ -76,7 +40,9 @@ namespace Virion
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
+            Conf = new Config();
             viewManager = new ViewManager(this);
+
             Components.Add(viewManager);
 
             viewManager.AddView(new BackgroundView(), null);
@@ -88,17 +54,9 @@ namespace Virion
         {
             base.Initialize();
 
-            playerCount = 4;
-
-            players = new Player[playerCount];
-            for (int i=0; i < playerCount; i++)
+            players = new Player[Conf.playerCount];
+            for (int i = 0; i < Conf.playerCount; i++)
                 players[i] = (new Player("Player "+(i+1), i));
-
-            resolutions = new Vector2[3] { new Vector2(1200, 800), new Vector2(1366, 768), new Vector2(1920, 1080) };
-
-            graphics.IsFullScreen = false;
-
-            this.ResolutionIndex = 0;
 
         }
         
@@ -106,7 +64,8 @@ namespace Virion
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             device = graphics.GraphicsDevice;
-            
+
+            Conf.LoadContent();
 
             texture = new Texture2D(graphics.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             //Texture2D texture = new Texture2D(graphics, 1, 1, SurfaceFormat.Color);
@@ -130,8 +89,8 @@ namespace Virion
             Vector3 screenScalingFactor;
             if (resultionIndependent)
             {
-                float horScaling = (float)device.PresentationParameters.BackBufferWidth / Resolution.X;
-                float verScaling = (float)device.PresentationParameters.BackBufferHeight / Resolution.Y;
+                float horScaling = (float)device.PresentationParameters.BackBufferWidth / Conf.Resolution.X;
+                float verScaling = (float)device.PresentationParameters.BackBufferHeight / Conf.Resolution.Y;
                 screenScalingFactor = new Vector3(horScaling, verScaling, 1);
             }
             else

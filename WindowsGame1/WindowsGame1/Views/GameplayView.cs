@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 
+
 namespace Virion
 {
     class GameplayView : GameView
@@ -69,7 +70,7 @@ namespace Virion
             Keys[] down = new Keys[4] { Keys.Down, Keys.S, Keys.G, Keys.K };
             Keys[] right = new Keys[4] { Keys.Right, Keys.D, Keys.H, Keys.L }; 
 
-            for (int i = 0; i < Main.Instance.playerCount; i++)
+            for (int i = 0; i < Main.Instance.Conf.playerCount; i++)
             {
                 Main.Instance.players[i].Model = models[i];
                 Virus p = new Virus(Main.Instance.players[i], new Vector2(i * 100, i * 100), 5);
@@ -120,6 +121,8 @@ namespace Virion
                 ViewManager.Game.ResetElapsedTime();
             }
         }
+
+        
 
 
 
