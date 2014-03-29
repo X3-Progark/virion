@@ -125,7 +125,7 @@ namespace Virion
             {
                 //If we are not supposed to calculate a new frame, just return
                 //base.Update(gameTime);
-                return;
+                //return;
             }
 
             //We have reached the elapsed time and have to reset it

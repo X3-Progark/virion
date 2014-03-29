@@ -299,7 +299,8 @@ namespace Virion
                 cellPointsLength[i] = length;
 
                 //SOME UGLY SHIET
-                if (length >= cellRadius || length <= cellRadius * (1 - cellRadiusMinFactor)) cellPointsLengthSpeed[i] = -cellPointsLengthSpeed[i];
+                if (length >= cellRadius || length <= cellRadius * (1 - cellRadiusMinFactor))
+                    cellPointsLengthSpeed[i] = -cellPointsLengthSpeed[i];
 
                 cellVectors[i] = getVectorFromAngleAndLength(angle, length);
 
