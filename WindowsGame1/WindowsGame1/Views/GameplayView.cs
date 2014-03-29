@@ -63,6 +63,7 @@ namespace Virion
 
             //The look of the different players
 
+
             string[] models = new string[4] { "XOXXOXXOX", "OXOOMXXXX", "XMXOMOXMX", "OXOOMOXOX" };
 
             Keys[] up = new Keys[4] { Keys.Up, Keys.W, Keys.T, Keys.I };
@@ -80,12 +81,10 @@ namespace Virion
             totalCells = 40;
 
             for (int i = 0; i < totalCells; i++)
-                cellList.Add(new NormalCell(new Point((int)(800 * Main.getRandomD()), (int)(500 * Main.getRandomD())), 30));
+                cellList.Add(new NormalCell(new Vector2((int)(600 * Main.getRandomD() + 100), (int)(200 * Main.getRandomD() + 100)), 30));
 
-            for (int i = 0; i < 5; i++)
-                whiteCellList.Add(new WhiteCell(new Vector2((int)(800 * Main.getRandomD()), (int)(500 * Main.getRandomD())), 30));
-
-            //cellList.Add(new WhiteCell(new Point(300, 300), 200));
+            for (int i = 0; i < 10; i++)
+                whiteCellList.Add(new WhiteCell(new Vector2((int)(800 * Main.getRandomD()), (int)(500 * Main.getRandomD())), 50));
 
         }
 

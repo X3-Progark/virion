@@ -61,7 +61,7 @@ namespace Virion
 
         public Config()
         {
-            this.resolutions = new Vector2[3] { new Vector2(1200, 800), new Vector2(1366, 768), new Vector2(1920, 1080) };
+            this.resolutions = new Vector2[4] { new Vector2(800, 600), new Vector2(1200, 800), new Vector2(1366, 768), new Vector2(1920, 1080) };
             this.ResolutionIndex = 0;
             this.playerCount = 4;
         }
