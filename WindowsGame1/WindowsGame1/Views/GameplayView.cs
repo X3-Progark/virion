@@ -23,6 +23,7 @@ namespace Virion
         List<Virus> playerObjects;
         List<WhiteCell> whiteCellList;
 
+        Texture2D healthBarTexture;
 
         Vector2 playerPosition = new Vector2(100, 100);
         Vector2 enemyPosition = new Vector2(100, 100);
@@ -33,6 +34,7 @@ namespace Virion
 
         InputAction pauseAction;
 
+        int infected, dead, totalCells;
 
         List<NormalCell> cellList;
 
@@ -41,6 +43,9 @@ namespace Virion
         {
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
+
+            healthBarTexture = new Texture2D(Main.Instance.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+            healthBarTexture.SetData(new[] { Color.White });
 
             pauseAction = new InputAction(
                 new Keys[] { Keys.Escape },
@@ -56,30 +61,29 @@ namespace Virion
             whiteCellList = new List<WhiteCell>();
 
             //The look of the different players
-            string p1 = "XOXXOXXOX";
-            string p2 = "OXOOMXXXX";
-            string p3 = "XMXOMOXMX";
-            string p4 = "OXOOMOXOX";
 
-            //Creates players
-            Virus player1 = new Virus(p1, new Vector2(100, 400), 5);
-            Virus player2 = new Virus(p2, new Vector2(200, 400), 5);
-            Virus player3 = new Virus(p3, new Vector2(300, 400), 5);
-            Virus player4 = new Virus(p4, new Vector2(400, 400), 5);
 
-            //Adds players to the list and gives the correct controls
-            addNewPlayer(player1, Keys.Up, Keys.Left, Keys.Down, Keys.Right);
-            addNewPlayer(player2, Keys.W, Keys.A, Keys.S, Keys.D);
-            addNewPlayer(player3, Keys.T, Keys.F, Keys.G, Keys.H);
-            //addNewPlayer(player4, Keys.I, Keys.J, Keys.K, Keys.L);
+            string[] models = new string[4] { "XOXXOXXOX", "OXOOMXXXX", "XMXOMOXMX", "OXOOMOXOX" };
 
-            for (int i = 0; i < 40; i++)
-                cellList.Add(new NormalCell(new Vector2((int)(800 * Main.getRandomD()), (int)(500 * Main.getRandomD())), 50));
+            Keys[] up = new Keys[4] { Keys.Up, Keys.W, Keys.T, Keys.I };
+            Keys[] left = new Keys[4] { Keys.Left, Keys.A, Keys.F, Keys.J };
+            Keys[] down = new Keys[4] { Keys.Down, Keys.S, Keys.G, Keys.K };
+            Keys[] right = new Keys[4] { Keys.Right, Keys.D, Keys.H, Keys.L }; 
+
+            for (int i = 0; i < Main.Instance.playerCount; i++)
+            {
+                Main.Instance.players[i].Model = models[i];
+                Virus p = new Virus(Main.Instance.players[i], new Vector2(i * 100, i * 100), 5);
+                addNewPlayer(p, up[i], left[i], down[i], right[i]);
+            }
+
+            totalCells = 40;
+
+            for (int i = 0; i < totalCells; i++)
+                cellList.Add(new NormalCell(new Vector2((int)(600 * Main.getRandomD() + 100), (int)(200 * Main.getRandomD() + 100)), 30));
 
             for (int i = 0; i < 10; i++)
                 whiteCellList.Add(new WhiteCell(new Vector2((int)(800 * Main.getRandomD()), (int)(500 * Main.getRandomD())), 50));
-
-            //cellList.Add(new WhiteCell(new Point(300, 300), 200));
 
         }
 
@@ -141,11 +145,17 @@ namespace Virion
 
             if (IsActive)
             {
+                infected = 0;
+                dead = 0;
+
                 foreach (NormalCell c in cellList)
                 {
                     c.Update(gameTime);
                     c.collisionHandeling(cellList);
-                    
+                    if (c.isInfected())
+                        infected++;
+                    else if (c.isDead())
+                        dead++;
                 }
 
                 foreach (Virus v in playerObjects) v.Update(gameTime);
@@ -219,6 +229,16 @@ namespace Virion
         }
 
 
+        public void GameWon()
+        {
+            foreach (Player p in Main.Instance.players)
+            {
+                p.Proteins++;
+            }
+            LoadingView.Load(ViewManager, false, null, new BackgroundView(), new MainMenuView());
+        }
+
+
         
         public override void Draw(GameTime gameTime)
         {
@@ -229,12 +249,24 @@ namespace Virion
 
             spriteBatch.Begin();
 
-
             foreach (Unit c in cellList) c.Draw(gameTime, spriteBatch);
-            foreach (Virus v in playerObjects) v.Draw(gameTime, spriteBatch);
+            foreach (Virus v in playerObjects)
+            {
+                // Virus
+                v.Draw(gameTime, spriteBatch);
+
+                // Health bar
+                spriteBatch.Draw(healthBarTexture, new Rectangle(150 * v.Player.Index + 40, 20, 1 * v.Health, 20), Color.Red);
+
+                spriteBatch.DrawString(gameFont, "P" + (v.Player.Index+1), new Vector2(150 * v.Player.Index + 10, 10), Color.Black);
+            }
 
             //wc.Draw(gameTime, spriteBatch, playerPosition);
             foreach (WhiteCell wc in whiteCellList) wc.Draw(gameTime, spriteBatch);
+
+            spriteBatch.DrawString(gameFont, "Infected: "+ infected, new Vector2(10, 50), Color.Black);
+            spriteBatch.DrawString(gameFont, "Dead: " + dead, new Vector2(10, 70), Color.Black);
+            spriteBatch.DrawString(gameFont, "Healthy" + (totalCells - dead - infected), new Vector2(10, 90), Color.Black);
 
             spriteBatch.End();
 
