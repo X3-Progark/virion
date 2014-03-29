@@ -142,6 +142,16 @@ namespace Virion
             //base.Initialize();
         }
 
+        public bool isInfected()
+        {
+            return this.state == State.Infected;
+        }
+
+        public bool isDead()
+        {
+            return this.state == State.Dead;
+        }
+
         private void initDarkMatrix()
         {
             Random r = getRandom();

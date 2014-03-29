@@ -34,6 +34,7 @@ namespace Virion
 
         InputAction pauseAction;
 
+        int infected, dead, totalCells;
 
         List<NormalCell> cellList;
 
@@ -75,8 +76,9 @@ namespace Virion
                 addNewPlayer(p, up[i], left[i], down[i], right[i]);
             }
 
+            totalCells = 40;
 
-            for (int i = 0; i < 40; i++)
+            for (int i = 0; i < totalCells; i++)
                 cellList.Add(new NormalCell(new Point((int)(800 * Main.getRandomD()), (int)(500 * Main.getRandomD())), 30));
 
             for (int i = 0; i < 5; i++)
@@ -144,11 +146,17 @@ namespace Virion
 
             if (IsActive)
             {
+                infected = 0;
+                dead = 0;
+
                 foreach (NormalCell c in cellList)
                 {
                     c.Update(gameTime);
                     c.collisionHandeling(cellList);
-                    
+                    if (c.isInfected())
+                        infected++;
+                    else if (c.isDead())
+                        dead++;
                 }
 
                 foreach (Virus v in playerObjects) v.Update(gameTime);
@@ -257,8 +265,9 @@ namespace Virion
             //wc.Draw(gameTime, spriteBatch, playerPosition);
             foreach (WhiteCell wc in whiteCellList) wc.Draw(gameTime, spriteBatch);
 
-            
-            
+            spriteBatch.DrawString(gameFont, "Infected: "+ infected, new Vector2(10, 50), Color.Black);
+            spriteBatch.DrawString(gameFont, "Dead: " + dead, new Vector2(10, 70), Color.Black);
+            spriteBatch.DrawString(gameFont, "Healthy" + (totalCells - dead - infected), new Vector2(10, 90), Color.Black);
 
             spriteBatch.End();
 
