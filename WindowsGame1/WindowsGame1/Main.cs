@@ -14,6 +14,8 @@ namespace Virion
     
     public class Main : Microsoft.Xna.Framework.Game
     {
+        public static Main Instance;
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         Texture2D texture;
@@ -30,6 +32,7 @@ namespace Virion
 
         public Main()
         {
+            Instance = this;
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
@@ -45,7 +48,7 @@ namespace Virion
         {
             base.Initialize();
 
-            baseScreenSize = new Vector2(1920, 1080);
+            baseScreenSize = new Vector2(1200, 800);
 
             if (resultionIndependent)
             {

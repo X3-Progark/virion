@@ -448,8 +448,8 @@ namespace Virion
                     c.coll();
                 }
             }
-            if (cellPosition.X > 800 || cellPosition.X < 0) cellMotion.X *= -1;
-            if (cellPosition.Y > 500 || cellPosition.Y < 0) cellMotion.Y *= -1;
+            if (cellPosition.X > Main.Instance.GraphicsDevice.Viewport.Width || cellPosition.X < 0) cellMotion.X *= -1;
+            if (cellPosition.Y > Main.Instance.GraphicsDevice.Viewport.Height || cellPosition.Y < 0) cellMotion.Y *= -1;
         }
 
         public void coll()

@@ -74,10 +74,10 @@ namespace Virion
             //addNewPlayer(player4, Keys.I, Keys.J, Keys.K, Keys.L);
 
             for (int i = 0; i < 40; i++)
-                cellList.Add(new NormalCell(new Point((int)(800 * Main.getRandomD()), (int)(500 * Main.getRandomD())), 100));
+                cellList.Add(new NormalCell(new Point((int)(800 * Main.getRandomD()), (int)(500 * Main.getRandomD())), 30));
 
             for (int i = 0; i < 5; i++)
-                whiteCellList.Add(new WhiteCell(new Vector2((int)(800 * Main.getRandomD()), (int)(500 * Main.getRandomD())), 200));
+                whiteCellList.Add(new WhiteCell(new Vector2((int)(800 * Main.getRandomD()), (int)(500 * Main.getRandomD())), 30));
 
             //cellList.Add(new WhiteCell(new Point(300, 300), 200));
 

@@ -134,7 +134,7 @@ namespace Virion
             cellDirection = cellPosition-closestEnemy.getPosition();
             cellDirection.Normalize();
             Console.WriteLine(cellDirection.ToString());
-            cellPosition -= cellDirection * 10;
+            cellPosition -= cellDirection * 1;
 
             colorMatrix = new int[cellLength * 2, cellLength * 2];
             updateDarkMatrix();
