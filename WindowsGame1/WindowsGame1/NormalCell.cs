@@ -299,7 +299,8 @@ namespace Virion
                 cellPointsLength[i] = length;
 
                 //SOME UGLY SHIET
-                if (length >= cellRadius || length <= cellRadius * (1 - cellRadiusMinFactor)) cellPointsLengthSpeed[i] = -cellPointsLengthSpeed[i];
+                if (length >= cellRadius || length <= cellRadius * (1 - cellRadiusMinFactor))
+                    cellPointsLengthSpeed[i] = -cellPointsLengthSpeed[i];
 
                 cellVectors[i] = getVectorFromAngleAndLength(angle, length);
 
@@ -447,8 +448,9 @@ namespace Virion
                     //c.coll();
                 }
             }
-            if (cellPosition.X > 750 || cellPosition.X < 0) cellMotion.X *= -1;
-            if (cellPosition.Y > 450 || cellPosition.Y < 0) cellMotion.Y *= -1;
+
+            if (cellPosition.X > Main.Instance.GraphicsDevice.Viewport.Width || cellPosition.X < 0) cellMotion.X *= -1;
+            if (cellPosition.Y > Main.Instance.GraphicsDevice.Viewport.Height || cellPosition.Y < 0) cellMotion.Y *= -1;
         }
 
         public void coll()

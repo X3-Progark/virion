@@ -33,12 +33,14 @@ namespace Virion
             cellLength, cellRadius,
             elapsedTime, frameTime;
 
-        private Point cellPosition;
+        private Vector2 cellPosition;
         private Vector2 cellDirection, cellMotion;
 
         Random random;
 
-        public WhiteCell(Point cellPosition, int frameTime)
+        List<Virus> playerObjects;
+
+        public WhiteCell(Vector2 cellPosition, int frameTime)
         {
             //TODO: Må, MÅ, hentes fra en høyere klasse slik at de får forskjellige variabler! 
             //Når de blir initialisert samtidig får de akkurat samme variabler > cellene blir identiske
@@ -128,7 +130,11 @@ namespace Virion
 
             //We have reached the elapsed time and have to reset it
             elapsedTime = 0;
-
+            Virus closestEnemy = findClosestVirus();
+            cellDirection = cellPosition-closestEnemy.getPosition();
+            cellDirection.Normalize();
+            Console.WriteLine(cellDirection.ToString());
+            cellPosition -= cellDirection * 1;
 
             colorMatrix = new int[cellLength * 2, cellLength * 2];
             updateDarkMatrix();
@@ -297,8 +303,8 @@ namespace Virion
             else if (pixelCode == 2) c = (darkMatrix[x, y] ? fillColorDark : fillColor);
             else if (pixelCode == 3) c = (darkMatrix[x, y] ? centerColorDark : centerColor);
 
-            int xPos = (x - cellLength) * pixelSize + cellPosition.X - cellPosition.X % pixelSize;
-            int yPos = (y - cellLength) * pixelSize + cellPosition.Y - cellPosition.Y % pixelSize;
+            int xPos = (x - cellLength) * pixelSize + (int)cellPosition.X - (int)cellPosition.X % pixelSize;
+            int yPos = (y - cellLength) * pixelSize + (int)cellPosition.Y - (int)cellPosition.Y % pixelSize;
 
             spriteBatch.Draw(texture, new Rectangle(xPos, yPos, pixelSize, pixelSize), c);
 
@@ -314,6 +320,28 @@ namespace Virion
         public double getRandomD()
         {
             return random.NextDouble();
+        }
+        private Virus findClosestVirus()
+        {
+            Virus virus = null;
+            float distance = float.MaxValue;
+           
+            foreach (Virus v in playerObjects)
+            {
+                float temp = Vector2.Distance(this.cellPosition, v.getPosition());
+                if (distance > temp)
+                {
+                    distance = temp;
+                    virus = v;
+                }
+        
+            }
+            return virus;
+        }
+
+        public void updateVirus(List<Virus> playerObjects)
+        {
+            this.playerObjects = playerObjects;
         }
 
 

@@ -41,11 +41,9 @@ namespace Virion
             TransitionOffTime = TimeSpan.FromSeconds(0.2);
 
             menuSelect = new InputAction(
-                new Buttons[] { Buttons.A, Buttons.Start },
                 new Keys[] { Keys.Space, Keys.Enter },
                 true);
             menuCancel = new InputAction(
-                new Buttons[] { Buttons.B, Buttons.Back },
                 new Keys[] { Keys.Escape, Keys.Back },
                 true);
         }
