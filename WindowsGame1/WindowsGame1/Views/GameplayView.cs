@@ -56,22 +56,21 @@ namespace Virion
             whiteCellList = new List<WhiteCell>();
 
             //The look of the different players
-            Main.Instance.players[0].Model = "XOXXOXXOX";
-            Main.Instance.players[1].Model = "OXOOMXXXX";
-            Main.Instance.players[2].Model = "XMXOMOXMX";
-            Main.Instance.players[3].Model = "OXOOMOXOX";
 
-            //Creates players
-            Virus player1 = new Virus(Main.Instance.players[0], new Vector2(100, 400), 5);
-            Virus player2 = new Virus(Main.Instance.players[1], new Vector2(200, 400), 5);
-            Virus player3 = new Virus(Main.Instance.players[2], new Vector2(300, 400), 5);
-            Virus player4 = new Virus(Main.Instance.players[3], new Vector2(400, 400), 5);
+            string[] models = new string[4] { "XOXXOXXOX", "OXOOMXXXX", "XMXOMOXMX", "OXOOMOXOX" };
 
-            //Adds players to the list and gives the correct controls
-            addNewPlayer(player1, Keys.Up, Keys.Left, Keys.Down, Keys.Right);
-            addNewPlayer(player2, Keys.W, Keys.A, Keys.S, Keys.D);
-            addNewPlayer(player3, Keys.T, Keys.F, Keys.G, Keys.H);
-            //addNewPlayer(player4, Keys.I, Keys.J, Keys.K, Keys.L);
+            Keys[] up = new Keys[4] { Keys.Up, Keys.W, Keys.T, Keys.I };
+            Keys[] left = new Keys[4] { Keys.Left, Keys.A, Keys.F, Keys.J };
+            Keys[] down = new Keys[4] { Keys.Down, Keys.S, Keys.G, Keys.K };
+            Keys[] right = new Keys[4] { Keys.Right, Keys.D, Keys.H, Keys.L }; 
+
+            for (int i = 0; i < Main.Instance.playerCount; i++)
+            {
+                Main.Instance.players[i].Model = models[i];
+                Virus p = new Virus(Main.Instance.players[i], new Vector2(i * 100, i * 100), 5);
+                addNewPlayer(p, up[i], left[i], down[i], right[i]);
+            }
+
 
             for (int i = 0; i < 40; i++)
                 cellList.Add(new NormalCell(new Point((int)(800 * Main.getRandomD()), (int)(500 * Main.getRandomD())), 30));
@@ -219,6 +218,16 @@ namespace Virion
         }
 
 
+        public void GameWon()
+        {
+            foreach (Player p in Main.Instance.players)
+            {
+                p.Proteins++;
+            }
+            LoadingView.Load(ViewManager, false, null, new BackgroundView(), new MainMenuView());
+        }
+
+
         
         public override void Draw(GameTime gameTime)
         {
@@ -228,7 +237,6 @@ namespace Virion
             SpriteBatch spriteBatch = ViewManager.SpriteBatch;
 
             spriteBatch.Begin();
-
 
             foreach (Unit c in cellList) c.Draw(gameTime, spriteBatch);
             foreach (Virus v in playerObjects) v.Draw(gameTime, spriteBatch);

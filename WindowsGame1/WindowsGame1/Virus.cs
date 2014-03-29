@@ -82,10 +82,10 @@ namespace Virion
             cellMotion = new Vector2();
 
             //How quick the speed should slow down
-            breakFactor = 0.98f;
+            breakFactor = 0.98f - 0.02f * player.Speed;
 
             //How much it should move
-            motionAdd = pixelSize * 0.05f;
+            motionAdd = pixelSize * ( 0.05f + 0.02f * player.Speed );
 
             maxSpeed = pixelSize * 0.5f * player.Speed;
 

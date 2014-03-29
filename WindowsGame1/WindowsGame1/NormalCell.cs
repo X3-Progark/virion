@@ -16,6 +16,14 @@ namespace Virion
     public class NormalCell : Unit
     {
 
+        enum State
+        {
+            Healthy,
+            Infected,
+            Dead
+        };
+
+
         //Default texture
         private Texture2D texture;
 
@@ -46,11 +54,15 @@ namespace Virion
         private Point cellPosition;
         private Vector2 cellMotion;
 
+        private State state;
+
         public NormalCell(Point cellPosition, int frameTime)
 
         {
             //TODO: Må, MÅ, hentes fra en høyere klasse slik at de får forskjellige variabler! 
             //Når de blir initialisert samtidig får de akkurat samme variabler > cellene blir identiske
+
+            this.state = State.Healthy;
 
             this.frameTime = frameTime;
             elapsedTime = 0;

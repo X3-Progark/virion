@@ -31,6 +31,7 @@ namespace Virion
         ViewManager viewManager;
 
         public Player[] players;
+        public int playerCount;
 
         public Main()
         {
@@ -50,11 +51,11 @@ namespace Virion
         {
             base.Initialize();
 
-            players = new Player[4];
-            players[0] = (new Player("Player 1"));
-            players[1] = (new Player("Player 2"));
-            players[2] = (new Player("Player 3"));
-            players[3] = (new Player("Player 4"));
+            playerCount = 4;
+
+            players = new Player[playerCount];
+            for (int i=0; i < playerCount; i++)
+                players[i] = (new Player("Player "+(i+1)));
 
             baseScreenSize = new Vector2(1200, 800);
 
