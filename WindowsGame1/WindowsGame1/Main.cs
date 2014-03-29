@@ -55,7 +55,7 @@ namespace Virion
 
             players = new Player[playerCount];
             for (int i=0; i < playerCount; i++)
-                players[i] = (new Player("Player "+(i+1)));
+                players[i] = (new Player("Player "+(i+1), i));
 
             baseScreenSize = new Vector2(1200, 800);
 

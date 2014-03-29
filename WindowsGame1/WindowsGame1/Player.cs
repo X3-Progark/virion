@@ -7,6 +7,8 @@ namespace Virion
 {
     public class Player
     {
+        private int index;
+
         private int proteins;
         private int strengthLevel;
         private int healthLevel;
@@ -51,11 +53,16 @@ namespace Virion
             set { this.model = value; }
         }
 
+        public int Index
+        {
+            get { return this.index; }
+            set { this.index = value; }
+        }
 
-
-        public Player(string name)
+        public Player(string name, int index)
         {
             this.name = name;
+            this.index = index;
 
             proteins = 3;
             strengthLevel = 1;

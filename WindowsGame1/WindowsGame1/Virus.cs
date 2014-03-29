@@ -49,6 +49,12 @@ namespace Virion
             set { this.strength = value; }
         }
 
+        public Player Player
+        {
+            get { return this.player; }
+            set { this.player = value; }
+        }
+
         public Virus(Player player, Vector2 cellPosition, int frameTime)
 
         {

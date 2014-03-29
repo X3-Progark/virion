@@ -23,6 +23,7 @@ namespace Virion
         List<Virus> playerObjects;
         List<WhiteCell> whiteCellList;
 
+        Texture2D healthBarTexture;
 
         Vector2 playerPosition = new Vector2(100, 100);
         Vector2 enemyPosition = new Vector2(100, 100);
@@ -41,6 +42,9 @@ namespace Virion
         {
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);
+
+            healthBarTexture = new Texture2D(Main.Instance.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+            healthBarTexture.SetData(new[] { Color.White });
 
             pauseAction = new InputAction(
                 new Keys[] { Keys.Escape },
@@ -239,10 +243,22 @@ namespace Virion
             spriteBatch.Begin();
 
             foreach (Unit c in cellList) c.Draw(gameTime, spriteBatch);
-            foreach (Virus v in playerObjects) v.Draw(gameTime, spriteBatch);
+            foreach (Virus v in playerObjects)
+            {
+                // Virus
+                v.Draw(gameTime, spriteBatch);
+
+                // Health bar
+                spriteBatch.Draw(healthBarTexture, new Rectangle(150 * v.Player.Index + 40, 20, 1 * v.Health, 20), Color.Red);
+
+                spriteBatch.DrawString(gameFont, "P" + (v.Player.Index+1), new Vector2(150 * v.Player.Index + 10, 10), Color.Black);
+            }
 
             //wc.Draw(gameTime, spriteBatch, playerPosition);
             foreach (WhiteCell wc in whiteCellList) wc.Draw(gameTime, spriteBatch);
+
+            
+            
 
             spriteBatch.End();
 
