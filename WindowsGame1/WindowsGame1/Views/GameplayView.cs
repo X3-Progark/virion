@@ -81,8 +81,16 @@ namespace Virion
             Map map = new Map();
             map.generate();
 
-            cellList = map.cellList;
-            whiteCellList = map.whiteCellList;
+            totalCells = map.normalCells;
+            int whiteCells = map.whiteCells;
+
+            Console.WriteLine(totalCells);
+            Console.WriteLine(whiteCells);
+            for (int i = 0; i < totalCells; i++)
+                cellList.Add(new NormalCell(new Point((int)(800 * Main.getRandomD()), (int)(500 * Main.getRandomD())), 30));
+
+            for (int i = 0; i < whiteCells; i++)
+                whiteCellList.Add(new WhiteCell(new Vector2((int)(800 * Main.getRandomD()), (int)(500 * Main.getRandomD())), 30));
 
             //cellList.Add(new WhiteCell(new Point(300, 300), 200));
 
