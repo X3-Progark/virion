@@ -29,7 +29,7 @@ namespace Virion
             fullScreenEntry.Selected += ToggleFullScreen;
             playerCountEntry.Selected += ChangePlayerCount;
             soundMenuEntry.Selected += SoundMenuEntrySelected;
-            back.Selected += OnCancel;
+            back.Selected += BackToMain;
 
             MenuEntries.Add(resolutionEntry);
             MenuEntries.Add(fullScreenEntry);
@@ -40,25 +40,26 @@ namespace Virion
 
         void SetMenuEntryText()
         {
-            resolutionEntry.Text = Main.Instance.Resolution.X + " x " + Main.Instance.Resolution.Y;
-            fullScreenEntry.Text = "Fullscreen: " + Main.Instance.FullScreen;
+
+            resolutionEntry.Text = Main.Instance.Conf.Resolution.X + " x " + Main.Instance.Conf.Resolution.Y;
+            fullScreenEntry.Text = "Fullscreen: " + Main.Instance.Conf.FullScreen;
             soundMenuEntry.Text = "Sound: " + sound;
-            playerCountEntry.Text = "Players: " + Main.Instance.playerCount;
+            playerCountEntry.Text = "Players: " + Main.Instance.Conf.playerCount;
         }
 
         void ChangePlayerCount(object sender, PlayerIndexEventArgs e)
         {
-            if (Main.Instance.playerCount > 3)
-                Main.Instance.playerCount = 1;
+            if (Main.Instance.Conf.playerCount > 3)
+                Main.Instance.Conf.playerCount = 1;
             else
-                Main.Instance.playerCount++;
+                Main.Instance.Conf.playerCount++;
 
             SetMenuEntryText();
         }
 
         void ToggleFullScreen(object sender, PlayerIndexEventArgs e)
         {
-            Main.Instance.FullScreen = !Main.Instance.FullScreen;
+            Main.Instance.Conf.FullScreen = !Main.Instance.Conf.FullScreen;
 
             SetMenuEntryText();
         }
@@ -66,7 +67,7 @@ namespace Virion
         void ChangeResolution(object sender, PlayerIndexEventArgs e)
         {
 
-            Main.Instance.ResolutionIndex++;
+            Main.Instance.Conf.ResolutionIndex++;
 
             SetMenuEntryText();
         }
@@ -75,6 +76,12 @@ namespace Virion
         {
             sound = !sound;
             SetMenuEntryText();
+        }
+
+        void BackToMain(object sender, PlayerIndexEventArgs e)
+        {
+            Main.Instance.Conf.Save("virionconf.xml");
+            OnCancel(0);
         }
     }
 }

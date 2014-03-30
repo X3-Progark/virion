@@ -36,6 +36,8 @@ namespace Virion
 
         private Vector2 cellPosition;
         private Vector2 cellDirection, cellMotion;
+        private Virus closestVirus;
+        private float closestVirusDistance;
 
         Random random;
 
@@ -134,15 +136,28 @@ namespace Virion
 
             //We have reached the elapsed time and have to reset it
             elapsedTime = 0;
+            findClosestVirus();
+            if (closestVirus != null)
+            {
 
-            //For the recalculation of the cell-walls
-            functionX++;
+                if( closestVirusDistance > this.cellRadius)
+                {
+                    cellDirection = cellPosition - closestVirus.getPosition();
+                    cellDirection.Normalize();
+                    cellPosition -= cellDirection * 1;
+                }
+                
+                if (closestVirusDistance < this.cellRadius*this.pixelSize)
+                {
+                    closestVirus.Health--;
+                }
+                
 
-            Virus closestEnemy = findClosestVirus();
-            cellDirection = cellPosition-closestEnemy.getPosition();
-            cellDirection.Normalize();
-            Console.WriteLine(cellDirection.ToString());
-            cellPosition -= cellDirection * 1;
+            }
+            else
+            {
+                cellPosition -= cellDirection * 1;
+            }
 
             colorMatrix = new int[cellLength * 2, cellLength * 2];
             updateDarkMatrix();
@@ -336,7 +351,7 @@ namespace Virion
             return Main.getRandomD();
         }
 
-        private Virus findClosestVirus()
+        private void findClosestVirus()
         {
             Virus virus = null;
             float distance = float.MaxValue;
@@ -344,14 +359,15 @@ namespace Virion
             foreach (Virus v in playerObjects)
             {
                 float temp = Vector2.Distance(this.cellPosition, v.getPosition());
-                if (distance > temp)
+                if (distance > temp && v.Health > 0)
                 {
                     distance = temp;
                     virus = v;
                 }
         
             }
-            return virus;
+            this.closestVirus = virus;
+            this.closestVirusDistance = distance;
         }
 
         public Vector2 getPosition()

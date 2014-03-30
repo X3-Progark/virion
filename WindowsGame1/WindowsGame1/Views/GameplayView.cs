@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 
+
 namespace Virion
 {
     class GameplayView : GameView
@@ -37,6 +38,7 @@ namespace Virion
         int infected, dead, totalCells;
 
         List<NormalCell> cellList;
+        List<Protein> proteins;
 
         
         public GameplayView()
@@ -59,6 +61,7 @@ namespace Virion
 
             cellList = new List<NormalCell>();
             whiteCellList = new List<WhiteCell>();
+            proteins = new List<Protein>();
 
             //The look of the different players
 
@@ -70,7 +73,7 @@ namespace Virion
             Keys[] down = new Keys[4] { Keys.Down, Keys.S, Keys.G, Keys.K };
             Keys[] right = new Keys[4] { Keys.Right, Keys.D, Keys.H, Keys.L }; 
 
-            for (int i = 0; i < Main.Instance.playerCount; i++)
+            for (int i = 0; i < Main.Instance.Conf.playerCount; i++)
             {
                 Main.Instance.players[i].Model = models[i];
                 Virus p = new Virus(Main.Instance.players[i], new Vector2(i * 100, i * 100), 5);
@@ -79,12 +82,22 @@ namespace Virion
 
             totalCells = 40;
 
+            Map map = new Map();
+            map.generate();
+
+            totalCells = map.normalCells;
+            int whiteCells = map.whiteCells;
+
+            Console.WriteLine(totalCells);
+            Console.WriteLine(whiteCells);
             for (int i = 0; i < totalCells; i++)
                 cellList.Add(new NormalCell(new Vector2((int)(600 * Main.getRandomD() + 100), (int)(200 * Main.getRandomD() + 100)), 30));
 
-            for (int i = 0; i < 10; i++)
-                whiteCellList.Add(new WhiteCell(new Vector2((int)(800 * Main.getRandomD()), (int)(500 * Main.getRandomD())), 50));
+            for (int i = 0; i < whiteCells; i++)
+                whiteCellList.Add(new WhiteCell(new Vector2((int)(800 * Main.getRandomD()), (int)(500 * Main.getRandomD())), 30));
 
+
+            proteins.Add(new Protein(new Vector2(200, 200), 100));
         }
 
         public void addNewPlayer(Virus v, Keys up, Keys left, Keys down, Keys right)
@@ -119,6 +132,8 @@ namespace Virion
                 ViewManager.Game.ResetElapsedTime();
             }
         }
+
+        
 
 
 
@@ -159,6 +174,8 @@ namespace Virion
                 }
 
                 foreach (Virus v in playerObjects) v.Update(gameTime);
+
+                foreach (Protein p in proteins) p.Update(gameTime);
 
                 foreach (WhiteCell wc in whiteCellList)
                 {
@@ -260,6 +277,8 @@ namespace Virion
 
                 spriteBatch.DrawString(gameFont, "P" + (v.Player.Index+1), new Vector2(150 * v.Player.Index + 10, 10), Color.Black);
             }
+
+            foreach (Protein p in proteins) p.Draw(gameTime, spriteBatch);
 
             //wc.Draw(gameTime, spriteBatch, playerPosition);
             foreach (WhiteCell wc in whiteCellList) wc.Draw(gameTime, spriteBatch);
