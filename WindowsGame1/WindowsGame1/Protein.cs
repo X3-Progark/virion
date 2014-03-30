@@ -21,11 +21,18 @@ namespace Virion
             cellMotion = new Vector2(0, 0);
         }
 
-
         public override void Update(GameTime gameTime)
         {
-
+     /*      
+            Virus v = hitsAVirus();
+            if (v != null)
+            {
+                v.Consume(this);
+            }
+      */
         }
+
+
 
         public override void Initialize()
         {

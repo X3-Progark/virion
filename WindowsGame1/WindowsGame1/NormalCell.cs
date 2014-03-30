@@ -35,7 +35,7 @@ namespace Virion
             fillColor, fillColorDark, 
             centerColor, centerColorDark;
         
-        private int pixelSize, cellPoints,
+        private int cellPoints,
             elapsedTime, frameTime;
 
         private double cellRadiusMinFactor, 
@@ -49,6 +49,9 @@ namespace Virion
 
         private State state;
 
+        private int infectionProgress;
+        private float health;
+
         public NormalCell(Vector2 cellPosition, int frameTime)
 
         {
@@ -56,6 +59,9 @@ namespace Virion
             //Når de blir initialisert samtidig får de akkurat samme variabler > cellene blir identiske
 
             this.state = State.Healthy;
+
+            this.infectionProgress = 0;
+            this.health = 100.0f;
 
             this.frameTime = frameTime;
             elapsedTime = 0;
@@ -171,8 +177,25 @@ namespace Virion
                 return;
             }
 
-            //We have reached the elapsed time and have to reset it
-            elapsedTime = 0; 
+            if (!isDead() && isInfected())
+            {
+                health -= 0.1f;
+                if (health <= 0.0f)
+                    this.state = State.Dead;
+            }
+
+            if (isInfected())
+            {
+                maxSpeed = pixelSize * 0.2f;
+                minSpeed = pixelSize * 0.1f;
+            }
+            else if (isDead())
+            {
+                maxSpeed = 0.0f;
+                minSpeed = 0.0f;
+            }
+
+            elapsedTime = 0; //We have reached the elapsed time and have to reset it
 
             colorMatrix = new int[cellRadius * 2, cellRadius * 2];
 
@@ -183,6 +206,15 @@ namespace Virion
             calculateNewCellVectors();
             fillColorMatrix();
             updateDarkMatrix();
+        }
+
+        public void Infect(int rate)
+        {
+            this.infectionProgress += rate;
+            if (infectionProgress <= 100)
+            {
+                this.state = State.Infected;
+            }
         }
 
         private void moveCell()
@@ -512,18 +544,6 @@ namespace Virion
         {
             cellMotion.X = Math.Abs(cellMotion.X);
             moveCell();
-        }
-
-
-
-        public Vector2 getPosition()
-        {
-            return cellPosition;
-        }
-
-        public Vector2 getMotion()
-        {
-            return cellMotion;
         }
 
         //We want a random

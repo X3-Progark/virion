@@ -82,7 +82,7 @@ namespace Virion
             }
             catch (FileNotFoundException e)
             {
-                
+                Console.Write(e.ToString());
             }
         }
 

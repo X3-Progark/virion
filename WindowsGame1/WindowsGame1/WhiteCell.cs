@@ -139,7 +139,7 @@ namespace Virion
                 
                 if (closestVirusDistance < this.cellRadius*this.pixelSize)
                 {
-                    closestVirus.Health--;
+                    closestVirus.Hit(5);
                 }
                 
 
@@ -334,7 +334,7 @@ namespace Virion
             foreach (Virus v in playerObjects)
             {
                 float temp = Vector2.Distance(this.cellPosition, v.getPosition());
-                if (distance > temp && v.Health > 0)
+                if (distance > temp && v.Alive())
                 {
                     distance = temp;
                     virus = v;
@@ -343,11 +343,6 @@ namespace Virion
             }
             this.closestVirus = virus;
             this.closestVirusDistance = distance;
-        }
-
-        public Vector2 getPosition()
-        {
-            return cellPosition;
         }
 
         public void updateVirus(List<Virus> playerObjects)
