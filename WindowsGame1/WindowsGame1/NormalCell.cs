@@ -174,14 +174,18 @@ namespace Virion
             if (!isDead() && isInfected())
             {
                 health -= 0.1f;
-                if (health <= 0.0f)
-                    this.state = State.Dead;
+            }
+
+            if (health <= 0.0f)
+            {
+                this.state = State.Dead;
             }
 
             if (isInfected())
             {
                 maxSpeed = pixelSize * 0.2f;
                 minSpeed = pixelSize * 0.1f;
+                cellRadiusMinFactor = 0.4d;
             }
             else if (isDead())
             {
@@ -210,7 +214,7 @@ namespace Virion
         public void Infect(int rate)
         {
             this.infectionProgress += rate;
-            if (infectionProgress <= 100)
+            if (infectionProgress >= 100)
             {
                 this.state = State.Infected;
             }
@@ -224,14 +228,15 @@ namespace Virion
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            for (int x = 0; x < cellRadius * 2; x++)
-            {
-                for (int y = 0; y < cellRadius * 2; y++)
+                for (int x = 0; x < cellRadius * 2; x++)
                 {
-                    int p = colorMatrix[x,y];
-                    drawPixel(x, y, p, spriteBatch);
+                    for (int y = 0; y < cellRadius * 2; y++)
+                    {
+                        int p = colorMatrix[x, y];
+                        drawPixel(x, y, p, spriteBatch);
+                    }
                 }
-            }
+                //base.Draw(gameTime);
         }
 
         private void drawPixel(int x, int y, int pixelCode, SpriteBatch spriteBatch)

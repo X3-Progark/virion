@@ -32,8 +32,6 @@ namespace Virion
       */
         }
 
-
-
         public override void Initialize()
         {
 
