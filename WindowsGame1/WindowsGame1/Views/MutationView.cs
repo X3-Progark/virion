@@ -109,6 +109,7 @@ namespace Virion
         // Returns to the main menu
         void BackToMain(object sender, PlayerIndexEventArgs e)
         {
+            Main.Instance.Save();
             LoadingView.Load(ViewManager, false, null, new BackgroundView(), new MainMenuView());
         }
     }

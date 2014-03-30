@@ -8,6 +8,8 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using System.IO;
+using System.Xml.Serialization;
 
 namespace Virion
 {
@@ -53,9 +55,15 @@ namespace Virion
         {
             base.Initialize();
 
-            players = new Player[Conf.playerCount];
-            for (int i = 0; i < Conf.playerCount; i++)
-                players[i] = (new Player("Player "+(i+1), i));
+            if (players == null)
+            {
+                players = new Player[Conf.playerCount];
+                for (int i = 0; i < Conf.playerCount; i++)
+                {
+                    players[i] = (new Player());
+                    players[i].Initialize("Player " + (i + 1), i);
+                }
+            }
 
         }
         
@@ -69,6 +77,31 @@ namespace Virion
             texture = new Texture2D(graphics.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             //Texture2D texture = new Texture2D(graphics, 1, 1, SurfaceFormat.Color);
             texture.SetData<Color>(new Color[] { Color.White });
+
+            try
+            {
+                Save s = Load();
+                this.level = s.level;
+                this.players = new Player[4];
+
+                for (int i = 0; i < 4; i++)
+                {
+                    if (s.players.Length > i)
+                    {
+                        this.players[i] = s.players[i];
+                    }
+                    else
+                    {
+                        Player p = new Player();
+                        p.Initialize("Player " + (i + 1), i);
+                        this.players[i] = p;
+                    }
+                }
+            }
+            catch (FileNotFoundException e)
+            {
+                Console.Write(e.ToString());
+            }
             
             base.LoadContent();
         }
@@ -100,6 +133,28 @@ namespace Virion
         public static double getRandomD()
         {
             return random.NextDouble();
+        }
+
+        public void Save()
+        {
+            Stream stream = File.Create("virionSave.xml");
+            XmlSerializer serializer = new XmlSerializer(typeof(Save));
+
+            Save s = new Save();
+            s.players = this.players;
+            s.level = this.level;
+
+            serializer.Serialize(stream, s);
+            stream.Close();
+        }
+
+        public Save Load()
+        {
+            Stream stream = File.OpenRead("virionSave.xml");
+            XmlSerializer serializer = new XmlSerializer(typeof(Save));
+            Save c = (Save)serializer.Deserialize(stream);
+            stream.Close();
+            return c;
         }
     }
 }

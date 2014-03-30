@@ -28,6 +28,8 @@ namespace Virion
 
             if (exitView.Evaluate(input, ControllingPlayer, out playerIndex))
             {
+                Main.Instance.level++;
+                Main.Instance.Save();
                 LoadingView.Load(ViewManager, false, null, new BackgroundView(), new MainMenuView());
             }
         }

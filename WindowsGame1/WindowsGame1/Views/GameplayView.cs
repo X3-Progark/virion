@@ -175,15 +175,11 @@ namespace Virion
 
             if (state == State.Lost)
             {
-                if (Main.Instance.level > 1)
-                    Main.Instance.level--;
-
                 LoadingView.Load(ViewManager, false, null, new LossView());
             }
 
             if (state == State.Won)
             {
-                Main.Instance.level++;
                 LoadingView.Load(ViewManager, false, null, new WinView());
             }
 
@@ -360,7 +356,7 @@ namespace Virion
                 // Health bar
                 int screenWidth = (int)Main.Instance.Conf.Resolution.X;
                 int screenHeight = (int)Main.Instance.Conf.Resolution.Y;
-                spriteBatch.Draw(healthBarTexture, new Rectangle(screenWidth / 4 * v.Player.Index + 40, 10, (int)((screenWidth/5) * ((float)v.Health / 100.0f)), 20), Color.Red);
+                spriteBatch.Draw(healthBarTexture, new Rectangle(screenWidth / 4 * v.Player.Index + 40, 10, (int)((screenWidth/5) * ((float)v.Health / v.Health)), 20), Color.Red);
 
                 spriteBatch.DrawString(gameFont, "P" + (v.Player.Index + 1), new Vector2(screenWidth / 4 * v.Player.Index + 10, 10), Color.Black);
             }

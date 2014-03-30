@@ -59,7 +59,12 @@ namespace Virion
             set { this.index = value; }
         }
 
-        public Player(string name, int index)
+        public Player()
+        {
+            
+        }
+
+        public void Initialize(string name, int index)
         {
             this.name = name;
             this.index = index;
