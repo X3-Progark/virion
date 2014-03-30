@@ -40,7 +40,12 @@ namespace Virion
 
             spriteBatch.Begin();
 
-            spriteBatch.DrawString(font, "You LOST", new Vector2(graphics.Viewport.Width/2, graphics.Viewport.Height/2), Color.Red);
+            string t = "You lost!";
+            Vector2 levelPosition = new Vector2(graphics.Viewport.Width / 2, graphics.Viewport.Height / 2);
+
+            spriteBatch.DrawString(font, t,
+                levelPosition,
+                Color.Red, 0, (font.MeasureString(t) / 2), 1, SpriteEffects.None, 0);
 
             spriteBatch.End();
         }

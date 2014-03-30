@@ -95,14 +95,12 @@ namespace Virion
 
             totalCells = 40;
 
-            Map map = new Map();
+            Map map = new Map(Main.Instance.level);
             map.generate();
 
             totalCells = map.normalCells;
             int whiteCells = map.whiteCells;
 
-            Console.WriteLine(totalCells);
-            Console.WriteLine(whiteCells);
             for (int i = 0; i < totalCells; i++)
                 cellList.Add(new NormalCell(new Vector2((int)(600 * Main.getRandomD() + 100), (int)(200 * Main.getRandomD() + 100)), 30));
 
@@ -174,12 +172,20 @@ namespace Virion
             else
                 pauseAlpha = Math.Max(pauseAlpha - 1f / 32, 0);
 
-            
+
             if (state == State.Lost)
+            {
+                if (Main.Instance.level > 1)
+                    Main.Instance.level--;
+
                 LoadingView.Load(ViewManager, false, null, new LossView());
+            }
 
             if (state == State.Won)
+            {
+                Main.Instance.level++;
                 LoadingView.Load(ViewManager, false, null, new WinView());
+            }
 
             if (IsActive)
             {
@@ -200,7 +206,10 @@ namespace Virion
                         totalCells--;
                         dead++;
                         infected--;
-                        AddProtein(c.getPosition());
+
+                        if (random.NextDouble() > 0.5d)
+                            AddProtein(c.getPosition());
+
                         toDie.Add(c);
                     }
                 }
@@ -351,7 +360,7 @@ namespace Virion
                 // Health bar
                 int screenWidth = (int)Main.Instance.Conf.Resolution.X;
                 int screenHeight = (int)Main.Instance.Conf.Resolution.Y;
-                spriteBatch.Draw(healthBarTexture, new Rectangle(screenWidth / 4 * v.Player.Index + 40, 20, (int)((screenWidth/5) * ((float)v.Health / 100.0f)), 20), Color.Red);
+                spriteBatch.Draw(healthBarTexture, new Rectangle(screenWidth / 4 * v.Player.Index + 40, 10, (int)((screenWidth/5) * ((float)v.Health / 100.0f)), 20), Color.Red);
 
                 spriteBatch.DrawString(gameFont, "P" + (v.Player.Index + 1), new Vector2(screenWidth / 4 * v.Player.Index + 10, 10), Color.Black);
             }

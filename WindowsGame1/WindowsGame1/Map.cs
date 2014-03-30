@@ -16,9 +16,10 @@ namespace Virion
         public int normalCells;
         public int whiteCells;
         int level;
-        public Map()
+
+        public Map(int level)
         {
-            level = 1;
+            this.level = level;
         }
 
         public void generate()
