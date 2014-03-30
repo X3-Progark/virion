@@ -14,28 +14,23 @@ namespace Virion
 {
     public class WhiteCell : Unit
     {
-
-        //Default texture
-        private Texture2D texture;
-
         private int[,] colorMatrix;
         private bool[,] darkMatrix;
 
         float percentageDarkSpots,
-            darkSpotMotionFactor;
+            darkSpotMotionFactor, 
+            cellSpeed;
 
         private Color c,
             wallColor, wallColorDark,
             fillColor, fillColorDark,
             centerColor, centerColorDark;
 
-        private int pixelSize,
-            cellLength, cellRadius,
+        private int cellLength, 
             elapsedTime, frameTime,
             functionX;
 
-        private Vector2 cellPosition;
-        private Vector2 cellDirection, cellMotion;
+        //private Vector2 cellMotion;
         private Virus closestVirus;
         private float closestVirusDistance;
 
@@ -57,8 +52,8 @@ namespace Virion
 
             this.cellPosition = cellPosition;
 
-            this.cellDirection = new Vector2(1, 0);
-            this.cellDirection.Normalize();
+            this.cellMotion = new Vector2(1, 0);
+            this.cellMotion.Normalize();
 
             pixelSize = 5;
 
@@ -66,6 +61,9 @@ namespace Virion
 
             //How many pixles the largest part should be
             cellRadius = 3;
+
+            //The speed of the white cell
+            cellSpeed = pixelSize;
 
             //A cellRadius*2 x cellRadius*2 2D int array
             colorMatrix = new int[cellLength * 2, cellLength * 2];
@@ -90,16 +88,7 @@ namespace Virion
             
         }
 
-        public void LoadContent(GraphicsDevice GD)
-        {
-            //Make the pixel texture that can obtain any color
-            texture = new Texture2D(GD, 1, 1, false, SurfaceFormat.Color);
-            texture.SetData<Color>(new Color[] { Color.White });
-
-            //base.LoadContent();
-        }
-
-        public void Initialize()
+        public override void Initialize()
         {
             //base.Initialize();
         }
@@ -124,7 +113,7 @@ namespace Virion
         }
 
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             elapsedTime += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (elapsedTime < frameTime)
@@ -142,9 +131,10 @@ namespace Virion
 
                 if( closestVirusDistance > this.cellRadius)
                 {
-                    cellDirection = cellPosition - closestVirus.getPosition();
-                    cellDirection.Normalize();
-                    cellPosition -= cellDirection * 1;
+                    cellMotion = cellPosition - closestVirus.getPosition();
+                    cellMotion.Normalize();
+                    cellPosition -= cellMotion * cellSpeed;
+                    functionX += 4;
                 }
                 
                 if (closestVirusDistance < this.cellRadius*this.pixelSize)
@@ -156,8 +146,10 @@ namespace Virion
             }
             else
             {
-                cellPosition -= cellDirection * 1;
+                cellPosition -= cellMotion * cellSpeed;
             }
+
+            functionX++;
 
             colorMatrix = new int[cellLength * 2, cellLength * 2];
             updateDarkMatrix();
@@ -203,10 +195,10 @@ namespace Virion
 
         private void fillWall()
         {
-            double startX = cellLength - cellDirection.X * cellLength * 0.25d;
-            double startY = cellLength - cellDirection.Y * cellLength * 0.25d;
-            double stepX = cellDirection.X / (double)pixelSize;
-            double stepY = cellDirection.Y / (double)pixelSize;
+            double startX = cellLength - cellMotion.X * cellLength * 0.25d;
+            double startY = cellLength - cellMotion.Y * cellLength * 0.25d;
+            double stepX = cellMotion.X / (double)pixelSize;
+            double stepY = cellMotion.Y / (double)pixelSize;
             Vector2 cV = new Vector2((float)stepX, (float)stepY);
             
 
@@ -237,7 +229,7 @@ namespace Virion
         private double getCellThickness(double xi)
         {
             double x = 4.0d * xi / (double)cellLength;
-            double sinPart =  Math.Sin(functionX / 5);
+            double sinPart =  Math.Sin(functionX / 20);
             double x4 = 0.04;
             double x3 = 0.40 + 0.02 * sinPart;
             double x2 = 1.46 + 0.14 * sinPart;
@@ -293,24 +285,7 @@ namespace Virion
             colorMatrix[cellLength - 1, cellLength - 1] = 3;
         }
 
-        //DELETE THIS, KEEP THE ONE UNDER!
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Vector2 pp)
-        {
-            cellPosition.X = (int)(pp.X);
-            cellPosition.Y = (int)(pp.Y);
-            cellDirection = new Vector2(cellPosition.X - 250, cellPosition.Y - 250);
-            cellDirection.Normalize(); 
-            for (int x = 0; x < cellLength * 2; x++)
-            {
-                for (int y = 0; y < cellLength * 2; y++)
-                {
-                    int p = colorMatrix[x, y];
-                    drawPixel(x, y, p, spriteBatch);
-                }
-            }
-        }
-
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
 
             for (int x = 0; x < cellLength * 2; x++)

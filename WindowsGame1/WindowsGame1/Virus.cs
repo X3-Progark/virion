@@ -14,9 +14,6 @@ namespace Virion
 {
     public class Virus : Unit
     {
-        //Default texture
-        private Texture2D texture;
-
         private int[,] colorMatrix;
 
         private Color c,
@@ -24,11 +21,8 @@ namespace Virion
             fillColor, fillColorDark, 
             centerColor, centerColorDark;
         
-        private int pixelSize, 
-            elapsedTime, frameTime;
+        private int elapsedTime, frameTime;
 
-        private Vector2 cellPosition;
-        private Vector2 cellMotion;
         private float breakFactor, motionAdd, maxSpeed;
 
         private Player player;
@@ -70,9 +64,9 @@ namespace Virion
 
             //Sets where the cell is
             this.cellPosition = cellPosition;
-            
-            //SHOULD BE SOME KIND OF GLOBAL VARIABLE
-            pixelSize = 5;
+
+            //The radius of the cell
+            cellRadius = 2; //1; //Maybe one?
 
             //A 5x5 2D int array
             colorMatrix = new int[5, 5];
@@ -117,19 +111,15 @@ namespace Virion
             colorMatrix[1, 3] = 1;*/
         }
 
-        public void LoadContent(GraphicsDevice GD)
-        {
-            texture = new Texture2D(GD, 1, 1, false, SurfaceFormat.Color);
-            texture.SetData<Color>(new Color[] { Color.White });
-        }
 
-        public void Initialize()
+
+        public override void Initialize()
         {
             //base.Initialize();
         }
 
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             elapsedTime += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (elapsedTime < frameTime)
@@ -178,7 +168,7 @@ namespace Virion
             cellMotion.X += motionAdd;
         }
 
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             for (int x = 0; x < 5; x++)
             {

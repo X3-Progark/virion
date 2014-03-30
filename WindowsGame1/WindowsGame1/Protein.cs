@@ -13,43 +13,28 @@ namespace Virion
     public class Protein : Unit
     {
 
-        private Texture2D proteinTexture;
-
-        private Vector2 position;
-        public Vector2 Position
-        {
-            get { return position; }
-            set { position = value; }
-        }
-
-
         public Protein(Vector2 position, int frameTime)
         {
-            this.position = position;
+            cellPosition = position;
 
-            proteinTexture = new Texture2D(Main.Instance.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
-            proteinTexture.SetData(new[] { Color.White });
+            cellRadius = 2;
+            cellMotion = new Vector2(0, 0);
         }
 
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
 
         }
 
-        public void Initialize()
+        public override void Initialize()
         {
 
         }
 
-        public void LoadContent(GraphicsDevice gd)
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-
-        }
-
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(proteinTexture, new Rectangle((int)position.X, (int)position.Y, 20, 10), Color.Brown);
+            spriteBatch.Draw(texture, new Rectangle((int)cellPosition.X, (int)cellPosition.Y, 20, 10), Color.Brown);
         }
 
     }

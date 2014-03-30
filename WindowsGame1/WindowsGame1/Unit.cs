@@ -12,16 +12,54 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Virion
 {
-    public interface Unit
+    public abstract class Unit
     {
+        protected Texture2D texture;
 
-        void LoadContent(GraphicsDevice GD);
+        protected Vector2 cellPosition, cellMotion;
 
-        void Initialize();
+        protected int pixelSize = 5, 
+            cellRadius;
 
-        void Update(GameTime gameTime);
+        public virtual void LoadContent(Texture2D t)
+        {
+            this.texture = t;
+        }
 
-        void Draw(GameTime gameTime, SpriteBatch sb);
-         
+        public abstract void Initialize();
+
+        public abstract void Update(GameTime gameTime);
+        
+        public abstract void Draw(GameTime gameTime, SpriteBatch sb);
+
+        public virtual int getRadius()
+        {
+            return cellRadius;
+        }
+
+        public virtual Vector2 getPosition()
+        {
+            return cellPosition;
+        }
+
+        public virtual Vector2 getMotion()
+        {
+            return cellMotion;
+        }
+
+        public virtual bool isClose(Unit u)
+        {
+            Vector2 distance = Vector2.Subtract(getPosition(), u.getPosition());
+
+            if (distance.Length() == 0) 
+                return false;
+            else 
+                return distance.Length() < ((getRadius() + u.getRadius()) * (pixelSize - 1));
+        }
+
+        public virtual bool isColliding(Unit u)
+        {
+            return true;
+        }
     }
 }

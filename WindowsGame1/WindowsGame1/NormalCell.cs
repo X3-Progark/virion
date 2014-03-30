@@ -23,25 +23,19 @@ namespace Virion
             Dead
         };
 
-
-        //Default texture
-        private Texture2D texture;
-
         private int[,] colorMatrix;
         private bool[,] darkMatrix;
 
         float percentageDarkSpots,
-            darkSpotMotionFactor, 
-            maxSpeed, minSpeed, 
-            speedBreak;
+            darkSpotMotionFactor,
+            maxSpeed, minSpeed;
 
         private Color c,
             wallColor, wallColorDark, 
             fillColor, fillColorDark, 
             centerColor, centerColorDark;
         
-        private int pixelSize, 
-            cellRadius,cellPoints,
+        private int pixelSize, cellPoints,
             elapsedTime, frameTime;
 
         private double cellRadiusMinFactor, 
@@ -52,9 +46,6 @@ namespace Virion
             cellPointsLengthSpeed;
 
         private List<Vector2> cellVectors;
-
-        private Vector2 cellPosition;
-        private Vector2 cellMotion;
 
         private State state;
 
@@ -130,25 +121,12 @@ namespace Virion
             //The minimum speed a cell can have
             minSpeed = pixelSize * 0.5f;
 
-            //How much speed you get from another cell in a bump
-            speedBreak = 0.9f;
-
             initDarkMatrix();
-
             calculateCellPulsation();
             
         }
 
-        public void LoadContent(GraphicsDevice GD)
-        {
-            //Make the pixel texture that can obtain any color
-            texture = new Texture2D(GD, 1, 1, false, SurfaceFormat.Color);
-            texture.SetData<Color>(new Color[] { Color.White });
-
-            //base.LoadContent();
-        }
-
-        public void Initialize()
+        public override void Initialize()
         {
             //base.Initialize();
         }
@@ -183,7 +161,7 @@ namespace Virion
             }
         }
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             elapsedTime += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (elapsedTime < frameTime)
@@ -193,7 +171,8 @@ namespace Virion
                 return;
             }
 
-            elapsedTime = 0; //We have reached the elapsed time and have to reset it
+            //We have reached the elapsed time and have to reset it
+            elapsedTime = 0; 
 
             colorMatrix = new int[cellRadius * 2, cellRadius * 2];
 
@@ -204,8 +183,6 @@ namespace Virion
             calculateNewCellVectors();
             fillColorMatrix();
             updateDarkMatrix();
-
-            //base.Update(gameTime);
         }
 
         private void moveCell()
@@ -214,9 +191,8 @@ namespace Virion
             cellPosition.Y += (int)cellMotion.Y;
         }
 
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-           
             for (int x = 0; x < cellRadius * 2; x++)
             {
                 for (int y = 0; y < cellRadius * 2; y++)
@@ -225,7 +201,6 @@ namespace Virion
                     drawPixel(x, y, p, spriteBatch);
                 }
             }
-            //base.Draw(gameTime);
         }
 
         private void drawPixel(int x, int y, int pixelCode, SpriteBatch spriteBatch)
@@ -465,7 +440,7 @@ namespace Virion
         {
             foreach(NormalCell c in cellList)
             {
-                if (isClose(c.getPosition()) && isColliding(c))
+                if (isClose(c) && isColliding(c))
                 {
                     Vector2 thisCellMotion = getMotion();
                     Vector2 otherCellMotion = c.getMotion();
@@ -486,18 +461,11 @@ namespace Virion
 
              foreach (WhiteCell wc in whiteCellList)
             {
-                if (isClose(wc.getPosition()))
+                if (isClose(wc))
                 {
                     coll(wc.getPosition(), getMotion().Length());
                 }
             }
-        }
-
-        private bool isClose(Vector2 otherPosition)
-        {
-            Vector2 distance = Vector2.Subtract(getPosition(), otherPosition);
-            if (distance.Length() == 0) return false;
-            return distance.Length() < (2 * cellRadius * (pixelSize - 1));
         }
 
 
