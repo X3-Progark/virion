@@ -33,7 +33,7 @@ namespace Virion
         float percentageDarkSpots,
             darkSpotMotionFactor, 
             maxSpeed, minSpeed, 
-            speedFromOtherCell;
+            speedBreak;
 
         private Color c,
             wallColor, wallColorDark, 
@@ -131,7 +131,7 @@ namespace Virion
             minSpeed = pixelSize * 0.5f;
 
             //How much speed you get from another cell in a bump
-            speedFromOtherCell = 0.5f;
+            speedBreak = 0.9f;
 
             initDarkMatrix();
 
@@ -461,30 +461,45 @@ namespace Virion
             }
         }
 
-        public void collisionHandeling(List<NormalCell> cellList)
+        public void collisionHandeling(List<NormalCell> cellList, List<WhiteCell> whiteCellList)
         {
             foreach(NormalCell c in cellList)
             {
-                if (isClose(c) && isColliding(c))
+                if (isClose(c.getPosition()) && isColliding(c))
                 {
-                    coll(c);
-                    c.coll(this);
+                    Vector2 thisCellMotion = getMotion();
+                    Vector2 otherCellMotion = c.getMotion();
+                    float thisCellSpeed = getMotion().Length();
+                    float otherCellSpeed = c.getMotion().Length();
+
+                    coll(otherCellMotion, thisCellSpeed);
+                    c.coll(thisCellMotion, otherCellSpeed);
                 }
             }
 
-            if (cellPosition.X < cellRadius * pixelSize * 0.5) hitLeft(0f);
-            if (cellPosition.Y < cellRadius * pixelSize * 0.5) hitOver(0f);
-            if (cellPosition.X > Main.Instance.GraphicsDevice.Viewport.Width - cellRadius * pixelSize * 0.5) hitRight(0f);
-            if (cellPosition.Y > Main.Instance.GraphicsDevice.Viewport.Height - cellRadius * pixelSize * 0.5) hitUnder(0f);
 
+            if (cellPosition.X < cellRadius * pixelSize * 0.5) hitLeft();
+            if (cellPosition.Y < cellRadius * pixelSize * 0.5) hitOver();
+            if (cellPosition.X > Main.Instance.GraphicsDevice.Viewport.Width - cellRadius * pixelSize * 0.5) hitRight();
+            if (cellPosition.Y > Main.Instance.GraphicsDevice.Viewport.Height - cellRadius * pixelSize * 0.5) hitUnder();
+
+
+             foreach (WhiteCell wc in whiteCellList)
+            {
+                if (isClose(wc.getPosition()))
+                {
+                    coll(wc.getPosition(), getMotion().Length());
+                }
+            }
         }
 
-        private bool isClose(NormalCell c)
+        private bool isClose(Vector2 otherPosition)
         {
-            Vector2 distance = Vector2.Subtract(getPosition(), c.getPosition());
+            Vector2 distance = Vector2.Subtract(getPosition(), otherPosition);
             if (distance.Length() == 0) return false;
             return distance.Length() < (2 * cellRadius * (pixelSize - 1));
         }
+
 
         private bool isColliding(NormalCell c)
         {
@@ -500,48 +515,37 @@ namespace Virion
             else return false;
         }
 
-        public void coll(NormalCell c)
+        public void coll(Vector2 otherCellMotion, float speed)
         {
-            Vector2 between = Vector2.Subtract(getPosition(), c.getPosition());
-
-            //Got hit in the y direction?
-            if (Math.Abs(between.Y) > Math.Abs(between.X))
-            {
-                //Got hit under?
-                if (between.Y < 0) hitUnder(c.getMotion().Y);
-                else hitOver(c.getMotion().Y);
-            }
-            else
-            {
-                //Got hit right?
-                if (between.X < 0) hitRight(c.getMotion().X);
-                else hitLeft(c.getMotion().X);
-            }
+            cellMotion = otherCellMotion;
+            cellMotion.Normalize();
+            cellMotion *= (speed);
         }
 
-        private void hitUnder(float otherCellMotionY)
+        private void hitUnder()
         {
-            cellMotion.Y = -Math.Abs(cellMotion.Y) + otherCellMotionY * speedFromOtherCell;
+            cellMotion.Y = -Math.Abs(cellMotion.Y);
             moveCell();
         }
 
-        private void hitOver(float otherCellMotionY)
+        private void hitOver()
         {
-            cellMotion.Y = Math.Abs(cellMotion.Y) + otherCellMotionY * speedFromOtherCell;
+            cellMotion.Y = Math.Abs(cellMotion.Y);
             moveCell();
         }
 
-        private void hitRight(float otherCellMotionX)
+        private void hitRight()
         {
-            cellMotion.X = -Math.Abs(cellMotion.X) + otherCellMotionX * speedFromOtherCell;
+            cellMotion.X = -Math.Abs(cellMotion.X);
             moveCell();
         }
 
-        private void hitLeft(float otherCellMotionX)
+        private void hitLeft()
         {
-            cellMotion.X = Math.Abs(cellMotion.X) + otherCellMotionX * speedFromOtherCell;
+            cellMotion.X = Math.Abs(cellMotion.X);
             moveCell();
         }
+
 
 
         public Vector2 getPosition()

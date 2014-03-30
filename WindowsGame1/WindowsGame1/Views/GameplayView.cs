@@ -151,7 +151,7 @@ namespace Virion
                 foreach (NormalCell c in cellList)
                 {
                     c.Update(gameTime);
-                    c.collisionHandeling(cellList);
+                    c.collisionHandeling(cellList, whiteCellList);
                     if (c.isInfected())
                         infected++;
                     else if (c.isDead())

@@ -354,6 +354,11 @@ namespace Virion
             return virus;
         }
 
+        public Vector2 getPosition()
+        {
+            return cellPosition;
+        }
+
         public void updateVirus(List<Virus> playerObjects)
         {
             this.playerObjects = playerObjects;
