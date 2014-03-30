@@ -38,7 +38,7 @@ namespace Virion
         void PlayGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             LoadingView.Load(ViewManager, true, e.PlayerIndex,
-                               new GameplayView());
+                               new BackgroundView(), new GameplayView());
         }
 
         /// Event handler for when the Mutations menu entry is selected.
