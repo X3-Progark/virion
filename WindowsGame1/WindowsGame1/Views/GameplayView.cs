@@ -82,11 +82,19 @@ namespace Virion
 
             totalCells = 40;
 
+            Map map = new Map();
+            map.generate();
+
+            totalCells = map.normalCells;
+            int whiteCells = map.whiteCells;
+
+            Console.WriteLine(totalCells);
+            Console.WriteLine(whiteCells);
             for (int i = 0; i < totalCells; i++)
                 cellList.Add(new NormalCell(new Vector2((int)(600 * Main.getRandomD() + 100), (int)(200 * Main.getRandomD() + 100)), 30));
 
-            for (int i = 0; i < 10; i++)
-                whiteCellList.Add(new WhiteCell(new Vector2((int)(800 * Main.getRandomD()), (int)(500 * Main.getRandomD())), 50));
+            for (int i = 0; i < whiteCells; i++)
+                whiteCellList.Add(new WhiteCell(new Vector2((int)(800 * Main.getRandomD()), (int)(500 * Main.getRandomD())), 30));
 
 
             proteins.Add(new Protein(new Vector2(200, 200), 100));
