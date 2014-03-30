@@ -28,7 +28,8 @@ namespace Virion
 
         float percentageDarkSpots,
             darkSpotMotionFactor,
-            maxSpeed, minSpeed;
+            maxSpeed, minSpeed, 
+            infectionProgress, health;
 
         private Color c,
             wallColor, wallColorDark, 
@@ -49,9 +50,6 @@ namespace Virion
 
         private State state;
 
-        private int infectionProgress;
-        private float health;
-
         public NormalCell(Vector2 cellPosition, int frameTime)
 
         {
@@ -60,7 +58,7 @@ namespace Virion
 
             this.state = State.Healthy;
 
-            this.infectionProgress = 0;
+            this.infectionProgress = 0f;
             this.health = 100.0f;
 
             this.frameTime = frameTime;
@@ -68,9 +66,6 @@ namespace Virion
 
             //Sets where the cell is
             this.cellPosition = cellPosition;
-            
-            //SHOULD BE SOME KIND OF GLOBAL VARIABLE
-            pixelSize = 5;
 
             //How many pixels the MAXIMUM cell radius should be
             cellRadius = 5;
@@ -173,7 +168,6 @@ namespace Virion
             if (elapsedTime < frameTime)
             {
                 //If we are not supposed to calculate a new frame, just return
-                //base.Update(gameTime);
                 return;
             }
 
@@ -193,6 +187,11 @@ namespace Virion
             {
                 maxSpeed = 0.0f;
                 minSpeed = 0.0f;
+            }
+
+            if (health != 100f || infectionProgress != 0f)
+            {
+                calculateColors();
             }
 
             elapsedTime = 0; //We have reached the elapsed time and have to reset it
@@ -544,6 +543,35 @@ namespace Virion
         {
             cellMotion.X = Math.Abs(cellMotion.X);
             moveCell();
+        }
+
+        private void calculateColors()
+        {
+            float healthFactor = health / 100f;
+            float infectionFactor = infectionProgress / 100f;
+
+            wallColor = new Color(
+                currentColor(241, 191, 205, healthFactor), 
+                currentColor(181, 191, 242, healthFactor), 
+                currentColor(141, 191, 115, healthFactor));
+
+            wallColorDark = new Color(236, 169, 119);
+
+            fillColor = new Color(254, 200, 200);
+
+            fillColorDark = new Color(254, 190, 190);
+
+            centerColor = new Color(254, 220, 220);
+
+            centerColorDark = new Color(254, 215, 215);
+        }
+
+        private int currentColor(int startValue, int deadValue, int infectedValue, float healthFactor)
+        {
+            float healthColorAdd = healthFactor * (startValue - deadValue);
+            float infectedColorAdd = (1 - healthFactor) * (startValue - infectedValue);
+
+            return (int)(startValue - healthColorAdd - infectedColorAdd);
         }
 
         //We want a random

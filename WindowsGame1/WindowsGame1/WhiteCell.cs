@@ -44,7 +44,6 @@ namespace Virion
             //Når de blir initialisert samtidig får de akkurat samme variabler > cellene blir identiske
             random = getRandom();
 
-
             functionX = random.Next(0,100);
 
             elapsedTime = 0;
@@ -54,8 +53,6 @@ namespace Virion
 
             this.cellMotion = new Vector2(1, 0);
             this.cellMotion.Normalize();
-
-            pixelSize = 5;
 
             cellLength = 12;
 

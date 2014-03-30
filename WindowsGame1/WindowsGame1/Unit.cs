@@ -56,10 +56,10 @@ namespace Virion
             else 
                 return distance.Length() < ((getRadius() + u.getRadius()) * (pixelSize - 1));
         }
-
+        /*
         public virtual bool isColliding(Unit u)
         {
             return true;
-        }
+        }*/
     }
 }
