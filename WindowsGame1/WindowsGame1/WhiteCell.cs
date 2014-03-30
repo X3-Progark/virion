@@ -126,7 +126,7 @@ namespace Virion
             if (closestVirus != null)
             {
 
-                if( closestVirusDistance > this.cellRadius)
+                if( closestVirusDistance > cellRadius)
                 {
                     cellMotion = cellPosition - closestVirus.getPosition();
                     cellMotion.Normalize();
@@ -134,7 +134,7 @@ namespace Virion
                     functionX += 4;
                 }
                 
-                if (closestVirusDistance < this.cellRadius*this.pixelSize)
+                if (closestVirusDistance < cellRadius * pixelSize)
                 {
                     closestVirus.Hit(5);
                 }
@@ -306,7 +306,6 @@ namespace Virion
 
             int xPos = (x - cellLength) * pixelSize + (int)cellPosition.X;// -(int)cellPosition.X % pixelSize;
             int yPos = (y - cellLength) * pixelSize + (int)cellPosition.Y;// -(int)cellPosition.Y % pixelSize;
-
             spriteBatch.Draw(texture, new Rectangle(xPos, yPos, pixelSize, pixelSize), c);
 
         }

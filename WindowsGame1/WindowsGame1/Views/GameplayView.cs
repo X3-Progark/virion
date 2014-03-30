@@ -17,6 +17,8 @@ namespace Virion
     class GameplayView : GameView
     {
 
+        const float DROP_RATE = 0.1f;
+
         ContentManager content;
         SpriteFont gameFont;
         Texture2D texture;
@@ -32,7 +34,7 @@ namespace Virion
 
         Random random = new Random();
 
-        float pauseAlpha;
+        float pauseAlpha, timePassed;
 
         InputAction pauseAction;
 
@@ -89,7 +91,8 @@ namespace Virion
             for (int i = 0; i < Main.Instance.Conf.playerCount; i++)
             {
                 Main.Instance.players[i].Model = models[i];
-                Virus p = new Virus(Main.Instance.players[i], new Vector2(i * 100, i * 100), 5);
+                Virus p = new Virus(Main.Instance.players[i],
+                    new Vector2(Main.Instance.Conf.Resolution.X / 2 + 10 * i, Main.Instance.Conf.Resolution.Y - 50), 5);
                 addNewPlayer(p, up[i], left[i], down[i], right[i]);
             }
 
@@ -105,7 +108,8 @@ namespace Virion
                 cellList.Add(new NormalCell(new Vector2((int)(600 * Main.getRandomD() + 100), (int)(200 * Main.getRandomD() + 100)), 30));
 
             for (int i = 0; i < whiteCells; i++)
-                whiteCellList.Add(new WhiteCell(new Vector2((int)(800 * Main.getRandomD()), (int)(500 * Main.getRandomD())), 30));
+                whiteCellList.Add(new WhiteCell(
+                    new Vector2((int)(Main.Instance.Conf.Resolution.X / whiteCells) * i, (int)(50 + Main.getRandomD())), 30));
 
         }
 
@@ -184,7 +188,19 @@ namespace Virion
 
             if (IsActive)
             {
-                
+
+                timePassed += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
+
+                if (timePassed > 10000)
+                {
+                    timePassed = 0.0f;
+                    WhiteCell w = new WhiteCell(
+                        new Vector2((int)(Main.Instance.Conf.Resolution.X / 2) , 50), 30);
+                    w.Initialize();
+                    w.LoadContent(texture);
+                    whiteCellList.Add(w);
+                }
+
                 allDead = true;
                 infected = 0;
 
@@ -202,7 +218,7 @@ namespace Virion
                         dead++;
                         infected--;
 
-                        if (random.NextDouble() > 0.5d)
+                        if (random.NextDouble() > DROP_RATE)
                             AddProtein(c.getPosition(), c.getCenterColor(), c.getCenterColorDark());
 
                         toDie.Add(c);
@@ -228,7 +244,7 @@ namespace Virion
                         {
                             infectingAny = true;
                             v.Infecting = true;
-                            c.Infect(v.Strength);
+                            c.Infect(Virus.BASE_STRENGTH + Virus.STRENGTH_RATE * v.Strength);
                         }
                     }
                     if (!infectingAny)
@@ -355,7 +371,7 @@ namespace Virion
                 // Health bar
                 int screenWidth = (int)Main.Instance.Conf.Resolution.X;
                 int screenHeight = (int)Main.Instance.Conf.Resolution.Y;
-                spriteBatch.Draw(healthBarTexture, new Rectangle(screenWidth / 4 * v.Player.Index + 40, 10, (int)((((float)screenWidth / 5.0f) * ((float)v.Health / (v.Player.Health*100)))), 20), Color.Red);
+                spriteBatch.Draw(healthBarTexture, new Rectangle(screenWidth / 4 * v.Player.Index + 40, 10, (int)((((float)screenWidth / 5.0f) * ((float)v.Health / (v.Player.Health * Virus.HEALTH_RATE + 100)))), 20), Color.Red);
 
                 spriteBatch.DrawString(gameFont, "P" + (v.Player.Index + 1), new Vector2(screenWidth / 4 * v.Player.Index + 10, 10), Color.Black);
             }

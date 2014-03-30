@@ -18,8 +18,8 @@ namespace Virion
 
         protected Vector2 cellPosition, cellMotion;
 
-        protected int pixelSize = (int)(Main.Instance.Conf.Resolution.X * 0.004f), 
-            cellRadius;
+        protected static int pixelSize = (int)(Main.Instance.Conf.Resolution.X * 0.004f); 
+        protected int cellRadius;
 
         public virtual void LoadContent(Texture2D t)
         {

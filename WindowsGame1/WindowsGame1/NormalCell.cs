@@ -211,7 +211,7 @@ namespace Virion
             updateDarkMatrix();
         }
 
-        public void Infect(int rate)
+        public void Infect(float rate)
         {
             this.infectionProgress += rate;
             if (infectionProgress >= 100)

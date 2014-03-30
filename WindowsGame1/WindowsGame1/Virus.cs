@@ -20,6 +20,15 @@ namespace Virion
             Dead
         };
 
+        public static float HEALTH_RATE = 10.0f;
+        public static float STRENGTH_RATE = 0.05f;
+        public static float SPEED_RATE = 0.1f;
+
+        public static float BASE_HEALTH = 100f;
+        public static float BASE_STRENGTH = 2.5f;
+        public static float BASE_SPEED = pixelSize;
+
+
         private int[,] colorMatrix;
 
         private Color c,
@@ -37,8 +46,8 @@ namespace Virion
 
         Random random;
 
-        private int health;
-        public int Health
+        private float health;
+        public float Health
         {
             get { return this.health; }
             set { this.health = value; }
@@ -72,7 +81,7 @@ namespace Virion
             random = new Random();
             infecting = false;
             this.strength = 1 * player.Strength;
-            this.health = 100 * player.Health;
+            this.health = BASE_HEALTH + (HEALTH_RATE * player.Health);
             this.player = player;
             this.frameTime = frameTime;
             this.state = State.Alive;
@@ -101,9 +110,7 @@ namespace Virion
             breakFactor = 0.98f - 0.02f * player.Speed;
 
             //How much it should move
-            motionAdd = pixelSize * ( 0.05f + 0.02f * player.Speed );
-
-            maxSpeed = pixelSize * 0.5f * player.Speed;
+            motionAdd = BASE_SPEED * 0.3f;
 
             setColorMatrix(player.Model);
         }
@@ -150,7 +157,6 @@ namespace Virion
             }
         }
 
-        
 
         public void Consume(Protein p)
         {
@@ -170,13 +176,13 @@ namespace Virion
             elapsedTime = 0;
 
             if (!Alive())
-                maxSpeed = 0.1f;
+                maxSpeed = 0.2f;
             else
             {
                 if (Infecting)
-                    maxSpeed = (float)Strength;
+                    maxSpeed = BASE_SPEED / 10 + STRENGTH_RATE * (float)Strength;
                 else
-                    maxSpeed = pixelSize * 0.5f * player.Speed;
+                    maxSpeed = BASE_SPEED + SPEED_RATE * player.Speed;
             }
 
             //Slowing down the virus
