@@ -38,6 +38,7 @@ namespace Virion
         int infected, dead, totalCells;
 
         List<NormalCell> cellList;
+        List<Protein> proteins;
 
         
         public GameplayView()
@@ -60,6 +61,7 @@ namespace Virion
 
             cellList = new List<NormalCell>();
             whiteCellList = new List<WhiteCell>();
+            proteins = new List<Protein>();
 
             //The look of the different players
 
@@ -86,6 +88,8 @@ namespace Virion
             for (int i = 0; i < 10; i++)
                 whiteCellList.Add(new WhiteCell(new Vector2((int)(800 * Main.getRandomD()), (int)(500 * Main.getRandomD())), 50));
 
+
+            proteins.Add(new Protein(new Vector2(200, 200), 100));
         }
 
         public void addNewPlayer(Virus v, Keys up, Keys left, Keys down, Keys right)
@@ -162,6 +166,8 @@ namespace Virion
                 }
 
                 foreach (Virus v in playerObjects) v.Update(gameTime);
+
+                foreach (Protein p in proteins) p.Update(gameTime);
 
                 foreach (WhiteCell wc in whiteCellList)
                 {
@@ -263,6 +269,8 @@ namespace Virion
 
                 spriteBatch.DrawString(gameFont, "P" + (v.Player.Index+1), new Vector2(150 * v.Player.Index + 10, 10), Color.Black);
             }
+
+            foreach (Protein p in proteins) p.Draw(gameTime, spriteBatch);
 
             //wc.Draw(gameTime, spriteBatch, playerPosition);
             foreach (WhiteCell wc in whiteCellList) wc.Draw(gameTime, spriteBatch);
