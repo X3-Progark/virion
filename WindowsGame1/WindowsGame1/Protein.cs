@@ -12,24 +12,45 @@ namespace Virion
 {
     public class Protein : Unit
     {
+        private int[,] colorMatrix;
 
-        public Protein(Vector2 position, int frameTime)
+        private Color centerColor, centerColorDark;
+
+        public Protein(Vector2 position, int frameTime, Color c1, Color c2)
         {
             cellPosition = position;
 
-            cellRadius = 2;
+            cellRadius = 1;
+
             cellMotion = new Vector2(0, 0);
+
+            centerColor = c1;
+            centerColorDark = c2;
+
+            colorMatrix = new int[cellRadius * 2, cellRadius * 2];
+
+        }
+
+        private void fillColorMatrix()
+        {
+            for (int i = 0; i < cellRadius * 2; i++)
+            {
+                for (int j = 0; j < cellRadius * 2; j++)
+                {
+                    colorMatrix[i, j] = (getRandomD() > 0.5 ? 1 : 2);
+                }
+            }
         }
 
         public override void Update(GameTime gameTime)
         {
-     /*      
-            Virus v = hitsAVirus();
-            if (v != null)
+            for (int i = 0; i < cellRadius * 2; i++)
             {
-                v.Consume(this);
+                for (int j = 0; j < cellRadius * 2; j++)
+                {
+                    colorMatrix[i, j] = (getRandomD() > 0.5 ? 1 : 2);
+                }
             }
-      */
         }
 
         public override void Initialize()
@@ -39,7 +60,17 @@ namespace Virion
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, new Rectangle((int)cellPosition.X, (int)cellPosition.Y, 20, 10), Color.Brown);
+
+            for (int i = 0; i < cellRadius * 2 ; i++)
+            {
+                for (int j = 0; j < cellRadius * 2; j++)
+                {
+                    spriteBatch.Draw(texture,
+                        new Rectangle((int)(cellPosition.X + i * pixelSize), (int)(cellPosition.Y + j * pixelSize), pixelSize, pixelSize), 
+                        (colorMatrix[i, j] == 1 ? centerColor : centerColorDark));
+                    
+                }
+            }
         }
 
     }

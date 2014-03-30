@@ -61,5 +61,16 @@ namespace Virion
         {
             return true;
         }*/
+
+        public virtual Random getRandom()
+        {
+            return Main.getRandom();
+        }
+
+        public virtual double getRandomD()
+        {
+            return Main.getRandomD();
+        }
+
     }
 }

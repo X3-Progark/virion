@@ -60,7 +60,7 @@ namespace Virion
             cellRadius = 3;
 
             //The speed of the white cell
-            cellSpeed = pixelSize;
+            cellSpeed = pixelSize * 0.1f;
 
             //A cellRadius*2 x cellRadius*2 2D int array
             colorMatrix = new int[cellLength * 2, cellLength * 2];
@@ -309,18 +309,6 @@ namespace Virion
 
             spriteBatch.Draw(texture, new Rectangle(xPos, yPos, pixelSize, pixelSize), c);
 
-        }
-
-        //We want a random
-        public Random getRandom()
-        {
-            return Main.getRandom();
-        }
-
-        //We need this as a public method to get different seeds in order to get an actual random number
-        public double getRandomD()
-        {
-            return Main.getRandomD();
         }
 
         private void findClosestVirus()
