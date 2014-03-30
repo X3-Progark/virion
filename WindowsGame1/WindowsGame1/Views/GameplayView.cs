@@ -107,7 +107,6 @@ namespace Virion
             for (int i = 0; i < whiteCells; i++)
                 whiteCellList.Add(new WhiteCell(new Vector2((int)(800 * Main.getRandomD()), (int)(500 * Main.getRandomD())), 30));
 
-            proteins.Add(new Protein(new Vector2(200, 200), 100));
         }
 
         public void addNewPlayer(Virus v, Keys up, Keys left, Keys down, Keys right)
@@ -204,7 +203,7 @@ namespace Virion
                         infected--;
 
                         if (random.NextDouble() > 0.5d)
-                            AddProtein(c.getPosition());
+                            AddProtein(c.getPosition(), c.getCenterColor(), c.getCenterColorDark());
 
                         toDie.Add(c);
                     }
@@ -260,9 +259,9 @@ namespace Virion
             }
         }
 
-        public void AddProtein(Vector2 pos)
+        public void AddProtein(Vector2 pos, Color c1, Color c2)
         {
-            Protein p = new Protein(pos, 100);
+            Protein p = new Protein(pos, 100, c1, c2);
             p.LoadContent(texture);
             proteins.Add(p);
         }

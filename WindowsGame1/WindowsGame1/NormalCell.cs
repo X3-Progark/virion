@@ -28,7 +28,8 @@ namespace Virion
 
         float percentageDarkSpots,
             darkSpotMotionFactor,
-            maxSpeed, minSpeed;
+            maxSpeed, minSpeed, 
+            infectionProgress, health;
 
         private Color c,
             wallColor, wallColorDark, 
@@ -49,9 +50,6 @@ namespace Virion
 
         private State state;
 
-        private int infectionProgress;
-        private float health;
-
         public NormalCell(Vector2 cellPosition, int frameTime)
 
         {
@@ -60,7 +58,7 @@ namespace Virion
 
             this.state = State.Healthy;
 
-            this.infectionProgress = 0;
+            this.infectionProgress = 0f;
             this.health = 100.0f;
 
             this.frameTime = frameTime;
@@ -68,9 +66,6 @@ namespace Virion
 
             //Sets where the cell is
             this.cellPosition = cellPosition;
-            
-            //SHOULD BE SOME KIND OF GLOBAL VARIABLE
-            pixelSize = 5;
 
             //How many pixels the MAXIMUM cell radius should be
             cellRadius = 5;
@@ -173,7 +168,6 @@ namespace Virion
             if (elapsedTime < frameTime)
             {
                 //If we are not supposed to calculate a new frame, just return
-                //base.Update(gameTime);
                 return;
             }
 
@@ -197,6 +191,11 @@ namespace Virion
             {
                 maxSpeed = 0.0f;
                 minSpeed = 0.0f;
+            }
+
+            if (health != 100f || infectionProgress != 0f)
+            {
+                calculateColors();
             }
 
             elapsedTime = 0; //We have reached the elapsed time and have to reset it
@@ -551,16 +550,83 @@ namespace Virion
             moveCell();
         }
 
-        //We want a random
-        private Random getRandom()
+        private void calculateColors()
         {
-            return Main.getRandom();
+            float healthFactor = health / 100f;
+            float infectionFactor = infectionProgress / 100f;
+
+            wallColor = new Color(
+                currentColor(241, 191, 222, healthFactor, infectionFactor),
+                currentColor(181, 191, 212, healthFactor, infectionFactor),
+                currentColor(141, 191, 127, healthFactor, infectionFactor));
+
+            wallColorDark = new Color(
+                currentColor(236, 191, 218, healthFactor, infectionFactor),
+                currentColor(169, 191, 206, healthFactor, infectionFactor),
+                currentColor(119, 191, 116, healthFactor, infectionFactor));
+
+            fillColor = new Color(
+                currentColor(254, 225, 232, healthFactor, infectionFactor),
+                currentColor(200, 225, 216, healthFactor, infectionFactor),
+                currentColor(200, 225, 144, healthFactor, infectionFactor));
+
+            fillColorDark = new Color(
+                currentColor(254, 220, 232, healthFactor, infectionFactor),
+                currentColor(190, 220, 209, healthFactor, infectionFactor),
+                currentColor(190, 220, 137, healthFactor, infectionFactor));
+
+            centerColor = new Color(
+                currentColor(254, 216, 232, healthFactor, infectionFactor),
+                currentColor(220, 242, 230, healthFactor, infectionFactor),
+                currentColor(220, 174, 158, healthFactor, infectionFactor));
+
+            centerColorDark = new Color(
+                currentColor(254, 205, 232, healthFactor, infectionFactor),
+                currentColor(215, 239, 227, healthFactor, infectionFactor),
+                currentColor(215, 152, 155, healthFactor, infectionFactor));
+            
+            /* //Want invisible?
+            wallColor = new Color(
+                currentColor(241, 255, 222, healthFactor, infectionFactor),
+                currentColor(181, 192, 212, healthFactor, infectionFactor),
+                currentColor(141, 203, 127, healthFactor, infectionFactor));
+
+            wallColorDark = new Color(
+                currentColor(236, 255, 218, healthFactor, infectionFactor),
+                currentColor(169, 192, 206, healthFactor, infectionFactor),
+                currentColor(119, 203, 116, healthFactor, infectionFactor));
+
+            fillColor = new Color(
+                currentColor(254, 255, 232, healthFactor, infectionFactor),
+                currentColor(200, 192, 216, healthFactor, infectionFactor),
+                currentColor(200, 203, 144, healthFactor, infectionFactor));
+
+            fillColorDark = new Color(
+                currentColor(254, 255, 232, healthFactor, infectionFactor),
+                currentColor(190, 192, 209, healthFactor, infectionFactor),
+                currentColor(190, 203, 137, healthFactor, infectionFactor));
+            */
+            
         }
 
-        //We need this as a public method to get different seeds in order to get an actual random number
-        private double getRandomD()
+        private int currentColor(int startValue, int deadValue, int infectedValue, float healthFactor, float infectionFactor)
         {
-            return Main.getRandomD();
+            infectionFactor = (infectionFactor > 1 ? 1 : infectionFactor);
+            float healthColorAdd = (1-healthFactor) * (startValue - deadValue);
+            float infectedColorAdd = healthFactor * infectionFactor * (startValue - infectedValue);
+
+            return (int)(startValue - healthColorAdd - infectedColorAdd);
         }
+
+        public Color getCenterColor()
+        {
+            return centerColor;
+        }
+
+        public Color getCenterColorDark()
+        {
+            return centerColorDark;
+        }
+
     }
 }
