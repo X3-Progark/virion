@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Virion", "Virion.csproj", "{39C4AF7A-8FD3-41F0-A6C4-D31F8D97FC58}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsGame1Content", "..\WindowsGame1Content\WindowsGame1Content.contentproj", "{FD44B219-D346-4C3E-8EDC-0CB20FAB2184}"
@@ -14,12 +16,14 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{39C4AF7A-8FD3-41F0-A6C4-D31F8D97FC58}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{39C4AF7A-8FD3-41F0-A6C4-D31F8D97FC58}.Debug|Any CPU.Build.0 = Debug|x86
 		{39C4AF7A-8FD3-41F0-A6C4-D31F8D97FC58}.Debug|x86.ActiveCfg = Debug|x86
 		{39C4AF7A-8FD3-41F0-A6C4-D31F8D97FC58}.Debug|x86.Build.0 = Debug|x86
 		{39C4AF7A-8FD3-41F0-A6C4-D31F8D97FC58}.Release|Any CPU.ActiveCfg = Release|x86
 		{39C4AF7A-8FD3-41F0-A6C4-D31F8D97FC58}.Release|x86.ActiveCfg = Release|x86
 		{39C4AF7A-8FD3-41F0-A6C4-D31F8D97FC58}.Release|x86.Build.0 = Release|x86
 		{FD44B219-D346-4C3E-8EDC-0CB20FAB2184}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{FD44B219-D346-4C3E-8EDC-0CB20FAB2184}.Debug|Any CPU.Build.0 = Debug|x86
 		{FD44B219-D346-4C3E-8EDC-0CB20FAB2184}.Debug|x86.ActiveCfg = Debug|x86
 		{FD44B219-D346-4C3E-8EDC-0CB20FAB2184}.Release|Any CPU.ActiveCfg = Release|x86
 		{FD44B219-D346-4C3E-8EDC-0CB20FAB2184}.Release|x86.ActiveCfg = Release|x86

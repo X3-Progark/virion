@@ -197,7 +197,8 @@ namespace Virion
             double stepX = cellMotion.X / (double)pixelSize;
             double stepY = cellMotion.Y / (double)pixelSize;
             Vector2 cV = new Vector2((float)stepX, (float)stepY);
-            
+
+            bool first = true;
 
             while(cV.Length() <= cellLength)
             {
@@ -215,6 +216,16 @@ namespace Virion
 
                 colorMatrix[x1, y1] = 1;
                 colorMatrix[x2, y2] = 1;
+
+                if (first)
+                {
+                    nV1.Normalize();
+                    int negX = (nV1.X == 0 ? 0 : (int)(nV1.X / Math.Abs(nV1.X)));
+                    int negY = (nV1.Y == 0 ? 0 : (int)(nV1.Y / Math.Abs(nV1.Y)));
+                    colorMatrix[x1 - negX, y1 - negY] = 1;
+                    colorMatrix[x2 + negX, y2 + negY] = 1;
+                    first = false;
+                }
 
                 cV.X += (float)stepX;
                 cV.Y += (float)stepY;
