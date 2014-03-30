@@ -191,7 +191,7 @@ namespace Virion
 
                 timePassed += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
 
-                if (timePassed > 10000)
+                if (timePassed > 30000)
                 {
                     timePassed = 0.0f;
                     WhiteCell w = new WhiteCell(
