@@ -1,4 +1,6 @@
 
+using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -70,7 +72,14 @@ namespace Virion
 
             spriteBatch.Begin();
 
-            spriteBatch.DrawString(font, "Level: " + Main.Instance.level, new Vector2(100, 100), Color.Beige);
+            string t = "Level: " + Main.Instance.level;
+            float transitionOffset = (float)Math.Pow(TransitionPosition, 2);
+            Vector2 levelPosition = new Vector2(graphics.Viewport.Width / 2, 125);
+            levelPosition.Y -= transitionOffset * 100;
+
+            spriteBatch.DrawString(font, t,
+                levelPosition, 
+                Color.Beige, 0, (font.MeasureString(t) / 2), 1, SpriteEffects.None, 0);
 
             spriteBatch.End();
         }
