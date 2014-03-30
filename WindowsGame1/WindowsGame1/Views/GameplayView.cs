@@ -37,9 +37,19 @@ namespace Virion
 
         int infected, dead, totalCells;
 
+        bool allDead;
+
         List<NormalCell> cellList;
         List<Protein> proteins;
 
+        enum State
+        {
+            Active,
+            Won,
+            Lost
+        };
+
+        State state;
         
         public GameplayView()
         {
@@ -63,8 +73,7 @@ namespace Virion
             whiteCellList = new List<WhiteCell>();
             proteins = new List<Protein>();
 
-            //The look of the different players
-
+            state = State.Active;
 
             string[] models = new string[4] { "XOXXOXXOX", "OXOOMXXXX", "XMXOMOXMX", "OXOOMOXOX" };
 
@@ -157,11 +166,17 @@ namespace Virion
                 pauseAlpha = Math.Max(pauseAlpha - 1f / 32, 0);
 
             
+            if (state == State.Lost)
+                LoadingView.Load(ViewManager, false, null, new LossView());
+
+            if (state == State.Won)
+                LoadingView.Load(ViewManager, false, null, new WinView());
 
             if (IsActive)
             {
                 infected = 0;
                 dead = 0;
+                allDead = true;
 
                 foreach (NormalCell c in cellList)
                 {
@@ -173,7 +188,19 @@ namespace Virion
                         dead++;
                 }
 
-                foreach (Virus v in playerObjects) v.Update(gameTime);
+                if (infected + dead == totalCells)
+                    state = State.Won;
+
+                foreach (Virus v in playerObjects)
+                {
+                    v.Update(gameTime);
+
+                    if (v.Alive())
+                        allDead = false;
+                }
+
+                if (allDead)
+                    state = State.Lost;
 
                 foreach (Protein p in proteins) p.Update(gameTime);
 

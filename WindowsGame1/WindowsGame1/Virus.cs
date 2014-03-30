@@ -14,6 +14,14 @@ namespace Virion
 {
     public class Virus : Unit
     {
+
+        enum State
+        {
+            Alive,
+            Dead
+        };
+
+
         //Default texture
         private Texture2D texture;
 
@@ -32,6 +40,8 @@ namespace Virion
         private float breakFactor, motionAdd, maxSpeed;
 
         private Player player;
+
+        private State state;
 
         Random random;
 
@@ -66,6 +76,7 @@ namespace Virion
             this.health = 100 * player.Health;
             this.player = player;
             this.frameTime = frameTime;
+            this.state = State.Alive;
             elapsedTime = 0;
 
             //Sets where the cell is
@@ -128,6 +139,22 @@ namespace Virion
             //base.Initialize();
         }
 
+        public bool Alive()
+        {
+            return this.state == State.Alive;
+        }
+
+        public void Hit(int damage)
+        {
+            if (health > damage)
+                health -= damage;
+            else
+            {
+                health = 0;
+                this.state = State.Dead;
+            }
+        }
+
 
         public void Update(GameTime gameTime)
         {
@@ -140,6 +167,9 @@ namespace Virion
             //We have reached the elapsed time and have to reset it
             elapsedTime = 0;
 
+            if (!Alive())
+                maxSpeed = 0.1f;
+
             //Slowing down the virus
             cellMotion.X *= breakFactor;
             cellMotion.Y *= breakFactor;
@@ -150,8 +180,8 @@ namespace Virion
             if (cellMotion.Y > maxSpeed) cellMotion.Y = maxSpeed;
             else if (cellMotion.Y < -maxSpeed) cellMotion.Y = -maxSpeed;
 
-            cellPosition.X += (int)cellMotion.X;
-            cellPosition.Y += (int)cellMotion.Y;
+            cellPosition.X += (float)cellMotion.X;
+            cellPosition.Y += (float)cellMotion.Y;
 
 
 
@@ -197,8 +227,8 @@ namespace Virion
             else if (pixelCode == 2) c = fillColorDark;
             else if (pixelCode == 3) c = centerColor;
 
-            int xPos = (x - 2) * pixelSize + (int)cellPosition.X - (int)cellPosition.X % pixelSize;
-            int yPos = (y - 2) * pixelSize + (int)cellPosition.Y - (int)cellPosition.Y % pixelSize;
+            int xPos = (x - 2) * pixelSize + (int)cellPosition.X;// - (int)cellPosition.X % pixelSize;
+            int yPos = (y - 2) * pixelSize + (int)cellPosition.Y;// - (int)cellPosition.Y % pixelSize;
 
             spriteBatch.Draw(texture, new Rectangle(xPos, yPos, pixelSize, pixelSize), c);
 

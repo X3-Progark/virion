@@ -34,7 +34,13 @@ namespace Virion
 
         public void Update(GameTime gameTime)
         {
-
+     /*      
+            Virus v = hitsAVirus();
+            if (v != null)
+            {
+                v.eatProtein(this);
+            }
+      */
         }
 
         public void Initialize()
