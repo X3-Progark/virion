@@ -1,5 +1,7 @@
 
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace Virion
 
@@ -55,6 +57,22 @@ namespace Virion
         protected override void OnCancel(PlayerIndex playerIndex)
         {
             ViewManager.Game.Exit();
+        }
+
+        /// When the user cancels the main menu, ask if they want to exit the sample.
+        public override void Draw(GameTime gameTime)
+        {
+            base.Draw(gameTime);
+
+            GraphicsDevice graphics = ViewManager.GraphicsDevice;
+            SpriteBatch spriteBatch = ViewManager.SpriteBatch;
+            SpriteFont font = ViewManager.Font;
+
+            spriteBatch.Begin();
+
+            spriteBatch.DrawString(font, "Level: " + Main.Instance.level, new Vector2(100, 100), Color.Beige);
+
+            spriteBatch.End();
         }
     }
 }

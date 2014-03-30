@@ -109,7 +109,6 @@ namespace Virion
             for (int i = 0; i < whiteCells; i++)
                 whiteCellList.Add(new WhiteCell(new Vector2((int)(800 * Main.getRandomD()), (int)(500 * Main.getRandomD())), 30));
 
-
             proteins.Add(new Protein(new Vector2(200, 200), 100));
         }
 
@@ -186,12 +185,14 @@ namespace Virion
             {
                 
                 allDead = true;
-                List<NormalCell> toDie = new List<NormalCell>();
+                infected = 0;
 
+                List<NormalCell> toDie = new List<NormalCell>();
                 foreach (NormalCell c in cellList)
                 {
                     c.Update(gameTime);
                     c.collisionHandeling(cellList, whiteCellList);
+
                     if (c.isInfected())
                         infected++;
                     else if (c.isDead())
@@ -206,9 +207,7 @@ namespace Virion
 
                 foreach (NormalCell c in toDie) cellList.Remove(c);
 
-
-
-                if (infected + dead == totalCells)
+                if (totalCells - infected <= 0)
                     state = State.Won;
 
                 foreach (Virus v in playerObjects)
@@ -217,6 +216,30 @@ namespace Virion
 
                     if (v.Alive())
                         allDead = false;
+
+                    bool infectingAny = false;
+                    foreach (NormalCell c in cellList)
+                    {
+                        if (c.isClose(v))
+                        {
+                            infectingAny = true;
+                            v.Infecting = true;
+                            c.Infect(v.Strength);
+                        }
+                    }
+                    if (!infectingAny)
+                        v.Infecting = false;
+
+                    List<Protein> eaten = new List<Protein>();
+                    foreach (Protein p in proteins)
+                    {
+                        if (p.isClose(v))
+                        {
+                            v.Consume(p);
+                            eaten.Add(p);
+                        }
+                    }
+                    foreach (Protein p in eaten) proteins.Remove(p);
                 }
 
                 if (allDead)
@@ -326,9 +349,11 @@ namespace Virion
                 v.Draw(gameTime, spriteBatch);
 
                 // Health bar
-                spriteBatch.Draw(healthBarTexture, new Rectangle(150 * v.Player.Index + 40, 20, 1 * v.Health, 20), Color.Red);
+                int screenWidth = (int)Main.Instance.Conf.Resolution.X;
+                int screenHeight = (int)Main.Instance.Conf.Resolution.Y;
+                spriteBatch.Draw(healthBarTexture, new Rectangle(screenWidth / 4 * v.Player.Index + 40, 20, (int)((screenWidth/5) * ((float)v.Health / 100.0f)), 20), Color.Red);
 
-                spriteBatch.DrawString(gameFont, "P" + (v.Player.Index+1), new Vector2(150 * v.Player.Index + 10, 10), Color.Black);
+                spriteBatch.DrawString(gameFont, "P" + (v.Player.Index + 1), new Vector2(screenWidth / 4 * v.Player.Index + 10, 10), Color.Black);
             }
 
             foreach (Protein p in proteins) p.Draw(gameTime, spriteBatch);

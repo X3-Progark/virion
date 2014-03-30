@@ -191,6 +191,7 @@ namespace Virion
             {
                 maxSpeed = pixelSize * 0.2f;
                 minSpeed = pixelSize * 0.1f;
+                cellRadiusMinFactor = 0.4d;
             }
             else if (isDead())
             {
@@ -214,7 +215,7 @@ namespace Virion
         public void Infect(int rate)
         {
             this.infectionProgress += rate;
-            if (infectionProgress <= 100)
+            if (infectionProgress >= 100)
             {
                 this.state = State.Infected;
             }

@@ -28,6 +28,7 @@ namespace Virion
         public Config Conf;
 
         public Player[] players;
+        public int level;
         
 
         public Main()
@@ -35,6 +36,8 @@ namespace Virion
             Instance = this;
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+
+            level = 1;
 
             Conf = new Config();
             viewManager = new ViewManager(this);

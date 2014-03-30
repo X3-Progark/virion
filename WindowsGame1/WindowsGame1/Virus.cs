@@ -57,13 +57,20 @@ namespace Virion
             set { this.player = value; }
         }
 
+        private bool infecting;
+        public bool Infecting
+        {
+            get { return this.infecting; }
+            set { this.infecting = value; }
+        }
+
         public Virus(Player player, Vector2 cellPosition, int frameTime)
 
         {
             //TODO: Må, MÅ, hentes fra en høyere klasse slik at de får forskjellige variabler! 
             //Når de blir initialisert samtidig får de akkurat samme variabler => cellene blir identiske
             random = new Random();
-
+            infecting = false;
             this.strength = 1 * player.Strength;
             this.health = 100 * player.Health;
             this.player = player;
@@ -143,6 +150,8 @@ namespace Virion
             }
         }
 
+        
+
         public void Consume(Protein p)
         {
             player.Proteins++;
@@ -162,6 +171,13 @@ namespace Virion
 
             if (!Alive())
                 maxSpeed = 0.1f;
+            else
+            {
+                if (Infecting)
+                    maxSpeed = (float)Strength;
+                else
+                    maxSpeed = pixelSize * 0.5f * player.Speed;
+            }
 
             //Slowing down the virus
             cellMotion.X *= breakFactor;

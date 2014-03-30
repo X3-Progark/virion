@@ -19,14 +19,12 @@ namespace Virion
         public Map()
         {
             level = 1;
-            
-
         }
 
         public void generate()
         {
-            normalCells = level * 10;
-            whiteCells = level *1;
+            normalCells = level * 5 + 10;
+            whiteCells = level * 1;
         }
 
         public int Level { get; set; }
