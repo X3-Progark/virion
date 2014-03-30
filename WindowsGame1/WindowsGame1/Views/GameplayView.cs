@@ -355,7 +355,7 @@ namespace Virion
                 // Health bar
                 int screenWidth = (int)Main.Instance.Conf.Resolution.X;
                 int screenHeight = (int)Main.Instance.Conf.Resolution.Y;
-                spriteBatch.Draw(healthBarTexture, new Rectangle(screenWidth / 4 * v.Player.Index + 40, 10, (int)((screenWidth/5) * ((float)v.Health / v.Health)), 20), Color.Red);
+                spriteBatch.Draw(healthBarTexture, new Rectangle(screenWidth / 4 * v.Player.Index + 40, 10, (int)((((float)screenWidth / 5.0f) * ((float)v.Health / (v.Player.Health*100)))), 20), Color.Red);
 
                 spriteBatch.DrawString(gameFont, "P" + (v.Player.Index + 1), new Vector2(screenWidth / 4 * v.Player.Index + 10, 10), Color.Black);
             }
@@ -367,7 +367,7 @@ namespace Virion
 
             spriteBatch.DrawString(gameFont, "Infected: "+ infected, new Vector2(10, 50), Color.Black);
             spriteBatch.DrawString(gameFont, "Dead: " + dead, new Vector2(10, 70), Color.Black);
-            spriteBatch.DrawString(gameFont, "Healthy" + (totalCells - dead - infected), new Vector2(10, 90), Color.Black);
+            spriteBatch.DrawString(gameFont, "Healthy" + (totalCells - infected), new Vector2(10, 90), Color.Black);
 
             spriteBatch.End();
 

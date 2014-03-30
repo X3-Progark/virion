@@ -60,7 +60,7 @@ namespace Virion
             cellRadius = 3;
 
             //The speed of the white cell
-            cellSpeed = pixelSize * 0.1f;
+            cellSpeed = pixelSize * 0.6f;
 
             //A cellRadius*2 x cellRadius*2 2D int array
             colorMatrix = new int[cellLength * 2, cellLength * 2];

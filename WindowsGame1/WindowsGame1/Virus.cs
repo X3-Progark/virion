@@ -190,9 +190,15 @@ namespace Virion
             else if (cellMotion.Y < -maxSpeed) cellMotion.Y = -maxSpeed;
 
             cellPosition.X += (float)cellMotion.X;
+            if (cellPosition.X < 0) cellPosition.X = 0.0f;
+            else if (cellPosition.X > Main.Instance.Conf.Resolution.X)
+                cellPosition.X = Main.Instance.Conf.Resolution.X;
+
+
             cellPosition.Y += (float)cellMotion.Y;
-
-
+            if (cellPosition.Y < 0) cellPosition.Y = 0;
+            else if (cellPosition.Y > Main.Instance.Conf.Resolution.Y)
+                cellPosition.Y = Main.Instance.Conf.Resolution.Y;
 
             //TODO
         }
