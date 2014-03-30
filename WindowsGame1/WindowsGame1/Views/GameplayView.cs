@@ -21,7 +21,7 @@ namespace Virion
 
         ContentManager content;
         SpriteFont gameFont;
-        Texture2D texture;
+        public static Texture2D texture;
 
         List<Keys> playerInputs;
         List<Virus> playerObjects;
@@ -355,8 +355,8 @@ namespace Virion
         
         public override void Draw(GameTime gameTime)
         {
-            ViewManager.GraphicsDevice.Clear(ClearOptions.Target,
-                                               Color.Pink, 0, 0);
+            //ViewManager.GraphicsDevice.Clear(ClearOptions.Target,
+            //                                   Color.Pink, 0, 0);
 
             SpriteBatch spriteBatch = ViewManager.SpriteBatch;
 
@@ -393,6 +393,11 @@ namespace Virion
 
                 ViewManager.FadeBackBufferToBlack(alpha);
             }
+        }
+
+        public static Texture2D getTexture()
+        {
+            return texture;
         }
 
     }
