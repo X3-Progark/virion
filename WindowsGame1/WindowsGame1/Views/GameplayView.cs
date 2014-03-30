@@ -19,6 +19,7 @@ namespace Virion
 
         ContentManager content;
         SpriteFont gameFont;
+        Texture2D texture;
 
         List<Keys> playerInputs;
         List<Virus> playerObjects;
@@ -132,14 +133,20 @@ namespace Virion
 
                 gameFont = content.Load<SpriteFont>("gamefont");
 
+                texture = new Texture2D(ViewManager.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+                texture.SetData<Color>(new Color[] { Color.White });
+
                 foreach (Unit c in cellList)
-                {
-                    c.LoadContent(ViewManager.GraphicsDevice);
-                }
+                    c.LoadContent(texture);
 
-                foreach (Virus v in playerObjects) v.LoadContent(ViewManager.GraphicsDevice);
+                foreach (Virus v in playerObjects) 
+                    v.LoadContent(texture);
 
-                foreach (WhiteCell w in whiteCellList) w.LoadContent(ViewManager.GraphicsDevice);
+                foreach (WhiteCell w in whiteCellList) 
+                    w.LoadContent(texture);
+
+                foreach (Protein p in proteins) 
+                    p.LoadContent(texture);
 
                 ViewManager.Game.ResetElapsedTime();
             }
@@ -184,7 +191,7 @@ namespace Virion
                 foreach (NormalCell c in cellList)
                 {
                     c.Update(gameTime);
-                    c.collisionHandeling(cellList);
+                    c.collisionHandeling(cellList, whiteCellList);
                     if (c.isInfected())
                         infected++;
                     else if (c.isDead())
@@ -227,7 +234,9 @@ namespace Virion
 
         public void AddProtein(Vector2 pos)
         {
-            proteins.Add(new Protein(pos, 100));
+            Protein p = new Protein(pos, 100);
+            p.LoadContent(texture);
+            proteins.Add(p);
         }
 
         

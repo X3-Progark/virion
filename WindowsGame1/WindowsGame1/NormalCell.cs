@@ -23,25 +23,19 @@ namespace Virion
             Dead
         };
 
-
-        //Default texture
-        private Texture2D texture;
-
         private int[,] colorMatrix;
         private bool[,] darkMatrix;
 
         float percentageDarkSpots,
-            darkSpotMotionFactor, 
-            maxSpeed, minSpeed, 
-            speedFromOtherCell;
+            darkSpotMotionFactor,
+            maxSpeed, minSpeed;
 
         private Color c,
             wallColor, wallColorDark, 
             fillColor, fillColorDark, 
             centerColor, centerColorDark;
         
-        private int pixelSize, 
-            cellRadius,cellPoints,
+        private int cellPoints,
             elapsedTime, frameTime;
 
         private double cellRadiusMinFactor, 
@@ -52,9 +46,6 @@ namespace Virion
             cellPointsLengthSpeed;
 
         private List<Vector2> cellVectors;
-
-        private Vector2 cellPosition;
-        private Vector2 cellMotion;
 
         private State state;
 
@@ -136,25 +127,12 @@ namespace Virion
             //The minimum speed a cell can have
             minSpeed = pixelSize * 0.5f;
 
-            //How much speed you get from another cell in a bump
-            speedFromOtherCell = 0.5f;
-
             initDarkMatrix();
-
             calculateCellPulsation();
             
         }
 
-        public void LoadContent(GraphicsDevice GD)
-        {
-            //Make the pixel texture that can obtain any color
-            texture = new Texture2D(GD, 1, 1, false, SurfaceFormat.Color);
-            texture.SetData<Color>(new Color[] { Color.White });
-
-            //base.LoadContent();
-        }
-
-        public void Initialize()
+        public override void Initialize()
         {
             //base.Initialize();
         }
@@ -189,7 +167,7 @@ namespace Virion
             }
         }
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             elapsedTime += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (elapsedTime < frameTime)
@@ -203,9 +181,6 @@ namespace Virion
             {
                 health -= 0.1f;
             }
-
-            health -= 1.0f;
-            Console.Write(health);
 
             if (health <= 0.0f)
             {
@@ -234,8 +209,6 @@ namespace Virion
             calculateNewCellVectors();
             fillColorMatrix();
             updateDarkMatrix();
-
-            //base.Update(gameTime);
         }
 
         public void Infect(int rate)
@@ -253,10 +226,8 @@ namespace Virion
             cellPosition.Y += (int)cellMotion.Y;
         }
 
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (!isDead())
-            {
                 for (int x = 0; x < cellRadius * 2; x++)
                 {
                     for (int y = 0; y < cellRadius * 2; y++)
@@ -266,7 +237,6 @@ namespace Virion
                     }
                 }
                 //base.Draw(gameTime);
-            }
         }
 
         private void drawPixel(int x, int y, int pixelCode, SpriteBatch spriteBatch)
@@ -502,30 +472,38 @@ namespace Virion
             }
         }
 
-        public void collisionHandeling(List<NormalCell> cellList)
+        public void collisionHandeling(List<NormalCell> cellList, List<WhiteCell> whiteCellList)
         {
             foreach(NormalCell c in cellList)
             {
                 if (isClose(c) && isColliding(c))
                 {
-                    coll(c);
-                    c.coll(this);
+                    Vector2 thisCellMotion = getMotion();
+                    Vector2 otherCellMotion = c.getMotion();
+                    float thisCellSpeed = getMotion().Length();
+                    float otherCellSpeed = c.getMotion().Length();
+
+                    coll(otherCellMotion, thisCellSpeed);
+                    c.coll(thisCellMotion, otherCellSpeed);
                 }
             }
 
-            if (cellPosition.X < cellRadius * pixelSize * 0.5) hitLeft(0f);
-            if (cellPosition.Y < cellRadius * pixelSize * 0.5) hitOver(0f);
-            if (cellPosition.X > Main.Instance.GraphicsDevice.Viewport.Width - cellRadius * pixelSize * 0.5) hitRight(0f);
-            if (cellPosition.Y > Main.Instance.GraphicsDevice.Viewport.Height - cellRadius * pixelSize * 0.5) hitUnder(0f);
 
+            if (cellPosition.X < cellRadius * pixelSize * 0.5) hitLeft();
+            if (cellPosition.Y < cellRadius * pixelSize * 0.5) hitOver();
+            if (cellPosition.X > Main.Instance.GraphicsDevice.Viewport.Width - cellRadius * pixelSize * 0.5) hitRight();
+            if (cellPosition.Y > Main.Instance.GraphicsDevice.Viewport.Height - cellRadius * pixelSize * 0.5) hitUnder();
+
+
+             foreach (WhiteCell wc in whiteCellList)
+            {
+                if (isClose(wc))
+                {
+                    coll(wc.getPosition(), getMotion().Length());
+                }
+            }
         }
 
-        private bool isClose(NormalCell c)
-        {
-            Vector2 distance = Vector2.Subtract(getPosition(), c.getPosition());
-            if (distance.Length() == 0) return false;
-            return distance.Length() < (2 * cellRadius * (pixelSize - 1));
-        }
 
         private bool isColliding(NormalCell c)
         {
@@ -541,58 +519,35 @@ namespace Virion
             else return false;
         }
 
-        public void coll(NormalCell c)
+        public void coll(Vector2 otherCellMotion, float speed)
         {
-            Vector2 between = Vector2.Subtract(getPosition(), c.getPosition());
-
-            //Got hit in the y direction?
-            if (Math.Abs(between.Y) > Math.Abs(between.X))
-            {
-                //Got hit under?
-                if (between.Y < 0) hitUnder(c.getMotion().Y);
-                else hitOver(c.getMotion().Y);
-            }
-            else
-            {
-                //Got hit right?
-                if (between.X < 0) hitRight(c.getMotion().X);
-                else hitLeft(c.getMotion().X);
-            }
+            cellMotion = otherCellMotion;
+            cellMotion.Normalize();
+            cellMotion *= (speed);
         }
 
-        private void hitUnder(float otherCellMotionY)
+        private void hitUnder()
         {
-            cellMotion.Y = -Math.Abs(cellMotion.Y) + otherCellMotionY * speedFromOtherCell;
+            cellMotion.Y = -Math.Abs(cellMotion.Y);
             moveCell();
         }
 
-        private void hitOver(float otherCellMotionY)
+        private void hitOver()
         {
-            cellMotion.Y = Math.Abs(cellMotion.Y) + otherCellMotionY * speedFromOtherCell;
+            cellMotion.Y = Math.Abs(cellMotion.Y);
             moveCell();
         }
 
-        private void hitRight(float otherCellMotionX)
+        private void hitRight()
         {
-            cellMotion.X = -Math.Abs(cellMotion.X) + otherCellMotionX * speedFromOtherCell;
+            cellMotion.X = -Math.Abs(cellMotion.X);
             moveCell();
         }
 
-        private void hitLeft(float otherCellMotionX)
+        private void hitLeft()
         {
-            cellMotion.X = Math.Abs(cellMotion.X) + otherCellMotionX * speedFromOtherCell;
+            cellMotion.X = Math.Abs(cellMotion.X);
             moveCell();
-        }
-
-
-        public Vector2 getPosition()
-        {
-            return cellPosition;
-        }
-
-        public Vector2 getMotion()
-        {
-            return cellMotion;
         }
 
         //We want a random
