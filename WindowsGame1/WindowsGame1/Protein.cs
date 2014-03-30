@@ -38,7 +38,7 @@ namespace Virion
             Virus v = hitsAVirus();
             if (v != null)
             {
-                v.eatProtein(this);
+                v.Consume(this);
             }
       */
         }

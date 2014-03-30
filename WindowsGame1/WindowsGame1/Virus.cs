@@ -155,6 +155,11 @@ namespace Virion
             }
         }
 
+        public void Consume(Protein p)
+        {
+            player.Proteins++;
+        }
+
 
         public void Update(GameTime gameTime)
         {

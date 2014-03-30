@@ -58,6 +58,9 @@ namespace Virion
 
         private State state;
 
+        private int infectionProgress;
+        private float health;
+
         public NormalCell(Vector2 cellPosition, int frameTime)
 
         {
@@ -65,6 +68,9 @@ namespace Virion
             //Når de blir initialisert samtidig får de akkurat samme variabler > cellene blir identiske
 
             this.state = State.Healthy;
+
+            this.infectionProgress = 0;
+            this.health = 100.0f;
 
             this.frameTime = frameTime;
             elapsedTime = 0;
@@ -193,6 +199,24 @@ namespace Virion
                 return;
             }
 
+            if (!isDead() && isInfected())
+            {
+                health -= 0.1f;
+                if (health <= 0.0f)
+                    this.state = State.Dead;
+            }
+
+            if (isInfected())
+            {
+                maxSpeed = pixelSize * 0.2f;
+                minSpeed = pixelSize * 0.1f;
+            }
+            else if (isDead())
+            {
+                maxSpeed = 0.0f;
+                minSpeed = 0.0f;
+            }
+
             elapsedTime = 0; //We have reached the elapsed time and have to reset it
 
             colorMatrix = new int[cellRadius * 2, cellRadius * 2];
@@ -206,6 +230,15 @@ namespace Virion
             updateDarkMatrix();
 
             //base.Update(gameTime);
+        }
+
+        public void Infect(int rate)
+        {
+            this.infectionProgress += rate;
+            if (infectionProgress <= 100)
+            {
+                this.state = State.Infected;
+            }
         }
 
         private void moveCell()

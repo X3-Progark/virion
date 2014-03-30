@@ -21,10 +21,6 @@ namespace Virion
         Texture2D texture;
         GraphicsDevice device;
 
-        const bool resultionIndependent = true;
-        Matrix globalTransformation;
-        
-
         public static Random random = new Random();
         
         ViewManager viewManager;
@@ -86,20 +82,6 @@ namespace Virion
         
         protected override void Draw(GameTime gameTime)
         {
-            Vector3 screenScalingFactor;
-            if (resultionIndependent)
-            {
-                float horScaling = (float)device.PresentationParameters.BackBufferWidth / Conf.Resolution.X;
-                float verScaling = (float)device.PresentationParameters.BackBufferHeight / Conf.Resolution.Y;
-                screenScalingFactor = new Vector3(horScaling, verScaling, 1);
-            }
-            else
-            {
-                screenScalingFactor = new Vector3(1, 1, 1);
-            }
-            globalTransformation = Matrix.CreateScale(screenScalingFactor);
-
-
             graphics.GraphicsDevice.Clear(Color.Black);
 
             //spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, globalTransformation);
