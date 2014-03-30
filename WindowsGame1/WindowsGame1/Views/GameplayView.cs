@@ -75,6 +75,9 @@ namespace Virion
 
             state = State.Active;
 
+            infected = 0;
+            dead = 0;
+
             string[] models = new string[4] { "XOXXOXXOX", "OXOOMXXXX", "XMXOMOXMX", "OXOOMOXOX" };
 
             Keys[] up = new Keys[4] { Keys.Up, Keys.W, Keys.T, Keys.I };
@@ -174,9 +177,9 @@ namespace Virion
 
             if (IsActive)
             {
-                infected = 0;
-                dead = 0;
+                
                 allDead = true;
+                List<NormalCell> toDie = new List<NormalCell>();
 
                 foreach (NormalCell c in cellList)
                 {
@@ -185,8 +188,18 @@ namespace Virion
                     if (c.isInfected())
                         infected++;
                     else if (c.isDead())
+                    {
+                        totalCells--;
                         dead++;
+                        infected--;
+                        AddProtein(c.getPosition());
+                        toDie.Add(c);
+                    }
                 }
+
+                foreach (NormalCell c in toDie) cellList.Remove(c);
+
+
 
                 if (infected + dead == totalCells)
                     state = State.Won;
@@ -212,6 +225,10 @@ namespace Virion
             }
         }
 
+        public void AddProtein(Vector2 pos)
+        {
+            proteins.Add(new Protein(pos, 100));
+        }
 
         
         public override void HandleInput(GameTime gameTime, InputState input)
