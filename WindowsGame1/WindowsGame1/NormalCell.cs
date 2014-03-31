@@ -12,29 +12,31 @@ using Microsoft.Xna.Framework.Media;
 
 namespace Virion
 {
-    /// <summary>
-    /// This is a game component that implements IUpdateable.
-    /// </summary>
+    
     public class NormalCell : Unit
     {
-        private Main game;
 
-        //Default texture
-        private Texture2D texture;
+        enum State
+        {
+            Healthy,
+            Infected,
+            Dead
+        };
 
         private int[,] colorMatrix;
         private bool[,] darkMatrix;
 
         float percentageDarkSpots,
-            darkSpotMotionFactor;
+            darkSpotMotionFactor,
+            maxSpeed, minSpeed, 
+            infectionProgress, health;
 
         private Color c,
             wallColor, wallColorDark, 
             fillColor, fillColorDark, 
             centerColor, centerColorDark;
         
-        private int pixelSize, 
-            cellRadius,cellPoints,
+        private int cellPoints,
             elapsedTime, frameTime;
 
         private double cellRadiusMinFactor, 
@@ -46,33 +48,36 @@ namespace Virion
 
         private List<Vector2> cellVectors;
 
-        private Point cellPosition;
-        private Vector2 cellMotion;
+        private State state;
 
-
-        public NormalCell(Main game, Point cellPosition, int frameTime)
+        public NormalCell(Vector2 cellPosition, int frameTime)
 
         {
-            this.game = (Main)game;
+            //TODO: Må, MÅ, hentes fra en høyere klasse slik at de får forskjellige variabler! 
+            //Når de blir initialisert samtidig får de akkurat samme variabler > cellene blir identiske
+
+            this.state = State.Healthy;
+
+            this.infectionProgress = 0f;
+            this.health = 100.0f;
+
             this.frameTime = frameTime;
-            this.cellPosition = cellPosition;
-            
             elapsedTime = 0;
-            
-            //SHOULD BE SOME KIND OF GLOBAL VARIABLE
-            pixelSize = 5;
+
+            //Sets where the cell is
+            this.cellPosition = cellPosition;
 
             //How many pixels the MAXIMUM cell radius should be
-            cellRadius = 7;
+            cellRadius = 5;
+
+            //Number of points that are used to define the edge
+            cellPoints = 10;
 
             //Percentage of the length of the radius can go inwards, larger makes bigger variation
             cellRadiusMinFactor = 0.1d;
 
             //How much the angles can vary. 1 is much, 0 is nothing. Makes shape more random!
-            cellAngleFactor = 0.8d;
-
-            //Number of points that are used to define the edge
-            cellPoints = 8;
+            cellAngleFactor = 0.5d;
 
             //A cellRadius*2 x cellRadius*2 2D int array
             colorMatrix = new int[cellRadius * 2, cellRadius * 2];
@@ -109,31 +114,37 @@ namespace Virion
             cellVectors = new List<Vector2>();
             
             //Says how the cell is moving
-            cellMotion = new Vector2();
+            cellMotion = getVectorFromAngleAndLength((float)360 * getRandomD(), (float)pixelSize/2);
+
+            //The maximum speed a cell can reach
+            maxSpeed = pixelSize * 0.9f;
+
+            //The minimum speed a cell can have
+            minSpeed = pixelSize * 0.5f;
 
             initDarkMatrix();
-
             calculateCellPulsation();
             
         }
 
-        public void LoadContent(GraphicsDevice GD)
-        {
-            //Make the pixel texture that can obtain any color
-            texture = new Texture2D(GD, 1, 1, false, SurfaceFormat.Color);
-            texture.SetData<Color>(new Color[] { Color.White });
-
-            //base.LoadContent();
-        }
-
-        public void Initialize()
+        public override void Initialize()
         {
             //base.Initialize();
         }
 
+        public bool isInfected()
+        {
+            return this.state == State.Infected;
+        }
+
+        public bool isDead()
+        {
+            return this.state == State.Dead;
+        }
+
         private void initDarkMatrix()
         {
-            Random r = game.getRandom();
+            Random r = getRandom();
             int amount = (int)(percentageDarkSpots*(cellRadius * cellRadius *4));
 
             for (int i = 0; i < amount; i++)
@@ -146,46 +157,86 @@ namespace Virion
                     i -= 1;
                     continue;
                 }
-                
+
                 darkMatrix[x, y] = true;
             }
-
         }
 
-        public void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             elapsedTime += (int)gameTime.ElapsedGameTime.TotalMilliseconds;
             if (elapsedTime < frameTime)
             {
                 //If we are not supposed to calculate a new frame, just return
-                //base.Update(gameTime);
                 return;
+            }
+
+            if (!isDead() && isInfected())
+            {
+                health -= 0.1f;
+            }
+
+            if (health <= 0.0f)
+            {
+                this.state = State.Dead;
+            }
+
+            if (isInfected())
+            {
+                maxSpeed = pixelSize * 0.2f;
+                minSpeed = pixelSize * 0.1f;
+                cellRadiusMinFactor = 0.4d;
+            }
+            else if (isDead())
+            {
+                maxSpeed = 0.0f;
+                minSpeed = 0.0f;
+            }
+
+            if (health != 100f || infectionProgress != 0f)
+            {
+                calculateColors();
             }
 
             elapsedTime = 0; //We have reached the elapsed time and have to reset it
 
             colorMatrix = new int[cellRadius * 2, cellRadius * 2];
 
+            if (cellMotion.Length() > maxSpeed) cellMotion *= 0.8f;
+            else if (cellMotion.Length() < minSpeed) cellMotion *= 1.2f;
+
+            moveCell();
             calculateNewCellVectors();
             fillColorMatrix();
             updateDarkMatrix();
-
-            //base.Update(gameTime);
         }
 
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public void Infect(float rate)
         {
-           
-            for (int x = 0; x < cellRadius * 2; x++)
+            this.infectionProgress += rate;
+            if (infectionProgress >= 100)
             {
-                for (int y = 0; y < cellRadius * 2; y++)
-                {
-                    int p = colorMatrix[x,y];
-                    drawPixel(x, y, p, spriteBatch);
-                }
+                this.state = State.Infected;
             }
+        }
 
-            //base.Draw(gameTime);
+        private void moveCell()
+        {
+            cellPosition.X += (int)cellMotion.X;
+            cellPosition.Y += (int)cellMotion.Y;
+        }
+
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+                for (int x = 0; x < cellRadius * 2; x++)
+                {
+                    for (int y = 0; y < cellRadius * 2; y++)
+                    {
+                        int p = colorMatrix[x, y];
+                        drawPixel(x, y, p, spriteBatch);
+                    }
+                }
+                //base.Draw(gameTime);
         }
 
         private void drawPixel(int x, int y, int pixelCode, SpriteBatch spriteBatch)
@@ -195,23 +246,23 @@ namespace Virion
             else if (pixelCode == 2) c = (darkMatrix[x, y] ? fillColorDark : fillColor);
             else if (pixelCode == 3) c = (darkMatrix[x, y] ? centerColorDark : centerColor);
 
-            int xPos = (x - cellRadius) * pixelSize + cellPosition.X;
-            int yPos = (y - cellRadius) * pixelSize + cellPosition.Y;
+            int xPos = (x - cellRadius) * pixelSize + (int)cellPosition.X;// -cellPosition.X % pixelSize;
+            int yPos = (y - cellRadius) * pixelSize + (int)cellPosition.Y;// -cellPosition.Y % pixelSize;
 
             spriteBatch.Draw(texture, new Rectangle(xPos, yPos, pixelSize, pixelSize), c);
 
         }
 
-        //
+        //Editing the darker pixels
         private void updateDarkMatrix()
         {
             for (int x = 0; x < cellRadius * 2; x++)
             {
                 for (int y = 0; y < cellRadius * 2; y++)
                 {
-                    if (game.getRandomD() <= darkSpotMotionFactor && darkMatrix[x, y])
+                    if (getRandomD() <= darkSpotMotionFactor && darkMatrix[x, y])
                     {
-                        double r = game.getRandomD();
+                        double r = getRandomD();
                         int xM = x;
                         int yM = y;
 
@@ -233,14 +284,14 @@ namespace Virion
         //Calculates how the cell vectors look like
         private void calculateCellPulsation()
         {
-            double angleStart = game.getRandomD() * 360d; //Find a random startingpoint for our angle
+            double angleStart = getRandomD() * 360d; //Find a random startingpoint for our angle
             double angleStep = 360f / cellPoints;
             double angleVariation = angleStep * cellAngleFactor; //How much should the angle vary
 
             for (int i = 0; i < cellPoints; i++)
             {
-                double angle = angleStart + angleStep * i + angleVariation * game.getRandomD();
-                double length = cellRadius - cellRadiusMinFactor * cellRadius * game.getRandomD();
+                double angle = angleStart + angleStep * i + angleVariation * getRandomD();
+                double length = cellRadius - cellRadiusMinFactor * cellRadius * getRandomD();
 
                 cellPointsAngle.Add(angle);
                 cellPointsLength.Add(length);
@@ -300,7 +351,8 @@ namespace Virion
                 cellPointsLength[i] = length;
 
                 //SOME UGLY SHIET
-                if (length >= cellRadius || length <= cellRadius * (1 - cellRadiusMinFactor)) cellPointsLengthSpeed[i] = -cellPointsLengthSpeed[i];
+                if (length >= cellRadius || length <= cellRadius * (1 - cellRadiusMinFactor))
+                    cellPointsLengthSpeed[i] = -cellPointsLengthSpeed[i];
 
                 cellVectors[i] = getVectorFromAngleAndLength(angle, length);
 
@@ -312,6 +364,7 @@ namespace Virion
             fillEdge();
             fillInside(cellRadius, cellRadius);
             fillCenter();
+            removeOutsiders();
         }
 
         private void fillEdge()
@@ -395,22 +448,185 @@ namespace Virion
             colorMatrix[cellRadius + 1, cellRadius + 1] = 3;
         }
 
-        private void fillFloaters()
+        //Removes ugly outsiders
+        private void removeOutsiders()
         {
-            int size = cellVectors.Count;
-
-            for (int i = 0; i < size; i++)
+            for (int x = 1; x < cellRadius * 2 - 1; x++)
             {
-                if (i % 2 != 0) continue;
+                for (int y = 1; y < cellRadius * 2 - 1; y++)
+                {
+                    if (colorMatrix[x, y] == 1)
+                    {
+                        int i = 0;
+                        if (colorMatrix[x + 1, y] == 0) i++;
+                        if (colorMatrix[x + 1, y + 1] == 0) i++;
+                        if (colorMatrix[x + 1, y - 1] == 0) i++;
+                        if (colorMatrix[x - 1, y] == 0) i++;
+                        if (colorMatrix[x - 1, y + 1] == 0) i++;
+                        if (colorMatrix[x - 1, y - 1] == 0) i++;
+                        if (colorMatrix[x, y + 1] == 0) i++;
+                        if (colorMatrix[x, y - 1] == 0) i++;
+                        if (i > 5) colorMatrix[x, y] = 0;
+                    }
+                }
+            }
+        }
 
-                Vector2 v1 = cellVectors[i];
-                int x = (int)(v1.X * 0.5f) + cellRadius;
-                int y = (int)(v1.Y * 0.5f) + cellRadius;
+        public void collisionHandeling(List<NormalCell> cellList, List<WhiteCell> whiteCellList)
+        {
+            foreach(NormalCell c in cellList)
+            {
+                if (isClose(c) && isColliding(c))
+                {
+                    Vector2 thisCellMotion = getMotion();
+                    Vector2 otherCellMotion = c.getMotion();
+                    float thisCellSpeed = getMotion().Length();
+                    float otherCellSpeed = c.getMotion().Length();
 
-                colorMatrix[x, y] = 4;
-
+                    coll(otherCellMotion, thisCellSpeed);
+                    c.coll(thisCellMotion, otherCellSpeed);
+                }
             }
 
+
+            if (cellPosition.X < cellRadius * pixelSize * 0.5) hitLeft();
+            if (cellPosition.Y < cellRadius * pixelSize * 0.5) hitOver();
+            if (cellPosition.X > Main.Instance.GraphicsDevice.Viewport.Width - cellRadius * pixelSize * 0.5) hitRight();
+            if (cellPosition.Y > Main.Instance.GraphicsDevice.Viewport.Height - cellRadius * pixelSize * 0.5) hitUnder();
+
+
+             foreach (WhiteCell wc in whiteCellList)
+            {
+                if (isClose(wc))
+                {
+                    coll(wc.getPosition(), getMotion().Length());
+                }
+            }
         }
+
+
+        private bool isColliding(NormalCell c)
+        {
+            Vector2 thisCellPosition = getPosition();
+            Vector2 otherCellPosition = c.getPosition();
+            Vector2 currentDistance = Vector2.Subtract(thisCellPosition, otherCellPosition);
+
+            Vector2 thisNextPosition = Vector2.Add(thisCellPosition, getMotion());
+            Vector2 otherNextPosition = Vector2.Add(otherCellPosition, c.getMotion());
+            Vector2 nextDistance = Vector2.Subtract(thisNextPosition, otherNextPosition);
+
+            if (currentDistance.Length() >= nextDistance.Length()) return true;
+            else return false;
+        }
+
+        public void coll(Vector2 otherCellMotion, float speed)
+        {
+            cellMotion = otherCellMotion;
+            cellMotion.Normalize();
+            cellMotion *= (speed);
+        }
+
+        private void hitUnder()
+        {
+            cellMotion.Y = -Math.Abs(cellMotion.Y);
+            moveCell();
+        }
+
+        private void hitOver()
+        {
+            cellMotion.Y = Math.Abs(cellMotion.Y);
+            moveCell();
+        }
+
+        private void hitRight()
+        {
+            cellMotion.X = -Math.Abs(cellMotion.X);
+            moveCell();
+        }
+
+        private void hitLeft()
+        {
+            cellMotion.X = Math.Abs(cellMotion.X);
+            moveCell();
+        }
+
+        private void calculateColors()
+        {
+            float healthFactor = health / 100f;
+            float infectionFactor = infectionProgress / 100f;
+
+            wallColor = new Color(
+                currentColor(241, 191, 222, healthFactor, infectionFactor),
+                currentColor(181, 191, 212, healthFactor, infectionFactor),
+                currentColor(141, 191, 127, healthFactor, infectionFactor));
+
+            wallColorDark = new Color(
+                currentColor(236, 191, 218, healthFactor, infectionFactor),
+                currentColor(169, 191, 206, healthFactor, infectionFactor),
+                currentColor(119, 191, 116, healthFactor, infectionFactor));
+
+            fillColor = new Color(
+                currentColor(254, 225, 232, healthFactor, infectionFactor),
+                currentColor(200, 225, 216, healthFactor, infectionFactor),
+                currentColor(200, 225, 144, healthFactor, infectionFactor));
+
+            fillColorDark = new Color(
+                currentColor(254, 220, 232, healthFactor, infectionFactor),
+                currentColor(190, 220, 209, healthFactor, infectionFactor),
+                currentColor(190, 220, 137, healthFactor, infectionFactor));
+
+            centerColor = new Color(
+                currentColor(254, 216, 232, healthFactor, infectionFactor),
+                currentColor(220, 242, 230, healthFactor, infectionFactor),
+                currentColor(220, 174, 158, healthFactor, infectionFactor));
+
+            centerColorDark = new Color(
+                currentColor(254, 205, 232, healthFactor, infectionFactor),
+                currentColor(215, 239, 227, healthFactor, infectionFactor),
+                currentColor(215, 152, 155, healthFactor, infectionFactor));
+            
+            /* //Want invisible?
+            wallColor = new Color(
+                currentColor(241, 255, 222, healthFactor, infectionFactor),
+                currentColor(181, 192, 212, healthFactor, infectionFactor),
+                currentColor(141, 203, 127, healthFactor, infectionFactor));
+
+            wallColorDark = new Color(
+                currentColor(236, 255, 218, healthFactor, infectionFactor),
+                currentColor(169, 192, 206, healthFactor, infectionFactor),
+                currentColor(119, 203, 116, healthFactor, infectionFactor));
+
+            fillColor = new Color(
+                currentColor(254, 255, 232, healthFactor, infectionFactor),
+                currentColor(200, 192, 216, healthFactor, infectionFactor),
+                currentColor(200, 203, 144, healthFactor, infectionFactor));
+
+            fillColorDark = new Color(
+                currentColor(254, 255, 232, healthFactor, infectionFactor),
+                currentColor(190, 192, 209, healthFactor, infectionFactor),
+                currentColor(190, 203, 137, healthFactor, infectionFactor));
+            */
+            
+        }
+
+        private int currentColor(int startValue, int deadValue, int infectedValue, float healthFactor, float infectionFactor)
+        {
+            infectionFactor = (infectionFactor > 1 ? 1 : infectionFactor);
+            float healthColorAdd = (1-healthFactor) * (startValue - deadValue);
+            float infectedColorAdd = healthFactor * infectionFactor * (startValue - infectedValue);
+
+            return (int)(startValue - healthColorAdd - infectedColorAdd);
+        }
+
+        public Color getCenterColor()
+        {
+            return centerColor;
+        }
+
+        public Color getCenterColorDark()
+        {
+            return centerColorDark;
+        }
+
     }
 }
