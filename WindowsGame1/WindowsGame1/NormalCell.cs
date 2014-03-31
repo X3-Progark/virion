@@ -37,7 +37,8 @@ namespace Virion
             centerColor, centerColorDark;
         
         private int cellPoints,
-            elapsedTime, frameTime;
+            elapsedTime, frameTime, 
+            functionX, xDivider, yDivider;
 
         private double cellRadiusMinFactor, 
             cellAngleFactor;
@@ -50,6 +51,13 @@ namespace Virion
 
         private State state;
 
+        private bool healedByCell;
+        public bool HealedByCell
+        {
+            get { return this.healedByCell; }
+            set { this.healedByCell = value; }
+        }
+
         public NormalCell(Vector2 cellPosition, int frameTime)
 
         {
@@ -57,6 +65,7 @@ namespace Virion
             //Når de blir initialisert samtidig får de akkurat samme variabler > cellene blir identiske
 
             this.state = State.Healthy;
+            healedByCell = false;
 
             this.infectionProgress = 0f;
             this.health = 100.0f;
@@ -117,10 +126,15 @@ namespace Virion
             cellMotion = getVectorFromAngleAndLength((float)360 * getRandomD(), (float)pixelSize/2);
 
             //The maximum speed a cell can reach
-            maxSpeed = pixelSize * 0.9f;
+            maxSpeed = pixelSize * 0.7f;
 
             //The minimum speed a cell can have
-            minSpeed = pixelSize * 0.5f;
+            minSpeed = pixelSize * 0.3f;
+
+            //Makes the cell move randomly around
+            functionX = getRandom().Next(0, 1000);
+            xDivider = getRandom().Next(60, 100);
+            yDivider = getRandom().Next(60, 100);
 
             initDarkMatrix();
             calculateCellPulsation();
@@ -173,7 +187,7 @@ namespace Virion
 
             if (!isDead() && isInfected())
             {
-                health -= 0.1f;
+                health -= 0.2f;
             }
 
             if (health <= 0.0f)
@@ -193,12 +207,23 @@ namespace Virion
                 minSpeed = 0.0f;
             }
 
+            if (infectionProgress == 0 && isInfected())
+            {
+                cellRadiusMinFactor = 0.1d;
+                this.state = State.Healthy;
+                calculateCellPulsation();
+            }
+
             if (health != 100f || infectionProgress != 0f)
             {
                 calculateColors();
             }
 
             elapsedTime = 0; //We have reached the elapsed time and have to reset it
+
+            functionX++;
+
+            healedByCell = false;
 
             colorMatrix = new int[cellRadius * 2, cellRadius * 2];
 
@@ -220,10 +245,21 @@ namespace Virion
             }
         }
 
+       public float getInfectionProgress()
+        {
+            return infectionProgress;
+        }
+
         private void moveCell()
         {
-            cellPosition.X += (int)cellMotion.X;
-            cellPosition.Y += (int)cellMotion.Y;
+            cellPosition.X += cellMotion.X;
+            cellPosition.Y += cellMotion.Y;
+
+            //random movements
+            float length = cellMotion.Length();
+            cellMotion = Vector2.Add(cellMotion, new Vector2((float)Math.Cos(functionX / xDivider) / 100, (float)Math.Sin(functionX / yDivider) / 100));
+            cellMotion.Normalize();
+            cellMotion *= length;
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -236,7 +272,6 @@ namespace Virion
                         drawPixel(x, y, p, spriteBatch);
                     }
                 }
-                //base.Draw(gameTime);
         }
 
         private void drawPixel(int x, int y, int pixelCode, SpriteBatch spriteBatch)
@@ -284,6 +319,10 @@ namespace Virion
         //Calculates how the cell vectors look like
         private void calculateCellPulsation()
         {
+            cellPointsAngle = new List<double>();
+            cellPointsLength = new List<double>();
+            cellVectors = new List<Vector2>();
+
             double angleStart = getRandomD() * 360d; //Find a random startingpoint for our angle
             double angleStep = 360f / cellPoints;
             double angleVariation = angleStep * cellAngleFactor; //How much should the angle vary
@@ -499,24 +538,9 @@ namespace Virion
             {
                 if (isClose(wc))
                 {
-                    coll(wc.getPosition(), getMotion().Length());
+                    coll(wc.getPosition(), pixelSize);
                 }
             }
-        }
-
-
-        private bool isColliding(NormalCell c)
-        {
-            Vector2 thisCellPosition = getPosition();
-            Vector2 otherCellPosition = c.getPosition();
-            Vector2 currentDistance = Vector2.Subtract(thisCellPosition, otherCellPosition);
-
-            Vector2 thisNextPosition = Vector2.Add(thisCellPosition, getMotion());
-            Vector2 otherNextPosition = Vector2.Add(otherCellPosition, c.getMotion());
-            Vector2 nextDistance = Vector2.Subtract(thisNextPosition, otherNextPosition);
-
-            if (currentDistance.Length() >= nextDistance.Length()) return true;
-            else return false;
         }
 
         public void coll(Vector2 otherCellMotion, float speed)
@@ -626,6 +650,11 @@ namespace Virion
         public Color getCenterColorDark()
         {
             return centerColorDark;
+        }
+
+        public override void hit(int damage)
+        {
+            infectionProgress = (infectionProgress <= damage ? 0 : infectionProgress - damage);
         }
 
     }

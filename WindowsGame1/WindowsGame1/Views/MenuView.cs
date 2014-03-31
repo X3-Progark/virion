@@ -26,8 +26,6 @@ namespace Virion
         InputAction menuSelect;
         InputAction menuCancel;
 
-
-        
         protected IList<MenuEntry> MenuEntries
         {
             get { return menuEntries; }
@@ -37,6 +35,8 @@ namespace Virion
         public MenuView(string menuTitle)
         {
             this.menuTitle = menuTitle;
+
+            
 
             TransitionOnTime = TimeSpan.FromSeconds(0.5);
             TransitionOffTime = TimeSpan.FromSeconds(0.5);

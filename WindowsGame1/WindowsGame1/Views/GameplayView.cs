@@ -26,6 +26,8 @@ namespace Virion
         List<Keys> playerInputs;
         List<Virus> playerObjects;
         List<WhiteCell> whiteCellList;
+        List<NormalCell> cellList;
+        List<Protein> proteins;
 
         Texture2D healthBarTexture;
 
@@ -42,8 +44,6 @@ namespace Virion
 
         bool allDead;
 
-        List<NormalCell> cellList;
-        List<Protein> proteins;
 
         enum State
         {
@@ -269,6 +269,7 @@ namespace Virion
 
                 foreach (WhiteCell wc in whiteCellList)
                 {
+                    wc.updateNormalCells(cellList);
                     wc.updateVirus(playerObjects);
                     wc.Update(gameTime);
                 }

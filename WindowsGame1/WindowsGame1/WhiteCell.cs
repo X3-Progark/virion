@@ -31,12 +31,13 @@ namespace Virion
             functionX;
 
         //private Vector2 cellMotion;
-        private Virus closestVirus;
-        private float closestVirusDistance;
+        private Unit closestUnit;
+        private float closestUnitDistance;
 
         Random random;
 
         List<Virus> playerObjects;
+        List<NormalCell> normalCellObjects;
 
         public WhiteCell(Vector2 cellPosition, int frameTime)
         {
@@ -123,20 +124,20 @@ namespace Virion
             //We have reached the elapsed time and have to reset it
             elapsedTime = 0;
             findClosestVirus();
-            if (closestVirus != null)
+            if (closestUnit != null)
             {
 
-                if( closestVirusDistance > cellRadius)
+                if( closestUnitDistance > cellRadius)
                 {
-                    cellMotion = cellPosition - closestVirus.getPosition();
+                    cellMotion = cellPosition - closestUnit.getPosition();
                     cellMotion.Normalize();
                     cellPosition -= cellMotion * cellSpeed;
                     functionX += 4;
                 }
                 
-                if (closestVirusDistance < cellRadius * pixelSize)
+                if (closestUnitDistance < cellRadius * pixelSize)
                 {
-                    closestVirus.Hit(5);
+                    closestUnit.hit(5);
                 }
                 
 
@@ -323,21 +324,45 @@ namespace Virion
 
         private void findClosestVirus()
         {
-            Virus virus = null;
+            Unit unit = closestUnit;
+            NormalCell nc = normalCellObjects[0];
             float distance = float.MaxValue;
+
+
+            foreach (NormalCell c in normalCellObjects)
+            {
+                float temp2 = Vector2.Distance(this.cellPosition, c.getPosition());
+                if (distance > temp2 && c.getInfectionProgress() > 20 && !c.HealedByCell)
+                {
+                    distance = temp2;
+                    nc = c;
+                }
+            } 
+            nc.HealedByCell = true;
+            unit = nc;
            
             foreach (Virus v in playerObjects)
             {
                 float temp = Vector2.Distance(this.cellPosition, v.getPosition());
-                if (distance > temp && v.Alive())
+                if (distance > temp * 1.3 && v.Alive() && !v.Hunted)
                 {
                     distance = temp;
-                    virus = v;
+                    unit = v;
+                    v.Hunted = true;
+                    nc.HealedByCell = false;
                 }
         
             }
-            this.closestVirus = virus;
-            this.closestVirusDistance = distance;
+
+            if (unit == null || nc.getInfectionProgress() == 0)
+                unit = playerObjects[0];
+
+            if (unit == closestUnit)
+                distance = Vector2.Distance(this.cellPosition, unit.getPosition());
+
+
+            this.closestUnit = unit;
+            this.closestUnitDistance = distance;
         }
 
         public void updateVirus(List<Virus> playerObjects)
@@ -345,6 +370,15 @@ namespace Virion
             this.playerObjects = playerObjects;
         }
 
+        public void updateNormalCells(List<NormalCell> normalCellObjects)
+        {
+            this.normalCellObjects = normalCellObjects;
+        }
+
+        public override void hit(int damage)
+        {
+
+        }
 
     }
 }

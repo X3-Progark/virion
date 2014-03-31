@@ -29,8 +29,10 @@ namespace Virion
         public abstract void Initialize();
 
         public abstract void Update(GameTime gameTime);
-        
+
         public abstract void Draw(GameTime gameTime, SpriteBatch sb);
+
+        public abstract void hit(int damage);
 
         public virtual int getRadius()
         {
@@ -56,11 +58,20 @@ namespace Virion
             else 
                 return distance.Length() < ((getRadius() + u.getRadius()) * (pixelSize - 1));
         }
-        /*
+        
         public virtual bool isColliding(Unit u)
         {
-            return true;
-        }*/
+            Vector2 thisCellPosition = getPosition();
+            Vector2 otherCellPosition = u.getPosition();
+            Vector2 currentDistance = Vector2.Subtract(thisCellPosition, otherCellPosition);
+
+            Vector2 thisNextPosition = Vector2.Add(thisCellPosition, getMotion());
+            Vector2 otherNextPosition = Vector2.Add(otherCellPosition, u.getMotion());
+            Vector2 nextDistance = Vector2.Subtract(thisNextPosition, otherNextPosition);
+
+            if (currentDistance.Length() >= nextDistance.Length()) return true;
+            else return false;
+        }
 
         public virtual Random getRandom()
         {

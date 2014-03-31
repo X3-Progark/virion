@@ -73,5 +73,10 @@ namespace Virion
             }
         }
 
+        public override void hit (int damage)
+        { 
+
+}
+
     }
 }

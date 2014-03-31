@@ -73,6 +73,13 @@ namespace Virion
             set { this.infecting = value; }
         }
 
+        private bool hunted;
+        public bool Hunted
+        {
+            get { return this.hunted; }
+            set { this.hunted = value; }
+        }
+
         public Virus(Player player, Vector2 cellPosition, int frameTime)
 
         {
@@ -80,6 +87,7 @@ namespace Virion
             //Når de blir initialisert samtidig får de akkurat samme variabler => cellene blir identiske
             random = new Random();
             infecting = false;
+            hunted = false;
             this.strength = 1 * player.Strength;
             this.health = BASE_HEALTH + (HEALTH_RATE * player.Health);
             this.player = player;
@@ -107,7 +115,7 @@ namespace Virion
             cellMotion = new Vector2();
 
             //How quick the speed should slow down
-            breakFactor = 0.98f - 0.02f * player.Speed;
+            breakFactor = 0.98f - 0.01f * player.Speed;
 
             //How much it should move
             motionAdd = BASE_SPEED * 0.3f;
@@ -126,19 +134,12 @@ namespace Virion
                 else if (look[i].Equals('M'))
                     colorMatrix[y, x] = 3;
             }
-            /*    colorMatrix[2, 2] = 3;
-
-            colorMatrix[3, 3] = 1;
-            colorMatrix[1, 1] = 1;
-            colorMatrix[3, 1] = 1;
-            colorMatrix[1, 3] = 1;*/
         }
 
 
 
         public override void Initialize()
         {
-            //base.Initialize();
         }
 
         public bool Alive()
@@ -146,7 +147,7 @@ namespace Virion
             return this.state == State.Alive;
         }
 
-        public void Hit(int damage)
+        public override void hit(int damage)
         {
             if (health > damage)
                 health -= damage;
@@ -154,6 +155,11 @@ namespace Virion
             {
                 health = 0;
                 this.state = State.Dead;
+
+                fillColor = new Color(101, 130, 57);
+                fillColorDark = new Color(90, 122, 56);
+                centerColor = new Color(174, 174, 174);
+                centerColorDark = new Color(160, 160, 160);
             }
         }
 
@@ -176,7 +182,7 @@ namespace Virion
             elapsedTime = 0;
 
             if (!Alive())
-                maxSpeed = 0.2f;
+                maxSpeed = pixelSize * 0.03f;
             else
             {
                 if (Infecting)
@@ -185,15 +191,17 @@ namespace Virion
                     maxSpeed = BASE_SPEED + SPEED_RATE * player.Speed;
             }
 
+            hunted = false;
+
             //Slowing down the virus
             cellMotion.X *= breakFactor;
             cellMotion.Y *= breakFactor;
 
-            if (cellMotion.X > maxSpeed) cellMotion.X = maxSpeed;
-            else if (cellMotion.X < -maxSpeed) cellMotion.X = -maxSpeed;
-            
-            if (cellMotion.Y > maxSpeed) cellMotion.Y = maxSpeed;
-            else if (cellMotion.Y < -maxSpeed) cellMotion.Y = -maxSpeed;
+            if (cellMotion.Length() > maxSpeed)
+            {
+                cellMotion.Normalize();
+                cellMotion *= maxSpeed;
+            }
 
             cellPosition.X += (float)cellMotion.X;
             if (cellPosition.X < 0) cellPosition.X = 0.0f;
