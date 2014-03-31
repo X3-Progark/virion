@@ -26,7 +26,7 @@ namespace Virion
 
         public static float BASE_HEALTH = 100f;
         public static float BASE_STRENGTH = 2.5f;
-        public static float BASE_SPEED = pixelSize;
+        public static float BASE_SPEED = pixelSize/2f;
 
 
         private int[,] colorMatrix;
@@ -41,6 +41,8 @@ namespace Virion
         private float breakFactor, motionAdd, maxSpeed;
 
         private Player player;
+
+        private List<Virus> playerList;
 
         private State state;
 
@@ -120,6 +122,8 @@ namespace Virion
             //How much it should move
             motionAdd = BASE_SPEED * 0.3f;
 
+            playerList = new List<Virus>();
+
             setColorMatrix(player.Model);
         }
 
@@ -136,10 +140,13 @@ namespace Virion
             }
         }
 
-
-
         public override void Initialize()
         {
+        }
+
+        public void setPlayerList(List<Virus> playerList)
+        {
+            this.playerList = playerList;
         }
 
         public bool Alive()
@@ -182,11 +189,26 @@ namespace Virion
             elapsedTime = 0;
 
             if (!Alive())
+            {
                 maxSpeed = pixelSize * 0.03f;
+
+                foreach(Virus v in playerList)
+                {
+                    if (v != this && isClose(v))
+                    {
+                        health = 5;
+                        state = State.Alive;
+                        fillColor = new Color(100, 191, 0);
+                        fillColorDark = new Color(94, 179, 0);
+                        centerColor = new Color(206, 255, 4);
+                        centerColorDark = new Color(222, 255, 91);
+                    }
+                }
+            }
             else
             {
                 if (Infecting)
-                    maxSpeed = BASE_SPEED / 10 + STRENGTH_RATE * (float)Strength;
+                    maxSpeed = BASE_SPEED / 8 + STRENGTH_RATE * (float)Strength;
                 else
                     maxSpeed = BASE_SPEED + SPEED_RATE * player.Speed;
             }

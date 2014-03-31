@@ -61,7 +61,7 @@ namespace Virion
             cellRadius = 3;
 
             //The speed of the white cell
-            cellSpeed = pixelSize * 1.1f;
+            cellSpeed = pixelSize * (Main.Instance.level * 0.1f + 0.8f);
 
             //A cellRadius*2 x cellRadius*2 2D int array
             colorMatrix = new int[cellLength * 2, cellLength * 2];
@@ -351,11 +351,30 @@ namespace Virion
                     v.Hunted = true;
                     nc.HealedByCell = false;
                 }
+                else if(temp < (pixelSize * cellRadius * 5) && v.Alive())
+                {
+                    distance = temp;
+                    unit = v;
+                    v.Hunted = true;
+                    nc.HealedByCell = false;
+                    break;
+                }
         
             }
 
-            if (unit == null || nc.getInfectionProgress() == 0)
-                unit = playerObjects[0];
+
+
+            if (nc.getInfectionProgress() == 0)
+            {
+                int i = 0;
+                while (unit == nc && i < playerObjects.Count)
+                {
+                    if (playerObjects[i].Alive())
+                        unit = playerObjects[i];
+                    i++;
+                }
+            }
+                
 
             if (unit == closestUnit)
                 distance = Vector2.Distance(this.cellPosition, unit.getPosition());

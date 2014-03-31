@@ -31,9 +31,6 @@ namespace Virion
 
         Texture2D healthBarTexture;
 
-        Vector2 playerPosition = new Vector2(100, 100);
-        Vector2 enemyPosition = new Vector2(100, 100);
-
         Random random = new Random();
 
         float pauseAlpha, timePassed;
@@ -139,8 +136,11 @@ namespace Virion
                 foreach (Unit c in cellList)
                     c.LoadContent(texture);
 
-                foreach (Virus v in playerObjects) 
+                foreach (Virus v in playerObjects)
+                {
                     v.LoadContent(texture);
+                    v.setPlayerList(playerObjects);
+                }
 
                 foreach (WhiteCell w in whiteCellList) 
                     w.LoadContent(texture);
@@ -333,12 +333,6 @@ namespace Virion
 
                 if (keyboardState.IsKeyDown(playerInputs[3]))
                     movement.X++;
-                
-
-                if (movement.Length() > 1)
-                    movement.Normalize();
-
-                playerPosition += movement * 1f;
             }
         }
 

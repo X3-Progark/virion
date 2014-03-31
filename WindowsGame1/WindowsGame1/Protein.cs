@@ -16,6 +16,8 @@ namespace Virion
 
         private Color centerColor, centerColorDark;
 
+        private int functionX;
+
         public Protein(Vector2 position, int frameTime, Color c1, Color c2)
         {
             cellPosition = position;
@@ -29,6 +31,7 @@ namespace Virion
 
             colorMatrix = new int[cellRadius * 2, cellRadius * 2];
 
+            functionX = getRandom().Next(0, 500);
         }
 
         private void fillColorMatrix()
@@ -44,6 +47,8 @@ namespace Virion
 
         public override void Update(GameTime gameTime)
         {
+            functionX++;
+
             for (int i = 0; i < cellRadius * 2; i++)
             {
                 for (int j = 0; j < cellRadius * 2; j++)
@@ -51,6 +56,8 @@ namespace Virion
                     colorMatrix[i, j] = (getRandomD() > 0.5 ? 1 : 2);
                 }
             }
+
+            cellPosition = Vector2.Add(cellPosition, new Vector2((float)Math.Cos(functionX), (float)Math.Sin(functionX)));
         }
 
         public override void Initialize()
