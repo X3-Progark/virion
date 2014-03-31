@@ -207,7 +207,7 @@ namespace Virion
                 minSpeed = 0.0f;
             }
 
-            if (infectionProgress == 0 && isInfected())
+            if (infectionProgress < 100 && isInfected())
             {
                 cellRadiusMinFactor = 0.1d;
                 this.state = State.Healthy;

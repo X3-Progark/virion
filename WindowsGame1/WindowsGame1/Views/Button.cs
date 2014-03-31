@@ -62,7 +62,7 @@ namespace Virion
         public int BorderThickness = 4;
         public Color BorderColor = new Color(200, 200, 200);
         public Color FillColor = new Color(100, 100, 100) * .75f;
-        public Color TextColor = Color.White;
+        public Color TextColor = Color.Black;
         public float Alpha = 0f;
         public event EventHandler<EventArgs> Tapped;
         

@@ -37,15 +37,17 @@ namespace Virion
         /// Event handler for when the Play Game menu entry is selected.
         void PlayGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            LoadingView.Load(ViewManager, true, e.PlayerIndex,
-                               new BackgroundView(), new GameplayView());
+            ViewManager.AddView(new GameplayView(), e.PlayerIndex);
+            //LoadingView.Load(ViewManager, true, e.PlayerIndex,
+            //                   new BackgroundView(), new GameplayView());
         }
 
         /// Event handler for when the Mutations menu entry is selected.
         void MutationsMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
-            LoadingView.Load(ViewManager, true, e.PlayerIndex,
-                               new MutationView());
+            ViewManager.AddView(new MutationView(), e.PlayerIndex);
+            //LoadingView.Load(ViewManager, true, e.PlayerIndex,
+            //                   new BackgroundView(), new MutationView());
         }
         
         /// Event handler for when the Options menu entry is selected.
@@ -79,7 +81,7 @@ namespace Virion
 
             spriteBatch.DrawString(font, t,
                 levelPosition, 
-                Color.Beige, 0, (font.MeasureString(t) / 2), 1, SpriteEffects.None, 0);
+                Color.Black, 0, (font.MeasureString(t) / 2), 1, SpriteEffects.None, 0);
 
             spriteBatch.End();
         }

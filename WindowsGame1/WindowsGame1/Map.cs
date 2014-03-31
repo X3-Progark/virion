@@ -26,6 +26,8 @@ namespace Virion
         {
             normalCells = level * 5 + 10;
             whiteCells = level * 1;
+
+            //if (level == 3) whiteCells = 10;
         }
 
         public int Level { get; set; }

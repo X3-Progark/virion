@@ -190,7 +190,7 @@ namespace Virion
             {
 
                 timePassed += (float)gameTime.ElapsedGameTime.TotalMilliseconds;
-
+                /*
                 if (timePassed > 30000)
                 {
                     timePassed = 0.0f;
@@ -199,7 +199,7 @@ namespace Virion
                     w.Initialize();
                     w.LoadContent(texture);
                     whiteCellList.Add(w);
-                }
+                }*/
 
                 allDead = true;
                 infected = 0;
