@@ -105,7 +105,7 @@ namespace Virion
             int whiteCells = map.whiteCells;
 
             for (int i = 0; i < totalCells; i++)
-                cellList.Add(new NormalCell(new Vector2((int)(600 * Main.getRandomD() + 100), (int)(200 * Main.getRandomD() + 100)), 30));
+                cellList.Add(new NormalCell(new Vector2((int)((Main.Instance.Conf.Resolution.X - 50) * Main.getRandomD() + 50), (int)((Main.Instance.Conf.Resolution.Y - 50) * Main.getRandomD() + 50)), 30));
 
             for (int i = 0; i < whiteCells; i++)
                 whiteCellList.Add(new WhiteCell(
