@@ -22,6 +22,7 @@ namespace Virion
 
         SpriteBatch spriteBatch;
         SpriteFont font;
+        SpriteFont creditFont;
         Texture2D blankTexture;
 
         bool isInitialized;
@@ -38,6 +39,11 @@ namespace Virion
         public SpriteFont Font
         {
             get { return font; }
+        }
+
+        public SpriteFont CreditFont
+        {
+            get { return creditFont; }
         }
 
 
@@ -75,6 +81,7 @@ namespace Virion
 
             spriteBatch = new SpriteBatch(GraphicsDevice);
             font = content.Load<SpriteFont>("menufont");
+            creditFont = content.Load<SpriteFont>("creditfont");
             blankTexture = content.Load<Texture2D>("blank");
 
             // Tell each of the views to load their content.

@@ -21,6 +21,8 @@ namespace Virion
         Vector2 resolution;
         Vector2[] resolutions;
         int resolutionIndex;
+        bool sound;
+        bool music;
 
         public bool FullScreen
         {
@@ -44,6 +46,24 @@ namespace Virion
             }
         }
 
+        public bool Sound
+        {
+            get { return sound; }
+            set
+            {
+                sound = value;
+            }
+        }
+
+        public bool Music
+        {
+            get { return music; }
+            set
+            {
+                music = value;
+            }
+        }
+
         public int ResolutionIndex
         {
             get { return resolutionIndex; }
@@ -64,6 +84,8 @@ namespace Virion
             this.resolutions = new Vector2[4] { new Vector2(800, 600), new Vector2(1200, 800), new Vector2(1366, 768), new Vector2(1920, 1080) };
             this.ResolutionIndex = 0;
             this.playerCount = 4;
+            this.sound = true;
+            this.music = true;
         }
 
 
@@ -79,6 +101,8 @@ namespace Virion
                 this.ResolutionIndex = c.resolutionIndex;
                 this.Resolution = c.Resolution;
                 this.playerCount = c.playerCount;
+                this.sound = c.sound;
+                this.music = c.music;
             }
             catch (FileNotFoundException e)
             {

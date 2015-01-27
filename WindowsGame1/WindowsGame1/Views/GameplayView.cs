@@ -9,7 +9,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
+using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Audio;
 
 
 namespace Virion
@@ -40,6 +41,12 @@ namespace Virion
         int infected, dead, totalCells;
 
         bool allDead;
+
+        Song song;
+        SoundEffect infectSound;
+        SoundEffectInstance infectSoundInstance;
+        SoundEffect proteinSound;
+        SoundEffectInstance proteinSoundInstance;
 
 
         enum State
@@ -108,6 +115,8 @@ namespace Virion
                 whiteCellList.Add(new WhiteCell(
                     new Vector2((int)(Main.Instance.Conf.Resolution.X / whiteCells) * i, (int)(50 + Main.getRandomD())), 30));
 
+
+            
         }
 
         public void addNewPlayer(Virus v, Keys up, Keys left, Keys down, Keys right)
@@ -132,6 +141,17 @@ namespace Virion
 
                 texture = new Texture2D(ViewManager.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
                 texture.SetData<Color>(new Color[] { Color.White });
+
+                song = content.Load<Song>("in_game");
+                MediaPlayer.Stop();
+                if (Main.Instance.Conf.Music)
+                    MediaPlayer.Play(song);
+
+                infectSound = content.Load<SoundEffect>("mutate");
+                proteinSound = content.Load<SoundEffect>("getprotein");
+
+                infectSoundInstance = infectSound.CreateInstance();
+                proteinSoundInstance = proteinSound.CreateInstance();
 
                 foreach (Unit c in cellList)
                     c.LoadContent(texture);
@@ -245,10 +265,15 @@ namespace Virion
                             infectingAny = true;
                             v.Infecting = true;
                             c.Infect(Virus.BASE_STRENGTH + Virus.STRENGTH_RATE * v.Strength);
+                            if (Main.Instance.Conf.Sound)
+                                infectSoundInstance.Play();
                         }
                     }
                     if (!infectingAny)
+                    {
                         v.Infecting = false;
+                        infectSoundInstance.Stop();
+                    }
 
                     List<Protein> eaten = new List<Protein>();
                     foreach (Protein p in proteins)
@@ -257,6 +282,8 @@ namespace Virion
                         {
                             v.Consume(p);
                             eaten.Add(p);
+                            if (Main.Instance.Conf.Sound)
+                                proteinSoundInstance.Play();
                         }
                     }
                     foreach (Protein p in eaten) proteins.Remove(p);
